@@ -8,26 +8,43 @@ XMLParser::XMLParser(const char *filename) {
 
     TiXmlDocument InputDoc;
 
-    if (InputDoc.LoadFile(filename)){
+    if (InputDoc.LoadFile(filename)) {
         std::cerr << InputDoc.ErrorDesc() << std::endl;
     }
 
 
-    TiXmlElement* System = InputDoc.FirstChildElement();
+    TiXmlElement *System = InputDoc.FirstChildElement();
     REQUIRE(System != NULL, "There is no system in xml");
 
-    TiXmlElement * Device = System->FirstChildElement();
-        for (TiXmlElement * elem = Device->FirstChildElement(); elem != NULL;
-            elem = elem->NextSiblingElement()){
+    TiXmlElement *Device = System->FirstChildElement();
+    for (TiXmlElement *elem = Device->FirstChildElement(); elem != NULL;
+         elem = elem->NextSiblingElement()) {
 
-            std::string elemname = elem->Value();
-            std::cout << elemname << std::endl;
+        std::string elemname = elem->Value();
+        std::cout << elemname << std::endl;
 
-            std::cout << elem->FirstChild()->ToText()->Value() << std::endl;
+        std::cout << elem->FirstChild()->ToText()->Value() << std::endl;
 
 
-            std::cout << "test" << std::endl;
+        std::cout << "test" << std::endl;
+    }
+
+    for (TiXmlElement *Job = Device->NextSiblingElement(); Job != NULL;
+         Job = Job->NextSiblingElement()) {
+
+        for (TiXmlElement *JobElem = Job->FirstChildElement(); JobElem != NULL;
+             JobElem = JobElem->NextSiblingElement()) {
+
+            std::string name = JobElem->Value();
+
+            if (name == "jobNumber") {
+
+
+                unsigned int JobNr = std::stoi(JobElem->FirstChild()->ToText()->Value());
+                std::cout << "jobnr = " << JobNr << std::endl;
+            }
         }
 
 
+    }
 }
