@@ -57,6 +57,7 @@ void XMLParser::parse() {
                     }else {
                         emissions = emissions_t;
                     }
+                    //Todo: remove this todo
 
                 } else if (elemname == "speed") {
                     speed = std::stoi(elem->FirstChild()->ToText()->Value());
