@@ -6,6 +6,8 @@
 #define PROJSOFTENG_PRINTER_H
 
 #include <string>
+#include <vector>
+#include <set>
 
 #include "DesignByContract.h"
 
@@ -26,7 +28,31 @@ namespace Printer {
 
     };
 
+
+    class Job {
+
+    public:
+        Job(std::string userName_in, int pageCount_in, int jobNr_in);
+
+
+    private:
+        int jobNr, pageCount;
+        std::string userName;
+    };
+
     class Printer {
+
+
+    public:
+        Printer();
+
+
+
+
+    private:
+        std::vector<Device> deviceList;
+        std::vector<Job> jobList;
+        std::set<unsigned int> jobNrSet;
 
     };
 

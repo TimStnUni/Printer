@@ -1,7 +1,7 @@
 <SYSTEM>
     <DEVICE>
         <name>Office_Printer5</name>
-        <emissions>-3</emissions>
+        <emissions>3</emissions>
         <speed>40</speed>
     </DEVICE>
     <JOB>

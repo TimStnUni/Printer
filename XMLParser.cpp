@@ -21,7 +21,13 @@ XMLParser::XMLParser(const char *filename) {
 void XMLParser::parse() {
 
     TiXmlElement *System = InputDoc.FirstChildElement();
+
+    //Probably not a require, probably just if
+
     REQUIRE(System != NULL, "There is no system in xml");
+
+    //Should make device and job here, then use setters to assingn them their values
+
 
 
     for (TiXmlElement *Level1Elem = System->FirstChildElement(); Level1Elem != NULL;
@@ -44,8 +50,13 @@ void XMLParser::parse() {
                         }
 
                 } else if (elemname == "emissions") {
-                    emissions = std::stoi(elem->FirstChild()->ToText()->Value());
-                    ENSURE(emissions > 0, "Emissions should be positive");
+                    int emissions_t = std::stoi(elem->FirstChild()->ToText()->Value());
+                    if (emissions_t <= 0){
+                        std::cout << "Emissions should be positive" << std::endl;
+                        continue;
+                    }else {
+                        emissions = emissions_t;
+                    }
 
                 } else if (elemname == "speed") {
                     speed = std::stoi(elem->FirstChild()->ToText()->Value());

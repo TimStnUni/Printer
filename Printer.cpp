@@ -18,4 +18,21 @@ namespace Printer {
         //TOdo : implement properlyinitialized
         //ENSURE(this->properlyInitialized, "inti");
     }
+
+
+
+
+
+    ///////////////////////////////////////////////////////////
+    //
+    //
+    //////////////////////////////////////////////////////////
+
+    Job::Job(std::string userName_in, int pageCount_in, int jobNr_in) {
+
+        userName = userName_in;
+        pageCount = pageCount_in;
+        jobNr = jobNr_in;
+
+    }
 } // Printer
