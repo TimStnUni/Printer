@@ -24,6 +24,8 @@ set(RELEASE_SOURCE_FILES main.cpp
         ./Libs/tinyxml.cpp
         ./Libs/tinyxmlparser.cpp
         ./Libs/tinyxmlerror.cpp
+        Printer.cpp
+        Printer.h
 
 )
 
@@ -35,6 +37,8 @@ set(DEBUG_SOURCE_FILES tests.cpp
         ./Libs/tinyxml.cpp
         ./Libs/tinyxmlparser.cpp
         ./Libs/tinyxmlerror.cpp
+        Printer.cpp
+        Printer.h
 )
 
         # Create RELEASE target

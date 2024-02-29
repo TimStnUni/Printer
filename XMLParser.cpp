@@ -6,45 +6,97 @@
 
 XMLParser::XMLParser(const char *filename) {
 
-    TiXmlDocument InputDoc;
 
     if (InputDoc.LoadFile(filename)) {
         std::cerr << InputDoc.ErrorDesc() << std::endl;
     }
 
+    _initCheck = this;
+    this->parse();
+
+    ENSURE(properlyInitialized(), "Parser not properly initialized");
+}
+
+
+void XMLParser::parse() {
 
     TiXmlElement *System = InputDoc.FirstChildElement();
     REQUIRE(System != NULL, "There is no system in xml");
 
-    TiXmlElement *Device = System->FirstChildElement();
-    for (TiXmlElement *elem = Device->FirstChildElement(); elem != NULL;
-         elem = elem->NextSiblingElement()) {
 
-        std::string elemname = elem->Value();
-        std::cout << elemname << std::endl;
+    for (TiXmlElement *Level1Elem = System->FirstChildElement(); Level1Elem != NULL;
+         Level1Elem = Level1Elem->NextSiblingElement()) {
 
-        std::cout << elem->FirstChild()->ToText()->Value() << std::endl;
+        std::string type = Level1Elem->Value();
 
+        if (type == "DEVICE") {
+            for (TiXmlElement *elem = Level1Elem->FirstChildElement(); elem != NULL;
+                 elem = elem->NextSiblingElement()) {
 
-        std::cout << "test" << std::endl;
-    }
-
-    for (TiXmlElement *Job = Device->NextSiblingElement(); Job != NULL;
-         Job = Job->NextSiblingElement()) {
-
-        for (TiXmlElement *JobElem = Job->FirstChildElement(); JobElem != NULL;
-             JobElem = JobElem->NextSiblingElement()) {
-
-            std::string name = JobElem->Value();
-
-            if (name == "jobNumber") {
+                std::string elemname = elem->Value();
 
 
-                unsigned int JobNr = std::stoi(JobElem->FirstChild()->ToText()->Value());
-                std::cout << "jobnr = " << JobNr << std::endl;
+                if (elemname == "name") {
+                    name = elem->FirstChild()->ToText()->Value();
+
+                        if (name.empty()){
+                            std::cerr << "name should not be emtpy" << std::endl;
+                        }
+
+                } else if (elemname == "emissions") {
+                    emissions = std::stoi(elem->FirstChild()->ToText()->Value());
+                    ENSURE(emissions > 0, "Emissions should be positive");
+
+                } else if (elemname == "speed") {
+                    speed = std::stoi(elem->FirstChild()->ToText()->Value());
+                    ENSURE(speed > 0, "Speed should be positive");
+                }
             }
+        } else if (type == "JOB") {
+
+            for (TiXmlElement *elem = Level1Elem->FirstChildElement(); elem != NULL;
+                 elem = elem->NextSiblingElement()) {
+
+                std::string elemname = elem->Value();
+
+
+                if (elemname == "userName") {
+                    userName = elem->FirstChild()->ToText()->Value();
+                } else if (elemname == "pageCount") {
+                    pageCount = std::stoi(elem->FirstChild()->ToText()->Value());
+                } else if (elemname == "jobNumber") {
+                    jobNr = std::stoi(elem->FirstChild()->ToText()->Value());
+                }
+            }
+
+        } else {
+
+            std::cerr << "Element should be either a printer or a Job, is a " << type << std::endl;
+
+
+            continue;
+
         }
 
 
     }
+
+
 }
+
+std::string XMLParser::getName() {
+    return name;
+}
+
+int XMLParser::getSpeed() {
+    return speed;
+}
+
+int XMLParser::getEmissions() {
+    return emissions;
+}
+
+bool XMLParser::properlyInitialized() {
+    return (this == _initCheck);
+}
+
