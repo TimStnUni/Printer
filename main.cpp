@@ -1,7 +1,9 @@
 #include <iostream>
-
+#include "XMLParser.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+
+    XMLParser test("test.xml");
+
     return 0;
 }

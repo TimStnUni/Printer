@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.6)
-project(TestsContracts)
+project(ProjSoftEng)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
@@ -20,17 +20,24 @@ link_directories(./gtest/lib)
 # Only add files with functionality here, no test files!
 set(RELEASE_SOURCE_FILES main.cpp
         XMLParser.cpp
-        XMLParser.h
+        ./Libs/tinystr.cpp
+        ./Libs/tinyxml.cpp
+        ./Libs/tinyxmlparser.cpp
+        ./Libs/tinyxmlerror.cpp
+
 )
 
 # Set source files for DEBUG target
 # Only add cpp files, no h files!
 set(DEBUG_SOURCE_FILES tests.cpp
         XMLParser.cpp
-        XMLParser.h
+        ./Libs/tinystr.cpp
+        ./Libs/tinyxml.cpp
+        ./Libs/tinyxmlparser.cpp
+        ./Libs/tinyxmlerror.cpp
 )
 
-# Create RELEASE target
+        # Create RELEASE target
 add_executable(release_target ${RELEASE_SOURCE_FILES})
 
 # Create DEBUG target

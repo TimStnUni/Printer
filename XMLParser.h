@@ -5,8 +5,20 @@
 #ifndef TESTSCONTRACTS_XMLPARSER_H
 #define TESTSCONTRACTS_XMLPARSER_H
 
+#include <string>
+#include <iostream>
+
+
+#include "tinyxml.h"
+#include "DesignByContract.h"
+
 
 class XMLParser {
+
+public:
+    XMLParser(const char * filename);
+
+
 
 };
 
