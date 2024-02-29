@@ -19,11 +19,15 @@ link_directories(./gtest/lib)
 # Only add cpp files, no h files!
 # Only add files with functionality here, no test files!
 set(RELEASE_SOURCE_FILES main.cpp
+        XMLParser.cpp
+        XMLParser.h
 )
 
 # Set source files for DEBUG target
 # Only add cpp files, no h files!
 set(DEBUG_SOURCE_FILES tests.cpp
+        XMLParser.cpp
+        XMLParser.h
 )
 
 # Create RELEASE target
