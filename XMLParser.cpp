@@ -24,6 +24,9 @@ XMLParser::XMLParser(const char *filename) {
             std::cout << elemname << std::endl;
 
             std::cout << elem->FirstChild()->ToText()->Value() << std::endl;
+
+
+            std::cout << "test" << std::endl;
         }
 
 
