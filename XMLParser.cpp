@@ -97,7 +97,18 @@ void XMLParser::parse() {
                     continue;
                 }
             }
-        } else if (type == "JOB") {
+        }
+
+        //This entire else if statement has to be redone, since there are multiple username. at the start it should probably
+        //make a job class and push stuff into there
+        //That would remove a bunch of the unneeded data members now as well
+
+        //Could potentially have the job be made at the end, after checks have been completed? probably better
+        //Maybe introduce some bool "ReadingCorrectly" that gets put to false if ever a member is not read correctly?
+        //is this even necessary with the continue statements?
+        else if (type == "JOB") {
+
+            bool readingCorrectly = true;
 
             for (TiXmlElement *elem = Level1Elem->FirstChildElement(); elem != NULL;
                  elem = elem->NextSiblingElement()) {
@@ -109,9 +120,11 @@ void XMLParser::parse() {
                     std::string userName_t = elem->FirstChild()->ToText()->Value();
                     if (userName_t.empty()){
                         std::cout << "username should not be empty" << std::endl;
+                        readingCorrectly = false;
                         continue;
                     }else{
                         userName = userName_t;
+
                     }
 
                 } else if (elemname == "pageCount") {
@@ -119,6 +132,7 @@ void XMLParser::parse() {
                         pageCount = std::stoi(elem->FirstChild()->ToText()->Value());
                     }else{
                         std::cout << "pagecount should be a positive integer" << std::endl;
+                        readingCorrectly = false;
                         continue;
                     }
 
@@ -129,11 +143,20 @@ void XMLParser::parse() {
                     }else{
                         //Not actually sure this needs to be a positive integer
                         std::cout << "jobnumber should be a positive integer" << std::endl;
+                        readingCorrectly = false;
+                        continue;
                     }
+
                 }
                 else{
                     std::cout << "Element name " << elemname << "is either empty or an unexpected element name" << std::endl;
+                    readingCorrectly = false;
                 }
+            }
+
+            if (readingCorrectly){
+                //Todo: implement this for printer as well, then implement a getPrinterList and getJobList
+                Printer::Job tempJob = Printer::Job(name, pageCount, jobNr);
             }
 
         } else {
