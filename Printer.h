@@ -5,73 +5,21 @@
 #ifndef PROJSOFTENG_PRINTER_H
 #define PROJSOFTENG_PRINTER_H
 
+
+#include <iostream>
 #include <string>
 #include <vector>
 #include <set>
 #include <unordered_set>
 #include <unordered_map>
+#include <utility>
+
 
 #include "DesignByContract.h"
-#include "XMLParser.h"
+#include "tinystr.h"
+#include "tinyxml.h"
 
 //TestComment2
-
-
-class XMLParser {
-
-public:
-
-    /**
-     *
-     * \brief Constructor for parser
-     * @param filename : Name of file to parse
-     *
-     * ENSURE(properlyInitialized(), "Parser not properly initialized");
-
-     */
-
-    //Todo: Write tests
-
-    XMLParser(const char * filename);
-    XMLParser(std::string filename);
-
-
-    std::string getName();
-    int getSpeed();
-    int getEmissions();
-
-    std::vector<Printer::Device> getDeviceList();
-    std::vector<Printer::Job> getJobList();
-    std::unordered_set<unsigned int> getJobNrList();
-
-private:
-
-    XMLParser * _initCheck;
-    bool properlyInitialized();
-
-
-    void parse();
-
-    TiXmlDocument InputDoc;
-
-
-    //these should probably all be removed
-    std::string name;
-    int speed, emissions;
-
-    int jobNr, pageCount;
-    std::string userName;
-
-
-
-    //new datamembers
-    std::vector<Printer::Device> deviceList;
-    std::vector<Printer::Job> jobList;
-    std::unordered_set<unsigned int> jobNrList;
-
-
-};
-
 
 namespace Printer {
 
@@ -100,6 +48,65 @@ namespace Printer {
         std::string userName;
     };
 
+
+    class XMLParser {
+
+    public:
+
+        /**
+         *
+         * \brief Constructor for parser
+         * @param filename : Name of file to parse
+         *
+         * ENSURE(properlyInitialized(), "Parser not properly initialized");
+
+         */
+
+        //Todo: Write tests
+
+        XMLParser(const char * filename);
+        XMLParser(std::string filename);
+
+
+        std::string getName();
+        int getSpeed();
+        int getEmissions();
+
+        std::vector<Device> getDeviceList();
+        std::vector<Job> getJobList();
+        std::unordered_set<unsigned int> getJobNrList();
+
+    private:
+
+        XMLParser * _initCheck;
+        bool properlyInitialized();
+
+
+        void parse();
+
+        TiXmlDocument InputDoc;
+
+
+        //these should probably all be removed
+        std::string name;
+        int speed, emissions;
+
+        int jobNr, pageCount;
+        std::string userName;
+
+
+
+        //new datamembers
+        std::vector<Device> deviceList;
+        std::vector<Job> jobList;
+        std::unordered_set<unsigned int> jobNrList;
+
+
+    };
+
+
+
+
     class Printer {
 
 
@@ -108,8 +115,10 @@ namespace Printer {
 
 
         Printer();
-        void addDevices(std::vector<Device> &device_in);
-        void addJobs(std::vector<Job> &jobs, std::unordered_set<unsigned int> &jobnrs);
+
+        //todo: make references again
+        void addDevices(std::vector<Device> device_in);
+        void addJobs(std::vector<Job> jobs, std::unordered_set<unsigned int> jobnrs);
 
 
 
