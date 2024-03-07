@@ -10,6 +10,7 @@ set(CMAKE_EXE_LINKER_FLAGS -pthread)
 
 # Set include dir
 include_directories(./gtest/include)
+include_directories(./gtest/include/gtest/internal)
 include_directories(./Libs)
 
 # Set Library dir

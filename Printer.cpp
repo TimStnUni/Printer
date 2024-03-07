@@ -13,6 +13,7 @@ namespace Printer {
             std::cerr << InputDoc.ErrorDesc() << std::endl;
         }
 
+
         _initCheck = this;
         this->parse();
 
@@ -24,7 +25,7 @@ namespace Printer {
         //Potentially add some check here for properlyparsed? could also split parse from the constructor and always
         //have the printer class call .parse() on it's parser.
 
-        //Todo: Step 3 of the use case still needs to be checked. I believe this needs to be done in the printer class.
+        //Step 3 of the use case still needs to be checked. I believe this needs to be done in the printer class.
         //The issue is mostly whether they mean that the jobnr's should be unique per xml file we read in,
         //or whether they should be unique over the entire printer system. If it's the entire printer system, it cannot
         //be checked here. If it's within a single xml file, it's fine.
@@ -169,7 +170,7 @@ namespace Printer {
 
                 if (readingCorrectly) {
                     //Todo: implement this for printer as well, then implement a getPrinterList and getJobList
-                    Job tempJob = Job(name, pageCount, jobNr);
+                    Job tempJob = Job(userName, pageCount, jobNr);
                     jobList.push_back(tempJob);
 
 
@@ -178,9 +179,9 @@ namespace Printer {
                     //todo loops twice for some reason, investigate
 
                     //todo implement in printer?
-                    if (jobNrList.find(jobNr)==jobNrList.end()){
+                    if (jobNrList.find(jobNr) == jobNrList.end()) {
                         jobNrList.insert(jobNr);
-                    }else{
+                    } else {
                         std::cout << "jobnr should be unique" << std::endl;
                     }
 
@@ -222,7 +223,7 @@ namespace Printer {
         return deviceList;
     }
 
-    std::vector<Job> XMLParser::getJobList() {
+    std::deque<Job> XMLParser::getJobList() {
         return jobList;
     }
 
@@ -230,11 +231,27 @@ namespace Printer {
         return jobNrList;
     }
 
+    XMLParser::~XMLParser() {
+        InputDoc.Clear();
+
+    }
+
+    XMLParser::XMLParser() {
+
+        _initCheck = this;
+
+
+    }
+
+    int XMLParser::getNrOfJobs() {
+        return jobList.size();
+    }
+
 
     Device::Device(std::string name_in, int emissions_in, int speed_in) {
 
-        REQUIRE(emissions_in > 0, "Emissions should be positive");
-        REQUIRE(speed_in > 0, "Speed should be positive");
+        //REQUIRE(emissions_in > 0, "Emissions should be positive");
+        //REQUIRE(speed_in > 0, "Speed should be positive");
 
         name = name_in;
         emissions = emissions_in;
@@ -243,6 +260,22 @@ namespace Printer {
 
         //TOdo : implement properlyinitialized
         //ENSURE(this->properlyInitialized, "inti");
+    }
+
+    Device::Device() {
+
+    }
+
+    std::string Device::getName() {
+        return name;
+    }
+
+    int Device::getEmissions() {
+        return emissions;
+    }
+
+    int Device::getSpeed() {
+        return speed;
     }
 
 
@@ -262,6 +295,22 @@ namespace Printer {
 
     }
 
+    unsigned int Job::getJobNr() {
+        return jobNr;
+    }
+
+    std::string Job::getUserName() {
+        return userName;
+    }
+
+    int Job::getPageCount() {
+        return pageCount;
+    }
+
+    Job::Job() {
+
+    }
+
     Printer::Printer() {
 
     }
@@ -273,7 +322,7 @@ namespace Printer {
         deviceList = device_in;
     }
 
-    void Printer::addJobs(std::vector<Job> jobs, std::unordered_set<unsigned int> jobnrs) {
+    void Printer::addJobs(std::deque<Job> jobs, std::unordered_set<unsigned int> jobnrs) {
 
         /*
         jobList.insert(jobList.end(), jobs.begin(), jobs.end());
@@ -288,10 +337,32 @@ namespace Printer {
         jobList = jobs;
         jobNrSet = jobnrs;
 
+        for (auto it : jobnrs){
+            std::cout << it << std::endl;
+
+        }
+
+
 
     }
 
+    Device Printer::getPrinter() {
+        return deviceList.at(0);
+    }
+
+    std::deque<Job> Printer::getJobList() {
+        return jobList;
+    }
+
+    std::unordered_set<unsigned int> Printer::getJobNrList() {
+        return jobNrSet;
+    }
+
     PrinterSystem::PrinterSystem() {
+
+
+        _initcheck = this;
+
 
     }
 
@@ -312,28 +383,106 @@ namespace Printer {
         int printerIndex = printerList.size() - 1;
 
 
-
-
-
         std::unordered_set<unsigned int>::iterator it;
 
 
         for (it = jobnrs.begin(); it != jobnrs.end(); ++it) {
-            std::cout << "test in loop" << std::endl;
+
             std::pair inserted_pair = jobNrMap.insert({*it, printerIndex});
 
-            std::cout << "second is " << inserted_pair.second << std::endl;
 
-            if (inserted_pair.second != true){
+            if (inserted_pair.second != true) {
 
 
                 //todo : Expand on this error
                 std::cout << "JobNr is not unique" << std::endl;
-            }else if (inserted_pair.second == true){
-                std::cout << "insertion happened" << std::endl;
             }
 
         }
+
+
+    }
+
+    void PrinterSystem::getInfo(std::string filename) {
+
+        REQUIRE(properlyInitialized(), "the printer system was not properly initialized");
+
+
+        std::ofstream outfile;
+        outfile.open(filename);
+        if (!outfile.is_open()) {
+            std::cout << "file could not be opened" << std::endl;
+        }
+
+
+        Device currentPrinter;
+        for (std::vector<Printer>::iterator printIt = printerList.begin(); printIt != printerList.end(); ++printIt) {
+
+            currentPrinter = printIt->getPrinter();
+
+            outfile << currentPrinter.getName() << " (CO2: " << currentPrinter.getEmissions() << "g/page; speed "
+                    << currentPrinter.getSpeed() << "p/minute):\n";
+
+            std::deque<Job> currentJobs = printIt->getJobList();
+
+            for (std::deque<Job>::iterator jobIt = currentJobs.begin(); jobIt != currentJobs.end(); ++jobIt) {
+
+                if (jobIt == currentJobs.begin()) {
+
+                    outfile << "    * Current: \n";
+                } else {
+                    outfile << "    * Queue: \n";
+                }
+
+                outfile << "        [#" << jobIt->getJobNr() << "|" << jobIt->getUserName() << "|"
+                        << jobIt->getPageCount()
+                        << "]\n";
+
+            }
+
+
+            outfile << std::endl;
+        }
+
+
+        outfile.close();
+
+    }
+
+    bool PrinterSystem::properlyInitialized() {
+        return (this == _initcheck);
+    }
+
+    void PrinterSystem::doPrintJob(unsigned int jobnr) {
+
+        int printerindex = jobNrMap.at(jobnr);
+
+        Printer Currentprinter = printerList.at(printerindex);
+
+        Device currentDevice = Currentprinter.getPrinter();
+
+        std::unordered_set<unsigned int> currentJobNrList = Currentprinter.getJobNrList();
+
+        int jobnrindex = std::distance(currentJobNrList.find(jobnr), currentJobNrList.begin());
+
+        std::cout << *currentJobNrList.find(jobnr) << std::endl;
+
+        std::cout << jobnrindex << std::endl;
+        Job currentJob = Currentprinter.getJobList().at(jobnrindex);
+
+
+        int pages = currentJob.getPageCount();
+
+        while (pages > 0){
+            pages --;
+        }
+
+        std::cout << "Printer \"" << currentDevice.getName() << "\" finished job:\n";
+        std::cout << "  Number: " << jobnr << "\n";
+        std::cout << "  Submitted by \"" << currentJob.getUserName() << "\"\n";
+        std::cout << "  " << currentJob.getPageCount() << " pages\n";
+
+        std::cout << std::endl;
 
 
     }
