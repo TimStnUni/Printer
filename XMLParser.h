@@ -26,6 +26,8 @@ public:
 
      */
 
+    //Todo: Write tests
+
     XMLParser(const char * filename);
 
     std::string getName();
