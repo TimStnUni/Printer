@@ -35,4 +35,65 @@ namespace Printer {
         jobNr = jobNr_in;
 
     }
+
+    Printer::Printer() {
+
+    }
+
+    void Printer::addDevices(std::vector<Device> &device_in) {
+
+        //deviceList.insert(deviceList.end(), device_in.begin(), device_in.end());
+
+        deviceList = device_in;
+    }
+
+    void Printer::addJobs(std::vector<Job> &jobs, std::unordered_set<unsigned int> &jobnrs) {
+
+        /*
+        jobList.insert(jobList.end(), jobs.begin(), jobs.end());
+
+        for (std::unordered_set<unsigned int>::iterator it = jobnrs.begin(); it != jobnrs.end(); it++) {
+
+            jobNrSet.insert(*it);
+
+        }
+         */
+
+        jobList = jobs;
+        jobNrSet = jobnrs;
+
+
+    }
+
+    PrinterSystem::PrinterSystem() {
+
+    }
+
+    void PrinterSystem::readXML(const char * filename) {
+
+        XMLParser tempXML(filename);
+
+        Printer tempPrtr;
+
+        tempPrtr.addDevices(tempXML.getDeviceList());
+
+        std::unordered_set<unsigned int> jobnrs;
+        tempPrtr.addJobs(tempXML.getJobList(), jobnrs);
+
+
+
+        printerList.push_back(tempPrtr);
+
+        int printerIndex = printerList.size()-1;
+
+        for (std::unordered_set<unsigned int>::iterator it = jobnrs.begin(); it != jobnrs.end(); it++) {
+
+            jobNrMap.insert({*it, printerIndex});
+
+        }
+
+
+
+
+        }
 } // Printer

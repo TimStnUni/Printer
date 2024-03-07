@@ -11,5 +11,9 @@ int main() {
 
 
 
+    Printer::PrinterSystem System;
+
+    System.readXML("test.xml");
+
     return 0;
 }

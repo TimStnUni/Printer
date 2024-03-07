@@ -12,8 +12,65 @@
 #include <unordered_map>
 
 #include "DesignByContract.h"
+#include "XMLParser.h"
 
 //TestComment2
+
+
+class XMLParser {
+
+public:
+
+    /**
+     *
+     * \brief Constructor for parser
+     * @param filename : Name of file to parse
+     *
+     * ENSURE(properlyInitialized(), "Parser not properly initialized");
+
+     */
+
+    //Todo: Write tests
+
+    XMLParser(const char * filename);
+    XMLParser(std::string filename);
+
+
+    std::string getName();
+    int getSpeed();
+    int getEmissions();
+
+    std::vector<Printer::Device> getDeviceList();
+    std::vector<Printer::Job> getJobList();
+    std::unordered_set<unsigned int> getJobNrList();
+
+private:
+
+    XMLParser * _initCheck;
+    bool properlyInitialized();
+
+
+    void parse();
+
+    TiXmlDocument InputDoc;
+
+
+    //these should probably all be removed
+    std::string name;
+    int speed, emissions;
+
+    int jobNr, pageCount;
+    std::string userName;
+
+
+
+    //new datamembers
+    std::vector<Printer::Device> deviceList;
+    std::vector<Printer::Job> jobList;
+    std::unordered_set<unsigned int> jobNrList;
+
+
+};
 
 
 namespace Printer {
@@ -51,6 +108,9 @@ namespace Printer {
 
 
         Printer();
+        void addDevices(std::vector<Device> &device_in);
+        void addJobs(std::vector<Job> &jobs, std::unordered_set<unsigned int> &jobnrs);
+
 
 
     private:
@@ -65,6 +125,8 @@ namespace Printer {
     public:
         //Should simply always be running, no input in constructor.
         PrinterSystem();
+
+        void readXML(const char * filename);
 
 
     private:
@@ -93,7 +155,7 @@ namespace Printer {
         }
 
 
-        this way if later some jobrn needs to be fetched it's a case of
+        this way if later some jobnr needs to be fetched it's a case of
 
          getJob(jobnr){
             printerlist.at(jobNrMap.at(jobnr)).getJob(jobnr){
@@ -102,7 +164,7 @@ namespace Printer {
 
 
         */
-        //std::unordered_map<unsigned int, unsigned int> jobNrMap;
+        std::unordered_map<unsigned int, unsigned int> jobNrMap;
 
     };
 

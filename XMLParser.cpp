@@ -32,6 +32,8 @@ XMLParser::XMLParser(const char *filename) {
 }
 
 
+
+
 void XMLParser::parse() {
 
     TiXmlElement *System = InputDoc.FirstChildElement();
@@ -54,6 +56,8 @@ void XMLParser::parse() {
         //Can technically move checks into those functions? is this better?
 
         if (type == "DEVICE") {
+            bool readingCorrect = true;
+
             for (TiXmlElement *elem = Level1Elem->FirstChildElement(); elem != NULL;
                  elem = elem->NextSiblingElement()) {
 
@@ -64,6 +68,7 @@ void XMLParser::parse() {
                     std::string name_t = elem->FirstChild()->ToText()->Value();
                     if (name_t.empty()) {
                         std::cout << "Name should not be empty" << std::endl;
+                        readingCorrect = false;
                         continue;
 
                     } else {
@@ -77,6 +82,7 @@ void XMLParser::parse() {
                         emissions = std::stoi(elem->FirstChild()->ToText()->Value());
                     } else {
                         std::cout << "Emissions should be positive" << std::endl;
+                        readingCorrect = false;
                         continue;
 
 
@@ -88,24 +94,30 @@ void XMLParser::parse() {
                         speed = std::stoi(elem->FirstChild()->ToText()->Value());
                     } else {
                         std::cout << "speed should be positive" << std::endl;
+                        readingCorrect = false;
                         continue;
                     }
 
-                }
-                else {
-                    std::cout << "Element name " << elemname << " is either empty or an unexpected element name" << std::endl;
+                } else {
+                    std::cout << "Element name " << elemname << " is either empty or an unexpected element name"
+                              << std::endl;
+                    readingCorrect = false;
                     continue;
                 }
             }
+
+            if (readingCorrect) {
+                Printer::Device tempPrinter = Printer::Device(name, emissions, speed);
+                deviceList.push_back(tempPrinter);
+            }
         }
+            //This entire else if statement has to be redone, since there are multiple username. at the start it should probably
+            //make a job class and push stuff into there
+            //That would remove a bunch of the unneeded data members now as well
 
-        //This entire else if statement has to be redone, since there are multiple username. at the start it should probably
-        //make a job class and push stuff into there
-        //That would remove a bunch of the unneeded data members now as well
-
-        //Could potentially have the job be made at the end, after checks have been completed? probably better
-        //Maybe introduce some bool "ReadingCorrectly" that gets put to false if ever a member is not read correctly?
-        //is this even necessary with the continue statements?
+            //Could potentially have the job be made at the end, after checks have been completed? probably better
+            //Maybe introduce some bool "ReadingCorrectly" that gets put to false if ever a member is not read correctly?
+            //is this even necessary with the continue statements?
         else if (type == "JOB") {
 
             bool readingCorrectly = true;
@@ -118,19 +130,19 @@ void XMLParser::parse() {
 
                 if (elemname == "userName") {
                     std::string userName_t = elem->FirstChild()->ToText()->Value();
-                    if (userName_t.empty()){
+                    if (userName_t.empty()) {
                         std::cout << "username should not be empty" << std::endl;
                         readingCorrectly = false;
                         continue;
-                    }else{
+                    } else {
                         userName = userName_t;
 
                     }
 
                 } else if (elemname == "pageCount") {
-                    if (std::stoi(elem->FirstChild()->ToText()->Value()) > 0){
+                    if (std::stoi(elem->FirstChild()->ToText()->Value()) > 0) {
                         pageCount = std::stoi(elem->FirstChild()->ToText()->Value());
-                    }else{
+                    } else {
                         std::cout << "pagecount should be a positive integer" << std::endl;
                         readingCorrectly = false;
                         continue;
@@ -140,24 +152,28 @@ void XMLParser::parse() {
                 } else if (elemname == "jobNumber") {
                     if (std::stoi(elem->FirstChild()->ToText()->Value()) > 0) {
                         jobNr = std::stoi(elem->FirstChild()->ToText()->Value());
-                    }else{
+                    } else {
                         //Not actually sure this needs to be a positive integer
                         std::cout << "jobnumber should be a positive integer" << std::endl;
                         readingCorrectly = false;
                         continue;
                     }
 
-                }
-                else{
-                    std::cout << "Element name " << elemname << "is either empty or an unexpected element name" << std::endl;
+                } else {
+                    std::cout << "Element name " << elemname << "is either empty or an unexpected element name"
+                              << std::endl;
                     readingCorrectly = false;
+                    continue;
                 }
             }
 
-            if (readingCorrectly){
+            if (readingCorrectly) {
                 //Todo: implement this for printer as well, then implement a getPrinterList and getJobList
                 Printer::Job tempJob = Printer::Job(name, pageCount, jobNr);
+                jobList.push_back(tempJob);
+                jobNrList.insert(jobNr);
             }
+
 
         } else {
 
@@ -188,5 +204,17 @@ int XMLParser::getEmissions() {
 
 bool XMLParser::properlyInitialized() {
     return (this == _initCheck);
+}
+
+std::vector<Printer::Device> XMLParser::getDeviceList() {
+    return deviceList;
+}
+
+std::vector<Printer::Job> XMLParser::getJobList() {
+    return jobList;
+}
+
+std::unordered_set<unsigned int> XMLParser::getJobNrList() {
+    return jobNrList;
 }
 

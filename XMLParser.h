@@ -31,10 +31,16 @@ public:
     //Todo: Write tests
 
     XMLParser(const char * filename);
+    XMLParser(std::string filename);
+
 
     std::string getName();
     int getSpeed();
     int getEmissions();
+
+    std::vector<Printer::Device> getDeviceList();
+    std::vector<Printer::Job> getJobList();
+    std::unordered_set<unsigned int> getJobNrList();
 
 private:
 
@@ -57,7 +63,7 @@ private:
 
 
     //new datamembers
-    std::vector<Printer::Printer> printerList;
+    std::vector<Printer::Device> deviceList;
     std::vector<Printer::Job> jobList;
     std::unordered_set<unsigned int> jobNrList;
 
