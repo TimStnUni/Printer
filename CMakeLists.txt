@@ -10,6 +10,7 @@ set(CMAKE_EXE_LINKER_FLAGS -pthread)
 
 # Set include dir
 include_directories(./gtest/include)
+include_directories(./gtest/include/gtest/internal)
 include_directories(./Libs)
 
 # Set Library dir
@@ -19,7 +20,6 @@ link_directories(./gtest/lib)
 # Only add cpp files, no h files!
 # Only add files with functionality here, no test files!
 set(RELEASE_SOURCE_FILES main.cpp
-        XMLParser.cpp
         ./Libs/tinystr.cpp
         ./Libs/tinyxml.cpp
         ./Libs/tinyxmlparser.cpp
@@ -32,7 +32,6 @@ set(RELEASE_SOURCE_FILES main.cpp
 # Set source files for DEBUG target
 # Only add cpp files, no h files!
 set(DEBUG_SOURCE_FILES tests.cpp
-        XMLParser.cpp
         ./Libs/tinystr.cpp
         ./Libs/tinyxml.cpp
         ./Libs/tinyxmlparser.cpp

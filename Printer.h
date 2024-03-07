@@ -5,23 +5,35 @@
 #ifndef PROJSOFTENG_PRINTER_H
 #define PROJSOFTENG_PRINTER_H
 
+
+#include <iostream>
 #include <string>
 #include <vector>
 #include <set>
 #include <unordered_set>
 #include <unordered_map>
+#include <utility>
+#include <fstream>
+#include <queue>
+
 
 #include "DesignByContract.h"
+#include "tinystr.h"
+#include "tinyxml.h"
 
 //TestComment2
-
 
 namespace Printer {
 
 
     class Device {
     public:
+        Device();
         Device(std::string name, int emissions, int speed);
+
+        std::string getName();
+        int getEmissions();
+        int getSpeed();
 
 
     protected:
@@ -35,7 +47,12 @@ namespace Printer {
     class Job {
 
     public:
+        Job();
         Job(std::string userName_in, int pageCount_in, int jobNr_in);
+
+        unsigned int getJobNr();
+        std::string getUserName();
+        int getPageCount();
 
 
     private:
@@ -43,19 +60,96 @@ namespace Printer {
         std::string userName;
     };
 
+
+    class XMLParser {
+
+    public:
+
+        /**
+         *
+         * \brief Constructor for parser
+         * @param filename : Name of file to parse
+         *
+         * ENSURE(properlyInitialized(), "Parser not properly initialized");
+
+         */
+
+        //Todo: Write tests
+
+
+        XMLParser();
+        XMLParser(const char * filename);
+        XMLParser(std::string filename);
+        ~XMLParser();
+
+
+        std::string getName();
+        int getSpeed();
+        int getEmissions();
+
+        std::vector<Device> getDeviceList();
+        std::deque<Job> getJobList();
+        std::unordered_set<unsigned int> getJobNrList();
+
+        int getNrOfJobs();
+
+    private:
+
+        XMLParser * _initCheck;
+        bool properlyInitialized();
+
+
+        void parse();
+
+        TiXmlDocument InputDoc;
+
+
+        //these should probably all be removed
+        std::string name;
+        int speed, emissions;
+
+        int jobNr, pageCount;
+        std::string userName;
+
+
+
+        //new datamembers
+        std::vector<Device> deviceList;
+        std::deque<Job> jobList;
+        std::unordered_set<unsigned int> jobNrList;
+
+
+    };
+
+
+
+
     class Printer {
 
 
     public:
-        //I think potentially the layout of this class
+
 
 
         Printer();
 
+        //todo: make references again
+        void addDevices(std::vector<Device> device_in);
+        void addJobs(std::deque<Job> jobs, std::unordered_set<unsigned int> jobnrs);
+
+
+        //this is technically not very general
+        Device getPrinter();
+        std::deque<Job> getJobList();
+        std::unordered_set<unsigned int> getJobNrList();
+
+
+
+
 
     private:
         std::vector<Device> deviceList;
-        std::vector<Job> jobList;
+        std::deque<Job> jobList;
         std::unordered_set<unsigned int> jobNrSet;
 
     };
@@ -66,9 +160,20 @@ namespace Printer {
         //Should simply always be running, no input in constructor.
         PrinterSystem();
 
+        bool properlyInitialized();
+
+        void readXML(const char * filename);
+
+        //        REQUIRE(properlyInitialized(), "the printer system was not properly initialized");
+        void getInfo(std::string filename);
+
+
+        void doPrintJob(unsigned int jobnr);
 
     private:
         std::vector<Printer> printerList;
+
+        PrinterSystem * _initcheck;
 
         //Naming is the same as for printer.
         //Potentially this should be replaced by a map that maps a jobnr to a pointer to the job, or at least to some
@@ -93,7 +198,7 @@ namespace Printer {
         }
 
 
-        this way if later some jobrn needs to be fetched it's a case of
+        this way if later some jobnr needs to be fetched it's a case of
 
          getJob(jobnr){
             printerlist.at(jobNrMap.at(jobnr)).getJob(jobnr){
@@ -102,7 +207,7 @@ namespace Printer {
 
 
         */
-        //std::unordered_map<unsigned int, unsigned int> jobNrMap;
+        std::unordered_map<unsigned int, unsigned int> jobNrMap;
 
     };
 
