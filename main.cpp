@@ -1,15 +1,21 @@
 #include <iostream>
-#include "XMLParser.h"
 #include "Printer.h"
 
 int main() {
 
-    XMLParser test("test.xml");
 
 
-    Printer::Device testDevice(test.getName(), test.getEmissions(), test.getSpeed());
+    Printer::PrinterSystem testSystem;
+
+    testSystem.readXML("test.xml");
+
+    testSystem.getInfo("test.txt");
 
 
+
+
+
+    testSystem.doPrintJob(2189);
 
     return 0;
 }

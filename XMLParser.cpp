@@ -26,7 +26,7 @@ void XMLParser::parse() {
 
     REQUIRE(System != NULL, "There is no system in xml");
 
-    //Should make device and job here, then use setters to assingn them their values
+    //Should make device and job here, then use setters to assign them their values
 
 
 
