@@ -40,12 +40,14 @@ namespace Printer {
         Device(std::string name, int emissions, int speed);
 
 
+
+        Device(const Device & inDevice);
         /**
          * \brief A getter function for the printer name
          * @return : returns the name of the printer
-         * REQUIRE(this->properlyInitialized(), "Device not initialized when calling getName()");
+         * REQUIRE(this->properlyInitialized(), "Device not initialized when calling getNameDev()");
          */
-        std::string getName();
+        std::string getNameDev();
 
 
         /**
@@ -159,7 +161,7 @@ namespace Printer {
         /**
          * \brief Getter function for the name. Not properly defined at the moment. XMLParser need to go through a thorough redesign
          * @return
-         * REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getName()")
+         * REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getNameDev()")
          */
         std::string getName();
 
@@ -229,6 +231,7 @@ namespace Printer {
          * ENSURE(this->properlyInitialized(), "Printer was not properly initialized");
          */
         Printer();
+        Printer(const Printer & inPrinter);
 
         //todo: make references again
         //As of now these do not work with references, but this should be possible to be remedied
@@ -240,7 +243,7 @@ namespace Printer {
          * \brief Function to add a printer device to a printer container
          * @param device_in a vector of devices to be added.
          * REQUIRE(this->properlyInitialized(), "Printer was not initialized when calling addDevices()")
-         * ENSURE(getDevice(device_in.getName) == device_in, "adding devices went wrong
+         * ENSURE(getDevice(device_in.getNameDev) == device_in, "adding devices went wrong
          * //The above ensure is not yet implemented, and wouldn't work with the current implementation anyways
          */
         void addDevices(std::vector<Device> device_in);

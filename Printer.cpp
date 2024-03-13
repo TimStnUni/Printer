@@ -269,11 +269,18 @@ namespace Printer {
     }
 
     Device::Device() {
+        _initCheck = this;
+
+        ENSURE(this->properlyInitialized(), "device was not properly initialized in the default constructor");
 
     }
 
-    std::string Device::getName() {
-        REQUIRE(this->properlyInitialized(), "Device not initialized when calling getName()");
+    std::string Device::getNameDev() {
+        std::cout << "false is " << false << std::endl;
+        std::cout << "propinit is " <<  this->properlyInitialized() << std::endl;
+        REQUIRE(this->properlyInitialized(), "Device not initialized when calling getNameDev()");
+        //This require is not satisfied. I believe this may be because of a copy constructor not setting _initcheck
+
         return name;
     }
 
@@ -288,7 +295,21 @@ namespace Printer {
     }
 
     bool Device::properlyInitialized() {
-        return this == _initCheck;
+        return (this == _initCheck);
+    }
+
+    Device::Device(const Device &inDevice) {
+
+        name = inDevice.name;
+        emissions = inDevice.emissions;
+        speed = inDevice.speed;
+
+        _initCheck = this;
+
+        std::cout << "copy constructor called" << std::endl;
+
+        ENSURE(this->properlyInitialized(), "Device not properly initialized in copy constructor");
+
     }
 
 
@@ -391,7 +412,22 @@ namespace Printer {
     }
 
     bool Printer::properlyInitialized() {
-        return this == _initCheck;
+        return (this == _initCheck);
+    }
+
+
+
+    Printer::Printer(const Printer &inPrinter) {
+
+        jobList = inPrinter.jobList;
+        jobNrSet =  inPrinter.jobNrSet;
+
+        deviceList = inPrinter.deviceList;
+
+
+        _initCheck = this;
+
+
     }
 
     PrinterSystem::PrinterSystem() {
@@ -456,7 +492,7 @@ namespace Printer {
 
             currentPrinter = printIt->getPrinter();
 
-            outfile << currentPrinter.getName() << " (CO2: " << currentPrinter.getEmissions() << "g/page; speed "
+            outfile << currentPrinter.getNameDev() << " (CO2: " << currentPrinter.getEmissions() << "g/page; speed "
                     << currentPrinter.getSpeed() << "p/minute):\n";
 
             std::deque<Job> currentJobs = printIt->getJobList();
@@ -513,7 +549,7 @@ namespace Printer {
             pages --;
         }
 
-        std::cout << "Printer \"" << currentDevice.getName() << "\" finished job:\n";
+        std::cout << "Printer \"" << currentDevice.getNameDev() << "\" finished job:\n";
         std::cout << "  Number: " << jobnr << "\n";
         std::cout << "  Submitted by \"" << currentJob.getUserName() << "\"\n";
         std::cout << "  " << currentJob.getPageCount() << " pages\n";
