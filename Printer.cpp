@@ -45,7 +45,7 @@ namespace Printer {
 
         //Should make device and job here, then use setters to assingn them their values
 
-
+        //Todo: replace all direct assignments with setters (so first implement setters)
 
         for (TiXmlElement *Level1Elem = System->FirstChildElement(); Level1Elem != NULL;
              Level1Elem = Level1Elem->NextSiblingElement()) {
@@ -204,14 +204,17 @@ namespace Printer {
     }
 
     std::string XMLParser::getName() {
+        REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getName()");
         return name;
     }
 
     int XMLParser::getSpeed() {
+        REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getSpeed()");
         return speed;
     }
 
     int XMLParser::getEmissions() {
+        REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getEmissions()");
         return emissions;
     }
 
@@ -220,14 +223,17 @@ namespace Printer {
     }
 
     std::vector<Device> XMLParser::getDeviceList() {
+        REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getDeviceList()");
         return deviceList;
     }
 
     std::deque<Job> XMLParser::getJobList() {
+        REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getJobList()");
         return jobList;
     }
 
     std::unordered_set<unsigned int> XMLParser::getJobNrList() {
+        REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getJobNrList()");
         return jobNrList;
     }
 
@@ -244,6 +250,7 @@ namespace Printer {
     }
 
     int XMLParser::getNrOfJobs() {
+        REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getNrOfJobs()");
         return jobList.size();
     }
 
@@ -257,9 +264,8 @@ namespace Printer {
         emissions = emissions_in;
         speed = speed_in;
 
-
-        //TOdo : implement properlyinitialized
-        //ENSURE(this->properlyInitialized, "inti");
+        _initCheck = this;
+        ENSURE(this->properlyInitialized(), "Device is not properly initialized");
     }
 
     Device::Device() {
@@ -267,15 +273,22 @@ namespace Printer {
     }
 
     std::string Device::getName() {
+        REQUIRE(this->properlyInitialized(), "Device not initialized when calling getName()");
         return name;
     }
 
     int Device::getEmissions() {
+        REQUIRE(this->properlyInitialized(), "Device not initialized when calling getEmissions()");
         return emissions;
     }
 
     int Device::getSpeed() {
+        REQUIRE(this->properlyInitialized(), "Device not initialized when calling getSpeed()");
         return speed;
+    }
+
+    bool Device::properlyInitialized() {
+        return this == _initCheck;
     }
 
 
@@ -293,17 +306,25 @@ namespace Printer {
         pageCount = pageCount_in;
         jobNr = jobNr_in;
 
+        _initCheck = this;
+
+        ENSURE(this->properlyInitialized(), "Job wasn't properly initialized");
+
+
     }
 
     unsigned int Job::getJobNr() {
+        REQUIRE(this->properlyInitialized(), "Job wasn't initialized when calling getJobNr()");
         return jobNr;
     }
 
     std::string Job::getUserName() {
+        REQUIRE(this->properlyInitialized(), "Job wasn't initialized when calling getUserName()");
         return userName;
     }
 
     int Job::getPageCount() {
+        REQUIRE(this->properlyInitialized(), "Job wasn't initialized when calling getPageCount()");
         return pageCount;
     }
 
@@ -311,11 +332,21 @@ namespace Printer {
 
     }
 
+    bool Job::properlyInitialized() {
+        return this == _initCheck;
+    }
+
     Printer::Printer() {
+
+        _initCheck = this;
+
+        ENSURE(this->properlyInitialized(), "Printer was not properly initialized");
 
     }
 
     void Printer::addDevices(std::vector<Device> device_in) {
+
+        REQUIRE(this->properlyInitialized(), "Printer was not initialized when calling addDevices()");
 
         //deviceList.insert(deviceList.end(), device_in.begin(), device_in.end());
 
@@ -323,6 +354,7 @@ namespace Printer {
     }
 
     void Printer::addJobs(std::deque<Job> jobs, std::unordered_set<unsigned int> jobnrs) {
+        REQUIRE(this->properlyInitialized(), "Printer was not initialized when calling addJobs()");
 
         /*
         jobList.insert(jobList.end(), jobs.begin(), jobs.end());
@@ -336,12 +368,12 @@ namespace Printer {
 
         jobList = jobs;
         jobNrSet = jobnrs;
-
+/*
         for (auto it : jobnrs){
             std::cout << it << std::endl;
 
         }
-
+*/
 
 
     }
@@ -356,6 +388,10 @@ namespace Printer {
 
     std::unordered_set<unsigned int> Printer::getJobNrList() {
         return jobNrSet;
+    }
+
+    bool Printer::properlyInitialized() {
+        return this == _initCheck;
     }
 
     PrinterSystem::PrinterSystem() {
