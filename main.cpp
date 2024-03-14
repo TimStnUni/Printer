@@ -7,6 +7,8 @@ int main() {
 
     Printer::PrinterSystem testSystem;
 
+
+
     testSystem.readXML("test.xml");
 
     testSystem.getInfo("test.txt");
@@ -14,8 +16,9 @@ int main() {
 
 
 
-    //Todo: This causes a segfault. i thought i knew why but i have lost this knowledge
+
     //testSystem.doPrintJob(89751);
+    testSystem.printAll();
 
     return 0;
 }

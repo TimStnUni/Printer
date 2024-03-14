@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <map>
 #include <unordered_set>
 #include <unordered_map>
 #include <utility>
@@ -21,7 +22,7 @@
 #include "tinystr.h"
 #include "tinyxml.h"
 
-//TestComment2
+//Todo: the requires don't work with the copy constructor. Ask Kasper
 
 namespace Printer {
 
@@ -40,8 +41,12 @@ namespace Printer {
         Device(std::string name, int emissions, int speed);
 
 
+        /**
+         * \brief Copy Constructor that should fix the _initCheck to this, but somehow that doesn't seem to happen
+         * @param inDevice device to be copied
+         */
+        Device(const Device &inDevice);
 
-        Device(const Device & inDevice);
         /**
          * \brief A getter function for the printer name
          * @return : returns the name of the printer
@@ -83,8 +88,10 @@ namespace Printer {
     public:
         Job();
 
+        Job(const Job &inJob);
+
         /**
-         * \brief Usual contstructor for a printing job
+         * \brief Usual constructor for a printing job
          * @param userName_in Username of the owner of the printing job
          * @param pageCount_in How many pages need to be printed
          * @param jobNr_in JobNr for the job
@@ -153,16 +160,18 @@ namespace Printer {
          * \brief Constructor for the parser which takes a string. Currently not implemented
          * @param filename : Name of file to parse as a string
          */
-        XMLParser(std::string filename);
+        //XMLParser(std::string filename);
 
         ~XMLParser();
 
 
-        /**
+
+       /*
+
          * \brief Getter function for the name. Not properly defined at the moment. XMLParser need to go through a thorough redesign
          * @return
          * REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getNameDev()")
-         */
+
         std::string getName();
 
 
@@ -173,6 +182,7 @@ namespace Printer {
         //REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getEmissions()");
         int getEmissions();
 
+        */
         //REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getDeviceList()");
         std::vector<Device> getDeviceList();
 
@@ -181,7 +191,9 @@ namespace Printer {
         std::deque<Job> getJobList();
 
         //REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getJobNrList()")
-        std::unordered_set<unsigned int> getJobNrList();
+        std::map<unsigned int, unsigned int> getJobNrMap();
+
+        std::set<unsigned int> getJobNrSet();
 
 
         //REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getNrOfJobs()")
@@ -200,17 +212,19 @@ namespace Printer {
 
 
         //these should probably all be removed
+        /*
         std::string name;
         int speed, emissions;
 
         int jobNr, pageCount;
         std::string userName;
-
+*/
 
         //new datamembers
         std::vector<Device> deviceList;
         std::deque<Job> jobList;
-        std::unordered_set<unsigned int> jobNrList;
+        std::map<unsigned int, unsigned int> jobNrMap;
+        std::set<unsigned int> jobNrSet;
 
 
     };
@@ -231,7 +245,8 @@ namespace Printer {
          * ENSURE(this->properlyInitialized(), "Printer was not properly initialized");
          */
         Printer();
-        Printer(const Printer & inPrinter);
+
+        Printer(const Printer &inPrinter);
 
         //todo: make references again
         //As of now these do not work with references, but this should be possible to be remedied
@@ -254,7 +269,7 @@ namespace Printer {
          * @param jobnrs Unordered set of jobnrs. This is in the process of being reimplemented
          * REQUIRE(this->properlyInitialized(), "Printer was not initialized when calling addJobs()")
          */
-        void addJobs(std::deque<Job> jobs, std::unordered_set<unsigned int> jobnrs);
+        void addJobs(std::deque<Job> &jobs, std::map<unsigned int, unsigned int> &jobnrs, std::set<unsigned int> &jobnrSet);
         //Todo: Change unordered set into something better (probably just a vector here)
         //Also potential to have this be a map of jobnrs to jobs. This keeps the duplication checking intact
 
@@ -263,9 +278,9 @@ namespace Printer {
         /**
          * \brief Getter function for a printer device. Currently poorly implemented to always return the first device stored in the printer
          * @return first device stored in the printer
-         * REQUIRE(this->properlyInitialized(), "Printer was not initialized when calling getPrinter()")
+         * REQUIRE(this->properlyInitialized(), "Printer was not initialized when calling getDevice()")
          */
-        Device getPrinter();
+        Device getDevice();
 
         /**
          * \brief Getter for all jobs
@@ -274,24 +289,36 @@ namespace Printer {
         std::deque<Job> getJobList();
 
         /**
-         * \brief Getter for all jobnrs.
+         * \brief Getter for all jobnrs. This should be deprecated
          * @return
          */
-        std::unordered_set<unsigned int> getJobNrList();
+        std::map<unsigned int, unsigned int> getJobNrMap();
+
+        std::set<unsigned int> getJobNrSet();
+
+        unsigned int getJobIndex(unsigned int &jobNr);
 
 
+        void removeJob(unsigned int jobNr);
     private:
 
         Printer *_initCheck;
 
         bool properlyInitialized();
 
-        //Todo: Change to map
         std::vector<Device> deviceList;
 
-        //todo: Change to map
+
+
+        //The deque idea was cute but ultimately uneccesary since we never actually loop over it.
+        //The entire idea of using sets and maps for duplicate checking is neat, but ultimately should probably not be
+        //outside of this. Do I really want to reengineer all the functions? No. Should I? probably.
+
+        //The deque is nice for the looping over all jobs since then it's a simple pop-front or pop-back operation
+        //but now it's simply a more complicated joblist.
         std::deque<Job> jobList;
-        std::unordered_set<unsigned int> jobNrSet;
+        std::map<unsigned int, unsigned int> jobNrMap;
+        std::set<unsigned int> jobNrSet;
 
     };
 
@@ -319,7 +346,7 @@ namespace Printer {
 
 
 
-        //Todo: This needs to be generalized to any output type. Should probably be given some sort of stream reference to dump its outputs into
+        //Todo: add a way to specify where the output should be stored. Look at later tictactoe versions
         /**
          * \brief Function that prints all know information about the printing system to a file
          * @param filename Filename of the output file
@@ -328,12 +355,21 @@ namespace Printer {
         void getInfo(std::string filename);
 
 
-        //Todo: Change the way jobnrs are stored
+
+
+        //Todo: add a way to specify where the output should be stored. Look at later tictactoe versions
         /**
          * \brief Function that executes a print job. Implementation currently seems to have some issues because of the storage solution for jobnrs
          * @param jobnr JobNr of the job to be executed
          */
         void doPrintJob(unsigned int jobnr);
+
+        /**
+         * \brief Loops over all jobs and prints that they are finished.
+         */
+
+        void printAll();
+
 
     private:
         std::vector<Printer> printerList;
@@ -346,7 +382,7 @@ namespace Printer {
         //printer list. This won't work, since there can be multiple jobs within a Printer container.
         //This should probably be a map of jobNr's that map to either indices or pointers to printers in the printerList.
         //Within those there can be a set that simply uses its own index to point to the correct job.
-        std::unordered_set<unsigned int> jobNrSet;
+        std::set<unsigned int> jobNrSet;
 
 
         /*If replaced by the following it could probably be implemented as something like
@@ -371,7 +407,7 @@ namespace Printer {
 
 
         */
-        std::unordered_map<unsigned int, unsigned int> jobNrMap;
+        std::map<unsigned int, unsigned int> jobNrMap;
 
     };
 

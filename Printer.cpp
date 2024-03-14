@@ -58,6 +58,8 @@ namespace Printer {
 
             if (type == "DEVICE") {
                 bool readingCorrect = true;
+                std::string name;
+                int emissions, speed;
 
                 for (TiXmlElement *elem = Level1Elem->FirstChildElement(); elem != NULL;
                      elem = elem->NextSiblingElement()) {
@@ -120,11 +122,13 @@ namespace Printer {
                 //Maybe introduce some bool "ReadingCorrectly" that gets put to false if ever a member is not read correctly?
                 //is this even necessary with the continue statements?
             else if (type == "JOB") {
-
+                std::string userName;
+                int pageCount, jobNr;
                 bool readingCorrectly = true;
 
                 for (TiXmlElement *elem = Level1Elem->FirstChildElement(); elem != NULL;
                      elem = elem->NextSiblingElement()) {
+
 
                     std::string elemname = elem->Value();
 
@@ -169,19 +173,23 @@ namespace Printer {
                 }
 
                 if (readingCorrectly) {
-                    //Todo: implement this for printer as well, then implement a getPrinterList and getJobList
-                    Job tempJob = Job(userName, pageCount, jobNr);
-                    jobList.push_back(tempJob);
+
 
 
 
 
                     //todo loops twice for some reason, investigate
 
-                    //todo implement in printer?
-                    if (jobNrList.find(jobNr) == jobNrList.end()) {
-                        jobNrList.insert(jobNr);
+                    //Implement better duplicate checking off the return value for insert?
+                    if (jobNrSet.find(jobNr) == jobNrSet.end()) {
+                        //Job is only added to joblist if its jobnr is unique
+                        Job tempJob = Job(userName, pageCount, jobNr);
+                        jobList.push_back(tempJob);
+                        jobNrMap.insert({jobNr, jobList.size() - 1});
+                        jobNrSet.insert(jobNr);
+
                     } else {
+
                         std::cout << "jobnr should be unique" << std::endl;
                     }
 
@@ -203,6 +211,7 @@ namespace Printer {
 
     }
 
+/*
     std::string XMLParser::getName() {
         REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getName()");
         return name;
@@ -217,7 +226,7 @@ namespace Printer {
         REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getEmissions()");
         return emissions;
     }
-
+*/
     bool XMLParser::properlyInitialized() {
         return (this == _initCheck);
     }
@@ -232,9 +241,9 @@ namespace Printer {
         return jobList;
     }
 
-    std::unordered_set<unsigned int> XMLParser::getJobNrList() {
-        REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getJobNrList()");
-        return jobNrList;
+    std::map<unsigned int, unsigned int> XMLParser::getJobNrMap() {
+        REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getJobNrMap()");
+        return jobNrMap;
     }
 
     XMLParser::~XMLParser() {
@@ -252,6 +261,10 @@ namespace Printer {
     int XMLParser::getNrOfJobs() {
         REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getNrOfJobs()");
         return jobList.size();
+    }
+
+    std::set<unsigned int> XMLParser::getJobNrSet() {
+        return jobNrSet;
     }
 
 
@@ -276,8 +289,7 @@ namespace Printer {
     }
 
     std::string Device::getNameDev() {
-        std::cout << "false is " << false << std::endl;
-        std::cout << "propinit is " <<  this->properlyInitialized() << std::endl;
+
         REQUIRE(this->properlyInitialized(), "Device not initialized when calling getNameDev()");
         //This require is not satisfied. I believe this may be because of a copy constructor not setting _initcheck
 
@@ -285,12 +297,12 @@ namespace Printer {
     }
 
     int Device::getEmissions() {
-        REQUIRE(this->properlyInitialized(), "Device not initialized when calling getEmissions()");
+        //REQUIRE(this->properlyInitialized(), "Device not initialized when calling getEmissions()");
         return emissions;
     }
 
     int Device::getSpeed() {
-        REQUIRE(this->properlyInitialized(), "Device not initialized when calling getSpeed()");
+        //REQUIRE(this->properlyInitialized(), "Device not initialized when calling getSpeed()");
         return speed;
     }
 
@@ -306,9 +318,9 @@ namespace Printer {
 
         _initCheck = this;
 
-        std::cout << "copy constructor called" << std::endl;
 
         ENSURE(this->properlyInitialized(), "Device not properly initialized in copy constructor");
+
 
     }
 
@@ -335,26 +347,37 @@ namespace Printer {
     }
 
     unsigned int Job::getJobNr() {
-        REQUIRE(this->properlyInitialized(), "Job wasn't initialized when calling getJobNr()");
+        //REQUIRE(this->properlyInitialized(), "Job wasn't initialized when calling getJobNr()");
         return jobNr;
     }
 
     std::string Job::getUserName() {
-        REQUIRE(this->properlyInitialized(), "Job wasn't initialized when calling getUserName()");
+        //REQUIRE(this->properlyInitialized(), "Job wasn't initialized when calling getUserName()");
         return userName;
     }
 
     int Job::getPageCount() {
-        REQUIRE(this->properlyInitialized(), "Job wasn't initialized when calling getPageCount()");
+        //REQUIRE(this->properlyInitialized(), "Job wasn't initialized when calling getPageCount()");
         return pageCount;
     }
 
     Job::Job() {
-
+        _initCheck = this;
     }
 
     bool Job::properlyInitialized() {
         return this == _initCheck;
+    }
+
+    Job::Job(const Job &inJob) {
+
+        userName = inJob.userName;
+        pageCount = inJob.pageCount;
+        jobNr = inJob.jobNr;
+
+
+        _initCheck = this;
+        ENSURE(this->properlyInitialized(), "job was not properly initialized");
     }
 
     Printer::Printer() {
@@ -374,7 +397,7 @@ namespace Printer {
         deviceList = device_in;
     }
 
-    void Printer::addJobs(std::deque<Job> jobs, std::unordered_set<unsigned int> jobnrs) {
+    void Printer::addJobs(std::deque<Job> &jobs, std::map<unsigned int, unsigned int> &jobnrs, std::set<unsigned int> & jobNrSet) {
         REQUIRE(this->properlyInitialized(), "Printer was not initialized when calling addJobs()");
 
         /*
@@ -388,18 +411,14 @@ namespace Printer {
          */
 
         jobList = jobs;
-        jobNrSet = jobnrs;
-/*
-        for (auto it : jobnrs){
-            std::cout << it << std::endl;
+        jobNrMap = jobnrs;
+        this->jobNrSet = jobNrSet;
 
-        }
-*/
 
 
     }
 
-    Device Printer::getPrinter() {
+    Device Printer::getDevice() {
         return deviceList.at(0);
     }
 
@@ -407,8 +426,8 @@ namespace Printer {
         return jobList;
     }
 
-    std::unordered_set<unsigned int> Printer::getJobNrList() {
-        return jobNrSet;
+    std::map<unsigned int, unsigned int> Printer::getJobNrMap() {
+        return jobNrMap;
     }
 
     bool Printer::properlyInitialized() {
@@ -416,16 +435,30 @@ namespace Printer {
     }
 
 
-
     Printer::Printer(const Printer &inPrinter) {
 
         jobList = inPrinter.jobList;
-        jobNrSet =  inPrinter.jobNrSet;
+        jobNrMap = inPrinter.jobNrMap;
 
         deviceList = inPrinter.deviceList;
 
 
         _initCheck = this;
+
+
+    }
+
+    std::set<unsigned int> Printer::getJobNrSet() {
+        return jobNrSet;
+    }
+
+    unsigned int Printer::getJobIndex(unsigned int &jobNr) {
+        return jobNrMap.at(jobNr);
+    }
+
+    void Printer::removeJob(unsigned int jobNr) {
+
+        jobList.erase(jobList.begin() + jobNrMap.at(jobNr));
 
 
     }
@@ -446,8 +479,10 @@ namespace Printer {
 
         tempPrtr.addDevices(tempXML.getDeviceList());
 
-        std::unordered_set<unsigned int> jobnrs = tempXML.getJobNrList();
-        tempPrtr.addJobs(tempXML.getJobList(), jobnrs);
+        std::map<unsigned int, unsigned int> jobnrs = tempXML.getJobNrMap();
+        std::deque<Job> tempJobList = tempXML.getJobList();
+        std::set<unsigned int> tempJobSet = tempXML.getJobNrSet();
+        tempPrtr.addJobs(tempJobList, jobnrs, tempJobSet);
 
 
         printerList.push_back(tempPrtr);
@@ -455,15 +490,19 @@ namespace Printer {
         int printerIndex = printerList.size() - 1;
 
 
-        std::unordered_set<unsigned int>::iterator it;
+        std::set<unsigned int>::iterator it;
 
 
-        for (it = jobnrs.begin(); it != jobnrs.end(); ++it) {
-
-            std::pair inserted_pair = jobNrMap.insert({*it, printerIndex});
+        for (it = tempJobSet.begin(); it != tempJobSet.end(); ++it) {
 
 
-            if (inserted_pair.second != true) {
+            if (jobNrSet.find(*it) == jobNrSet.end()) {
+
+                jobNrMap.insert({*it, printerIndex});
+                jobNrSet.insert(*it);
+
+            }
+            else {
 
 
                 //todo : Expand on this error
@@ -490,7 +529,11 @@ namespace Printer {
         Device currentPrinter;
         for (std::vector<Printer>::iterator printIt = printerList.begin(); printIt != printerList.end(); ++printIt) {
 
-            currentPrinter = printIt->getPrinter();
+
+
+            //This specific copying is where the issue lies. It's simply the only copying after which we use a member function.
+            currentPrinter = printIt->getDevice();
+
 
             outfile << currentPrinter.getNameDev() << " (CO2: " << currentPrinter.getEmissions() << "g/page; speed "
                     << currentPrinter.getSpeed() << "p/minute):\n";
@@ -531,22 +574,20 @@ namespace Printer {
 
         Printer Currentprinter = printerList.at(printerindex);
 
-        Device currentDevice = Currentprinter.getPrinter();
+        Device currentDevice = Currentprinter.getDevice();
 
-        std::unordered_set<unsigned int> currentJobNrList = Currentprinter.getJobNrList();
+        std::set<unsigned int> currentJobNrList = Currentprinter.getJobNrSet();
 
-        int jobnrindex = std::distance(currentJobNrList.find(jobnr), currentJobNrList.begin());
 
-        std::cout << *currentJobNrList.find(jobnr) << std::endl;
+        unsigned int jobnrindex = Currentprinter.getJobIndex(jobnr);
 
-        std::cout << jobnrindex << std::endl;
         Job currentJob = Currentprinter.getJobList().at(jobnrindex);
 
 
         int pages = currentJob.getPageCount();
 
-        while (pages > 0){
-            pages --;
+        while (pages > 0) {
+            pages--;
         }
 
         std::cout << "Printer \"" << currentDevice.getNameDev() << "\" finished job:\n";
@@ -555,7 +596,17 @@ namespace Printer {
         std::cout << "  " << currentJob.getPageCount() << " pages\n";
 
         std::cout << std::endl;
+        printerList.at(printerindex).removeJob(jobnr);
 
+
+    }
+
+    void PrinterSystem::printAll() {
+
+        for (std::set<unsigned int>::iterator jobNrIt = jobNrSet.begin(); jobNrIt != jobNrSet.end(); jobNrIt++){
+
+            this->doPrintJob(*jobNrIt);
+        }
 
     }
 } // Printer
