@@ -41,6 +41,8 @@ set(DEBUG_SOURCE_FILES
         Printer.cpp
         Printer.h
         Tests.cpp
+        TicTacToeUtils.h
+        TicTacToeUtils.cpp
 
 
 )

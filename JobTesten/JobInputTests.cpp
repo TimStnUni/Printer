@@ -10,6 +10,7 @@
 using namespace std;
 
 #include "../Printer.h"
+#include "TicTacToeUtils.h"
 
 class JobInputTests: public ::testing:: Test{
 protected:
@@ -21,3 +22,12 @@ protected:
     virtual void TearDown() {
     }
 };
+
+TEST_F(JobInputTests, checkneg_jobnr){
+    ASSERT_TRUE(DirectoryExists("JtestInput"));
+    ASSERT_TRUE(FileExists("JtestInput/negativeJobnr.xml"));
+
+
+
+
+}
