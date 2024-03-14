@@ -7,6 +7,8 @@ int main() {
 
     Printer::PrinterSystem testSystem;
 
+
+
     testSystem.readXML("test.xml");
 
     testSystem.getInfo("test.txt");
@@ -15,7 +17,8 @@ int main() {
 
 
 
-    testSystem.doPrintJob(89751);
+    //testSystem.doPrintJob(89751);
+    testSystem.printAll();
 
     return 0;
 }
