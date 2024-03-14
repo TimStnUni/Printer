@@ -3,7 +3,7 @@
 
 int main() {
 
-
+    XMLParser test("test.xml");
 
     Printer::PrinterSystem testSystem;
 
@@ -11,11 +11,6 @@ int main() {
 
     testSystem.getInfo("test.txt");
 
-
-
-
-
-    testSystem.doPrintJob(2189);
 
     return 0;
 }
