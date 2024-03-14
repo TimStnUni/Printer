@@ -10,7 +10,7 @@
 using namespace std;
 
 #include "../Printer.h"
-#include "TicTacToeUtils.h"
+#include "../TicTacToeUtils.h"
 
 class JobInputTests: public ::testing:: Test{
 protected:
@@ -33,14 +33,15 @@ TEST_F(JobInputTests, checkneg_jobnr){
     ASSERT_TRUE(FileExists("JobTesten/JtestInput/negativeJobnr.xml"));
 
     System::PrinterSystem P;
-    P.readXML("JobTesten/JtestInput/negativeJobnr.xml")
+    P.readXML("JobTesten/JtestInput/negativeJobnr.xml");
+
 
 
 }
 
 TEST_F(JobInputTests, Jobnr_unique){
-    ASSERT_TRUE(DirectoryExists("JestInput"));
-    ASSERT_TRUE(FileExists("JtestIntput/notuniqueJobnr.xml"));
+    ASSERT_TRUE(DirectoryExists("JobTesten/JtestInput"));
+    ASSERT_TRUE(FileExists("JobTesten/JtestInput/notuniqueJobnr.xml"));
 
 
 }

@@ -9,7 +9,7 @@
 
 using namespace std;
 
-#include "TicTacToeUtils.h"
+#include "../TicTacToeUtils.h"
 #include "../Printer.h"
 
 class JobOutputTests: public ::testing:: Test {

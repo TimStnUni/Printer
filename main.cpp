@@ -3,13 +3,17 @@
 
 int main() {
 
-    XMLParser test("test.xml");
 
-    Printer::PrinterSystem testSystem;
 
-    testSystem.readXML("test.xml");
-
-    testSystem.getInfo("test.txt");
+//    System::PrinterSystem testSystem;
+//
+//
+//    testSystem.readXML("test.xml");
+//
+//    testSystem.getInfo("test.txt");
+//
+//    //testSystem.doPrintJob(89751);
+//    testSystem.printAll();
 
 
     return 0;
