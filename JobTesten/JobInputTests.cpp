@@ -24,26 +24,24 @@ protected:
     }
 };
 
-
 /**
 Tests for Jobnr, Pagecount from Jobs
  */
-TEST_F(JobInputTests, checkneg_jobnr){
+TEST_F(JobInputTests, jobNrIsNegative){
     ASSERT_TRUE(DirectoryExists("JobTesten/JtestInput"));
     ASSERT_TRUE(FileExists("JobTesten/JtestInput/negativeJobnr.xml"));
 
-    System::PrinterSystem P;
-    P.readXML("JobTesten/JtestInput/negativeJobnr.xml");
+    System::PrinterSystem testSystem;
 
-
+    EXPECT_EQ(testSystem.readXML("test.xml"), false);
+    // readXML returns false if the xml is invalid
 
 }
 
 TEST_F(JobInputTests, Jobnr_unique){
     ASSERT_TRUE(DirectoryExists("JobTesten/JtestInput"));
     ASSERT_TRUE(FileExists("JobTesten/JtestInput/notuniqueJobnr.xml"));
-
-
 }
 
-//TEST_F()
+
+

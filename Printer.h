@@ -265,10 +265,12 @@ namespace System {
          */
         //REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getNrOfJobs()")
         int getNrOfJobs();
+        bool isParseSuccessful() const;
 
     private:
 
         XMLParser *_initCheck;
+        bool parseSuccessful = true;
 
         bool properlyInitialized();
 
@@ -406,7 +408,7 @@ namespace System {
          * \brief Reads an XML file and adds all devices/jobs inside to the printer system
          * @param filename
          */
-        void readXML(const char *filename);
+        bool readXML(const char *filename);
 
 
 

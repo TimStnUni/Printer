@@ -22,19 +22,17 @@ namespace System {
         }
 
         _initCheck = this;
-        this->parse();
+        parseSuccessful = this->parse();
 
         ENSURE(properlyInitialized(), "Parser not properly initialized");
-
     }
 
 
     bool XMLParser::parse() {
-
+        //TODO: ofstream error to file
         TiXmlElement *System = InputDoc.FirstChildElement();
 
         REQUIRE(System != nullptr, "There is no system in xml");
-
 
         for (TiXmlElement *Level1Elem = System->FirstChildElement(); Level1Elem != NULL;
              Level1Elem = Level1Elem->NextSiblingElement()) {
@@ -242,6 +240,10 @@ namespace System {
         this->parse();
 
 
+    }
+
+    bool XMLParser::isParseSuccessful() const {
+        return parseSuccessful;
     }
 
 
@@ -531,9 +533,12 @@ namespace System {
 
     }
 
-    void PrinterSystem::readXML(const char *filename) {
+    bool PrinterSystem::readXML(const char *filename) {
         XMLParser tempXML(filename);
-
+        //if parse is not successful return false
+        if(!tempXML.isParseSuccessful()){
+            return false;
+        }
         Printer tempPrtr;
 
         tempPrtr.addDevices(tempXML.getDeviceList());
