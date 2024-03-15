@@ -25,8 +25,6 @@
 //Todo: the requires don't work with the copy constructor. Ask Kasper
 
 namespace System {
-
-
     class Device {
     public:
         Device();

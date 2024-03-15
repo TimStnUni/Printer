@@ -15,9 +15,9 @@ namespace System {
     ////////////////////////////////////////////////////////////////////
 
     XMLParser::XMLParser(const char *filename) {
-
+        std::cout <<  InputDoc.LoadFile(filename) << std::endl;
         //Todo: check whether inputdoc isn't empty
-        if (InputDoc.LoadFile(filename)) {
+        if (!InputDoc.LoadFile(filename)) {
             std::cerr << InputDoc.ErrorDesc() << std::endl;
         }
 
@@ -186,7 +186,7 @@ namespace System {
 
         }
 
-
+        return true;
     }
 
 
@@ -532,7 +532,6 @@ namespace System {
     }
 
     void PrinterSystem::readXML(const char *filename) {
-
         XMLParser tempXML(filename);
 
         Printer tempPrtr;
