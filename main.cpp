@@ -17,7 +17,9 @@ int main() {
 
 
 
-    //testSystem.doPrintJob(89751);
+    testSystem.doPrintJob(89751);
+
+
     testSystem.printAll();
 
     return 0;
