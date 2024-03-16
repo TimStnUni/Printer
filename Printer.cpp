@@ -521,7 +521,7 @@ namespace Printer {
         jobList.erase(jobList.begin() + jobNrMap.at(jobNr));
         jobNrMap.erase(jobNr);
 
-        for (std::map<unsigned int, unsigned int>::iterator jobMapIt = jobNrMap.begin(); jobMapIt !=jobNrMap.end(); jobMapIt++){
+        for (std::map<unsigned int, unsigned int>::iterator jobMapIt = jobNrMap.find(jobNr); jobMapIt !=jobNrMap.end(); jobMapIt++){
             jobMapIt->second = jobMapIt->second - 1;
 
         }
