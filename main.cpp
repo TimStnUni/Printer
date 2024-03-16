@@ -1,3 +1,10 @@
+//============================================================================
+// Name        : main.cpp
+// Author      : Tim Standaert, modified by Jasmine Castillo
+// Version     :
+// Description :
+//============================================================================
+
 #include <unistd.h>
 #include <iostream>
 #include "Printer.h"

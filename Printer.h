@@ -16,11 +16,15 @@
 #include <utility>
 #include <fstream>
 #include <queue>
+#include <fstream>
+#include <algorithm>
 
 
 #include "DesignByContract.h"
 #include "tinystr.h"
 #include "tinyxml.h"
+
+using namespace std;
 
 //Todo: the requires don't work with the copy constructor. Ask Kasper
 
@@ -409,6 +413,8 @@ namespace System {
          * @param filename
          */
         bool readXML(const char *filename);
+
+        //TODO: change cerr to errorstream
 
 
 

@@ -166,7 +166,7 @@ namespace System {
 
                     } else {
 
-                        std::cout << "jobnr should be unique" << std::endl;
+                        std::cout << "Jobnumber should be unique" << std::endl;
                     }
 
                 }
@@ -523,6 +523,20 @@ namespace System {
         jobList.erase(jobList.begin() + jobNrMap.at(jobNr));
 
 
+        unsigned int jobindex = jobNrMap.at(jobNr);
+        jobNrMap.erase(jobNr);
+
+
+
+
+        for (std::map<unsigned int, unsigned int>::iterator jobMapIt = jobNrMap.begin(); jobMapIt !=jobNrMap.end(); jobMapIt++){
+            if (jobMapIt->second > jobindex){
+               jobMapIt->second = jobMapIt->second - 1;
+            }
+
+        }
+
+
     }
 
     PrinterSystem::PrinterSystem() {
@@ -659,9 +673,9 @@ namespace System {
         std::cout << std::endl;
         printerList.at(printerindex).removeJob(jobnr);
 
-//        // Remove the job number from the jobNrSet and jobNrMap
-//        jobNrSet.erase(jobnr);
-//        jobNrMap.erase(jobnr);
+        // Remove the job number from the jobNrSet and jobNrMap
+        jobNrSet.erase(jobnr);
+        jobNrMap.erase(jobnr);
     }
 
     void PrinterSystem::printAll() {
