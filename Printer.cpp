@@ -519,6 +519,12 @@ namespace Printer {
     void Printer::removeJob(unsigned int jobNr) {
 
         jobList.erase(jobList.begin() + jobNrMap.at(jobNr));
+        jobNrMap.erase(jobNr);
+
+        for (std::map<unsigned int, unsigned int>::iterator jobMapIt = jobNrMap.begin(); jobMapIt !=jobNrMap.end(); jobMapIt++){
+            jobMapIt->second = jobMapIt->second - 1;
+
+        }
 
 
     }
@@ -654,6 +660,8 @@ namespace Printer {
 
         std::cout << std::endl;
         printerList.at(printerindex).removeJob(jobnr);
+        jobNrSet.erase(jobnr);
+        jobNrMap.erase(jobnr);
 
 
     }
@@ -663,6 +671,7 @@ namespace Printer {
         for (std::set<unsigned int>::iterator jobNrIt = jobNrSet.begin(); jobNrIt != jobNrSet.end(); jobNrIt++) {
 
             this->doPrintJob(*jobNrIt);
+
         }
 
     }
