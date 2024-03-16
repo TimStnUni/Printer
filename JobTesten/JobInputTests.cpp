@@ -29,11 +29,11 @@ Tests for Jobnr, Pagecount from Jobs
  */
 TEST_F(JobInputTests, jobNrIsNegative){
     ASSERT_TRUE(DirectoryExists("JobTesten/JtestInput"));
-    ASSERT_TRUE(FileExists("JobTesten/JtestInput/negativeJobnr.xml"));
+    ASSERT_TRUE(FileExists("JobTesten/JtestInput/negativeJobnr1.xml"));
 
     System::PrinterSystem testSystem;
 
-    EXPECT_EQ(testSystem.readXML("test.xml"), false);
+    EXPECT_EQ(testSystem.readXML("JobTesten/JtestInput/negativeJobnr1.xml"), false);
     // readXML returns false if the xml is invalid
 
 }

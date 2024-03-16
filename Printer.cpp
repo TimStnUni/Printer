@@ -15,7 +15,7 @@ namespace System {
     ////////////////////////////////////////////////////////////////////
 
     XMLParser::XMLParser(const char *filename) {
-        std::cout <<  InputDoc.LoadFile(filename) << std::endl;
+//        std::cout <<  InputDoc.LoadFile(filename) << std::endl;
         //Todo: check whether inputdoc isn't empty
         if (!InputDoc.LoadFile(filename)) {
             std::cerr << InputDoc.ErrorDesc() << std::endl;
@@ -573,7 +573,7 @@ namespace System {
             }
 
         }
-
+        return true;
 
     }
 
@@ -659,7 +659,9 @@ namespace System {
         std::cout << std::endl;
         printerList.at(printerindex).removeJob(jobnr);
 
-
+//        // Remove the job number from the jobNrSet and jobNrMap
+//        jobNrSet.erase(jobnr);
+//        jobNrMap.erase(jobnr);
     }
 
     void PrinterSystem::printAll() {
