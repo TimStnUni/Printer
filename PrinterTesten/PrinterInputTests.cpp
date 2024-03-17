@@ -9,7 +9,7 @@
 
 using namespace std;
 
-using namespace Printer;
+using namespace System;
 
 class XMLTest: public ::testing::Test {
 protected:

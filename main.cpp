@@ -1,8 +1,9 @@
 //============================================================================
 // Name        : main.cpp
-// Author      : Tim Standaert, modified by Jasmine Castillo
-// Version     :
-// Description :
+// Author      : Tim Standaert, Jasmine Castillo, Thomas D'Archambeau
+// Date        : 29/02/2024
+// Version     : 17++
+// Description : PrinterSystem in C++, Ansi-style
 //============================================================================
 
 #include <unistd.h>
@@ -21,8 +22,9 @@ int main() {
 //    return 0;
     System::PrinterSystem testSystem;
 
+    testSystem.getInfo("testje.txt");
 
-    bool consistent = testSystem.readXML("test.xml", std::ofstream());
+    bool consistent = testSystem.readXML("test.xml");
 
     if(consistent){
         testSystem.getInfo("test.txt");

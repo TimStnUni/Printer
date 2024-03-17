@@ -1,7 +1,10 @@
-//
-// Created by tim on 29/02/24.
-//
-
+//============================================================================
+// Name        : Printer.cpp
+// Author      : Tim Standaert, Jasmine Castillo, Thomas D'Archambeau
+// Date        : 29/02/2024
+// Version     : 17++
+// Description : PrinterSystem in C++, Ansi-style
+//============================================================================
 #include "Printer.h"
 
 namespace System {
@@ -61,7 +64,7 @@ namespace System {
                         if (name_t.empty()) {
                             errorstream << "Name should not be empty" << std::endl;
                             readingCorrect = false;
-                            continue;
+                            return readingCorrect;
 
                         } else {
                             name = name_t;
@@ -626,7 +629,7 @@ namespace System {
 
             std::deque<Job> currentJobs = printIt->getJobList();
 
-            for (std::deque<Job>::iterator jobIt = currentJobs.begin(); jobIt != currentJobs.end(); ++jobIt) {
+            for (auto jobIt = currentJobs.begin(); jobIt != currentJobs.end(); ++jobIt) {
 
                 if (jobIt == currentJobs.begin()) {
 

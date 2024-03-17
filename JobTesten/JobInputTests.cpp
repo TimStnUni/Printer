@@ -1,11 +1,15 @@
-//
-// Created by alyja on 14/03/2024.
-//
+//============================================================================
+// Name        : JobInputTests.cpp
+// Author      : Tim Standaert, Jasmine Castillo, Thomas D'Archambeau
+// Date        : 14/03/2024
+// Version     : 17++
+// Description : PrinterSystem in C++, Ansi-style
+//============================================================================
 
 #include <iostream>
 #include <fstream>
 #include <sys/stat.h>
-#include <gtest/gtest.h>g
+#include <gtest/gtest.h>
 
 using namespace std;
 
@@ -73,3 +77,5 @@ TEST_F(JobInputTests, pageCountisnegative){
     EXPECT_EQ(testSystem.readXML("JobTesten/JtestInput/negativePagecount.xml"), false);
     // readXML returns false if the xml is invalid
 }
+
+

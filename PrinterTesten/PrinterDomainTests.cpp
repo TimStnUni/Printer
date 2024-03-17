@@ -10,7 +10,7 @@
 using namespace std;
 
 #include "../Printer.h"
-using namespace Printer;
+using namespace System;
 
 class PrinterDomainTest: public ::testing::Test {
 protected:
