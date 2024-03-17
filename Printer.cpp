@@ -22,13 +22,18 @@ namespace System {
         }
 
         _initCheck = this;
-        parseSuccessful = this->parse();
+        std::ofstream outFile; // Create an output file stream
+        std::string  f = filename;
+        std::string outputFileName = f +".txt";
+        const char *outputFileNameChar = outputFileName.c_str();
+        outFile.open(outputFileNameChar); // Open the file
+        parseSuccessful = this->parse(outFile);
 
         ENSURE(properlyInitialized(), "Parser not properly initialized");
     }
 
 
-    bool XMLParser::parse() {
+    bool XMLParser::parse(std::ostream &errorstream) {
         //TODO: ofstream error to file
         TiXmlElement *System = InputDoc.FirstChildElement();
 
@@ -54,7 +59,7 @@ namespace System {
                     if (elemname == "name") {
                         std::string name_t = elem->FirstChild()->ToText()->Value();
                         if (name_t.empty()) {
-                            std::cout << "Name should not be empty" << std::endl;
+                            errorstream << "Name should not be empty" << std::endl;
                             readingCorrect = false;
                             continue;
 
@@ -68,7 +73,7 @@ namespace System {
                         if (std::stoi(elem->FirstChild()->ToText()->Value()) > 0) {
                             emissions = std::stoi(elem->FirstChild()->ToText()->Value());
                         } else {
-                            std::cout << "Emissions should be positive" << std::endl;
+                            errorstream << "Emissions should be positive" << std::endl;
                             readingCorrect = false;
                             return readingCorrect;
 
@@ -80,7 +85,7 @@ namespace System {
                         if (std::stoi(elem->FirstChild()->ToText()->Value()) > 0) {
                             speed = std::stoi(elem->FirstChild()->ToText()->Value());
                         } else {
-                            std::cout << "speed should be positive" << std::endl;
+                            errorstream << "speed should be positive" << std::endl;
                             readingCorrect = false;
                             return readingCorrect;
                         }
@@ -110,12 +115,14 @@ namespace System {
 
 
                     if (elemname == "userName") {
-                        std::string userName_t = elem->FirstChild()->ToText()->Value();
-                        if (userName_t.empty()) {
-                            std::cout << "username should not be empty" << std::endl;
+                        auto t = elem->FirstChild();
+                        if(t == NULL){
+                            errorstream << "username should not be empty" << std::endl;
                             readingCorrectly = false;
-                            continue;
-                        } else {
+                            return readingCorrectly;
+                        }
+                        else {
+                            std::string userName_t = elem->FirstChild()->ToText()->Value();
                             userName = userName_t;
 
                         }
@@ -124,7 +131,7 @@ namespace System {
                         if (std::stoi(elem->FirstChild()->ToText()->Value()) > 0) {
                             pageCount = std::stoi(elem->FirstChild()->ToText()->Value());
                         } else {
-                            std::cout << "pagecount should be a positive integer" << std::endl;
+                            errorstream << "pagecount should be a positive integer" << std::endl;
                             readingCorrectly = false;
                             return readingCorrectly;
                         }
@@ -135,7 +142,7 @@ namespace System {
                             jobNr = std::stoi(elem->FirstChild()->ToText()->Value());
                         } else {
                             //Not actually sure this needs to be a positive integer
-                            std::cout << "jobnumber should be a positive integer" << std::endl;
+                            errorstream << "jobnumber should be a positive integer" << std::endl;
                             readingCorrectly = false;
                             return readingCorrectly;
                         }
@@ -166,7 +173,8 @@ namespace System {
 
                     } else {
 
-                        std::cout << "jobnr should be unique" << std::endl;
+                        errorstream << "Jobnumber should be unique" << std::endl;
+                        return false;
                     }
 
                 }
@@ -236,9 +244,13 @@ namespace System {
         if (InputDoc.LoadFile(filename)) {
             std::cerr << InputDoc.ErrorDesc() << std::endl;
         }
+        std::ofstream outFile; // Create an output file stream
+        std::string  f = filename;
+        std::string outputFileName = f +".txt";
+        const char *outputFileNameChar = outputFileName.c_str();
+        outFile.open(outputFileNameChar); // Open the file
 
-        this->parse();
-
+        this->parse(outFile);
 
     }
 
@@ -523,6 +535,20 @@ namespace System {
         jobList.erase(jobList.begin() + jobNrMap.at(jobNr));
 
 
+        unsigned int jobindex = jobNrMap.at(jobNr);
+        jobNrMap.erase(jobNr);
+
+
+
+
+        for (std::map<unsigned int, unsigned int>::iterator jobMapIt = jobNrMap.begin(); jobMapIt !=jobNrMap.end(); jobMapIt++){
+            if (jobMapIt->second > jobindex){
+               jobMapIt->second = jobMapIt->second - 1;
+            }
+
+        }
+
+
     }
 
     PrinterSystem::PrinterSystem() {
@@ -659,9 +685,9 @@ namespace System {
         std::cout << std::endl;
         printerList.at(printerindex).removeJob(jobnr);
 
-//        // Remove the job number from the jobNrSet and jobNrMap
-//        jobNrSet.erase(jobnr);
-//        jobNrMap.erase(jobnr);
+        // Remove the job number from the jobNrSet and jobNrMap
+        jobNrSet.erase(jobnr);
+        jobNrMap.erase(jobnr);
     }
 
     void PrinterSystem::printAll() {

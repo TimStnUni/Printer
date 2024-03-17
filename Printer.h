@@ -279,7 +279,7 @@ namespace System {
          * \brief Function that parses the XML file supplied to the constructor.
          */
 
-        bool parse();
+        bool parse(std::ostream &errorstream);
 
         TiXmlDocument InputDoc;
 

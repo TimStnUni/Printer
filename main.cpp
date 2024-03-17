@@ -15,13 +15,14 @@ int main() {
     System::PrinterSystem testSystem;
 
 
-    testSystem.readXML("test.xml");
+    bool consistent = testSystem.readXML("test.xml", std::ofstream());
 
-    testSystem.getInfo("test.txt");
+    if(consistent){
+        testSystem.getInfo("test.txt");
+        testSystem.doPrintJob(89751);
+        testSystem.printAll();
 
-    testSystem.doPrintJob(89751);
-    testSystem.printAll();
-
+    }
 
     return 0;
 }
