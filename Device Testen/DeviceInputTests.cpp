@@ -56,5 +56,5 @@ TEST_F(DeviceInputTests, ValidDeviceInput) {
 
     System::PrinterSystem testSystem;
     EXPECT_EQ(testSystem.readXML("DeviceTests/DevtestInput/validDevice.xml"), true);
-    // readXML returns true if the XML input for the device is valid
+    // readXML returns true if the XML input for the device is vali
 }
