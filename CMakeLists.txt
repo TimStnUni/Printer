@@ -43,7 +43,6 @@ set(DEBUG_SOURCE_FILES
         Tests.cpp
         TicTacToeUtils.h
         TicTacToeUtils.cpp
-        DeviceTesten/DeviceInputTests.cpp
 
 
 )
