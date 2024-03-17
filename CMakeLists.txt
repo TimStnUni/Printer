@@ -38,6 +38,8 @@ set(DEBUG_SOURCE_FILES tests.cpp
         ./Libs/tinyxmlerror.cpp
         Printer.cpp
         Printer.h
+        DesignByContract.h
+        "Device Testen/deviceTesten.cpp"
 )
 
         # Create RELEASE target
