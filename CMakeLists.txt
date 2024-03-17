@@ -39,7 +39,9 @@ set(DEBUG_SOURCE_FILES tests.cpp
         Printer.cpp
         Printer.h
         DesignByContract.h
-        "Device Testen/deviceTesten.cpp"
+        "Device Testen/DeviceInputTests.cpp"
+        Libs/TicTacToeUtils.cpp
+        Libs/TicTacToeUtils.h
 )
 
         # Create RELEASE target
