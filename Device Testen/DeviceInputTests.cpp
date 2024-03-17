@@ -5,8 +5,8 @@
 
 using namespace std;
 
-#include "../Printer.h" // Zorg ervoor dat dit pad overeenkomt met de locatie van je Printer.h bestand
-#include "../TicTacToeUtils.h" // Alleen nodig als TicTacToeUtils.h gebruikt wordt in je tests
+#include "../Printer.h"
+#include "../TicTacToeUtils.h"
 
 class DeviceInputTests: public ::testing::Test {
 protected:
@@ -20,9 +20,7 @@ protected:
     }
 };
 
-/**
-Tests for name, emissions, and speed from Devices
- */
+
 TEST_F(DeviceInputTests, DeviceNameIsEmpty) {
     ASSERT_TRUE(DirectoryExists("DeviceTests/DevtestInput"));
     ASSERT_TRUE(FileExists("DeviceTests/DevtestInput/emptyDeviceName.xml"));
