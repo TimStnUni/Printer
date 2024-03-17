@@ -39,14 +39,14 @@ TEST_F(DeviceInputTests, EmissionsAreNegative) {
     // readXML returns false if the emissions value is negative
 }
 
-TEST_F(DeviceInputTests, SpeedIsNegative) {
-    ASSERT_TRUE(DirectoryExists("DeviceTesten/DevtestInput"));
-    ASSERT_TRUE(FileExists("DeviceTesten/DevtestInput/negativeSpeed.xml"));
+//TEST_F(DeviceInputTests, SpeedIsNegative) {
+//ASSERT_TRUE(DirectoryExists("DeviceTesten/DevtestInput"));
+//ASSERT_TRUE(FileExists("DeviceTesten/DevtestInput/negativeSpeed.xml"));
 
-    System::PrinterSystem testSystem;
-    EXPECT_EQ(testSystem.readXML("DeviceTesten/DevtestInput/negativeSpeed.xml"), false);
+//System::PrinterSystem testSystem;
+//EXPECT_EQ(testSystem.readXML("DeviceTesten/DevtestInput/negativeSpeed.xml"), false);
     // readXML returns false if the speed is negative
-}
+//}
 
 TEST_F(DeviceInputTests, ValidDeviceInput) {
     ASSERT_TRUE(DirectoryExists("DeviceTesten/DevtestInput"));
@@ -54,5 +54,10 @@ TEST_F(DeviceInputTests, ValidDeviceInput) {
 
     System::PrinterSystem testSystem;
     EXPECT_EQ(testSystem.readXML("DeviceTesten/DevtestInput/validDevice.xml"), true);
-    // readXML returns true if the XML input for the device is vali
+    // readXML returns true if the XML input for the device is valid
+}
+
+TEST_F(DeviceInputTests, SpeedIsNegativeDeathTest) {
+    System::Device dev;
+    EXPECT_DEATH(dev.setSpeed(-1), "Speed should be positive");
 }

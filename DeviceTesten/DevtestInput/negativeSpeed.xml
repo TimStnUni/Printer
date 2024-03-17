@@ -2,7 +2,7 @@
     <DEVICE>
         <name>Office_Printer7</name>
         <emissions>8</emissions>
-        <speed>-20</speed>
+        <speed>-50</speed>
     </DEVICE>
 <JOB>
         <jobNumber>89751</jobNumber>
