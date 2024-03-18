@@ -24,6 +24,8 @@ int main() {
 
     bool consistent = testSystem.readXML("test.xml");
 
+
+    std::cout << "consistent is " << consistent << std::endl;
     if(consistent){
         testSystem.getInfo("test.txt");
         testSystem.doPrintJob(89751);

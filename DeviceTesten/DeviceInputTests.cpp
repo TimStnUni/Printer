@@ -32,10 +32,10 @@ TEST_F(DeviceInputTests, DeviceNameIsEmpty) {
 
 TEST_F(DeviceInputTests, EmissionsAreNegative) {
     ASSERT_TRUE(DirectoryExists("DeviceTesten/DevtestInput"));
-    ASSERT_TRUE(FileExists("DeviceTesten/DevtestInput/negativeEmissions.xml"));
+    ASSERT_TRUE(FileExists("DeviceTesten/DevtestInput/negativeEmission.xml"));
 
     System::PrinterSystem testSystem;
-    EXPECT_EQ(testSystem.readXML("DeviceTesten/DevtestInput/negativeEmissions.xml"), false);
+    EXPECT_EQ(testSystem.readXML("DeviceTesten/DevtestInput/negativeEmission.xml"), false);
     // readXML returns false if the emissions value is negative
 }
 

@@ -23,18 +23,21 @@ namespace System {
 
         _initCheck = this;
         std::ofstream outFile; // Create an output file stream
-        std::string  f = filename;
-        std::string outputFileName = f +".txt";
+        std::string f = filename;
+        std::string outputFileName = f + ".txt";
         const char *outputFileNameChar = outputFileName.c_str();
         outFile.open(outputFileNameChar); // Open the file
+
+
         parseSuccessful = this->parse(outFile);
+
 
         ENSURE(properlyInitialized(), "Parser not properly initialized");
     }
 
 
     bool XMLParser::parse(std::ostream &errorstream) {
-        //TODO: ofstream error to file
+
         TiXmlElement *System = InputDoc.FirstChildElement();
 
         REQUIRE(System != nullptr, "There is no system in xml");
@@ -56,52 +59,67 @@ namespace System {
                     std::string elemname = elem->Value();
 
 
-                    if (elemname == "name") {
-                        std::string name_t = elem->FirstChild()->ToText()->Value();
-                        if (name_t.empty()) {
-                            errorstream << "Name should not be empty" << std::endl;
+                    if (elem->FirstChild() == nullptr) {
+                        readingCorrect = false;
+
+                        errorstream << elemname << "should not be empty" << endl;
+                        return readingCorrect;
+                    } else {
+
+                        if (elemname == "name") {
+
+
+                            std::string name_t = elem->FirstChild()->ToText()->Value();
+
+                            if (name_t.empty()) {
+                                errorstream << "Name should not be empty" << std::endl;
+                                readingCorrect = false;
+                                return readingCorrect;
+
+                            } else {
+                                name = name_t;
+                                //std::cout << "name = " << name << std::endl;
+                            }
+
+
+                        } else if (elemname == "emissions") {
+
+                            if (std::stoi(elem->FirstChild()->ToText()->Value()) > 0) {
+                                emissions = std::stoi(elem->FirstChild()->ToText()->Value());
+
+                            } else {
+                                errorstream << "Emissions should be positive" << std::endl;
+                                readingCorrect = false;
+                                return readingCorrect;
+
+
+                            }
+
+
+                        } else if (elemname == "speed") {
+                            if (std::stoi(elem->FirstChild()->ToText()->Value()) > 0) {
+                                speed = std::stoi(elem->FirstChild()->ToText()->Value());
+                            } else {
+                                errorstream << "speed should be positive" << std::endl;
+                                readingCorrect = false;
+                                return readingCorrect;
+                            }
+
+                        } else {
+                            std::cout << "Element name " << elemname << " is either empty or an unexpected element name"
+                                      << std::endl;
                             readingCorrect = false;
                             continue;
-
-                        } else {
-                            name = name_t;
                         }
 
-
-                    } else if (elemname == "emissions") {
-
-                        if (std::stoi(elem->FirstChild()->ToText()->Value()) > 0) {
-                            emissions = std::stoi(elem->FirstChild()->ToText()->Value());
-                        } else {
-                            errorstream << "Emissions should be positive" << std::endl;
-                            readingCorrect = false;
-                            return readingCorrect;
-
-
-                        }
-
-
-                    } else if (elemname == "speed") {
-                        if (std::stoi(elem->FirstChild()->ToText()->Value()) > 0) {
-                            speed = std::stoi(elem->FirstChild()->ToText()->Value());
-                        } else {
-                            errorstream << "speed should be positive" << std::endl;
-                            readingCorrect = false;
-                            return readingCorrect;
-                        }
-
-                    } else {
-                        std::cout << "Element name " << elemname << " is either empty or an unexpected element name"
-                                  << std::endl;
-                        readingCorrect = false;
-                        continue;
                     }
                 }
-
                 if (readingCorrect) {
                     Device tempPrinter = Device(name, emissions, speed);
                     deviceList.push_back(tempPrinter);
                 }
+
+
             } else if (type == "JOB") {
                 std::string userName;
                 int pageCount, jobNr;
@@ -116,12 +134,11 @@ namespace System {
 
                     if (elemname == "userName") {
                         auto t = elem->FirstChild();
-                        if(t == NULL){
+                        if (t == NULL) {
                             errorstream << "username should not be empty" << std::endl;
                             readingCorrectly = false;
                             return readingCorrectly;
-                        }
-                        else {
+                        } else {
                             std::string userName_t = elem->FirstChild()->ToText()->Value();
                             userName = userName_t;
 
@@ -245,8 +262,8 @@ namespace System {
             std::cerr << InputDoc.ErrorDesc() << std::endl;
         }
         std::ofstream outFile; // Create an output file stream
-        std::string  f = filename;
-        std::string outputFileName = f +".txt";
+        std::string f = filename;
+        std::string outputFileName = f + ".txt";
         const char *outputFileNameChar = outputFileName.c_str();
         outFile.open(outputFileNameChar); // Open the file
 
@@ -281,23 +298,23 @@ namespace System {
 
     }
 
-    std::string Device::getNameDev() const{
+    std::string Device::getNameDev() const {
 
         REQUIRE(this->properlyInitialized(), "Device not initialized when calling getNameDev()");
         return name;
     }
 
-    int Device::getEmissions() const{
+    int Device::getEmissions() const {
         REQUIRE(this->properlyInitialized(), "Device not initialized when calling getEmissions()");
         return emissions;
     }
 
-    int Device::getSpeed() const{
+    int Device::getSpeed() const {
         REQUIRE(this->properlyInitialized(), "Device not initialized when calling getSpeed()");
         return speed;
     }
 
-    bool Device::properlyInitialized() const{
+    bool Device::properlyInitialized() const {
         return (_initCheck == this);
     }
 
@@ -315,7 +332,6 @@ namespace System {
         this->setNameDev(inName);
         this->setEmissions(emissions_in);
         this->setSpeed(speed_in);
-
 
 
         ENSURE(this->properlyInitialized(), "Device not properly initialized in copy constructor");
@@ -363,15 +379,14 @@ namespace System {
     Job::Job(std::string userName_in, int pageCount_in, int jobNr_in) {
 
         REQUIRE(!userName_in.empty(), "Username shouldn't be empty");
-        REQUIRE(pageCount_in>0, "Pagecount should be positive");
+        REQUIRE(pageCount_in > 0, "Pagecount should be positive");
 
 
         _initCheck = this;
 
-        this->setUserName( userName_in);
+        this->setUserName(userName_in);
         this->setPageCount(pageCount_in);
-        this->setJobNr( jobNr_in);
-
+        this->setJobNr(jobNr_in);
 
 
         ENSURE(this->properlyInitialized(), "Job wasn't properly initialized");
@@ -379,17 +394,17 @@ namespace System {
 
     }
 
-    unsigned int Job::getJobNr() const{
+    unsigned int Job::getJobNr() const {
         REQUIRE(this->properlyInitialized(), "Job wasn't initialized when calling getJobNr()");
         return jobNr;
     }
 
-    std::string Job::getUserName() const{
+    std::string Job::getUserName() const {
         REQUIRE(this->properlyInitialized(), "Job wasn't initialized when calling getUserName()");
         return userName;
     }
 
-    int Job::getPageCount() const{
+    int Job::getPageCount() const {
         REQUIRE(this->properlyInitialized(), "Job wasn't initialized when calling getPageCount()");
         return pageCount;
     }
@@ -399,7 +414,7 @@ namespace System {
         ENSURE(this->properlyInitialized(), "Default constructor not properly initialized");
     }
 
-    bool Job::properlyInitialized() const{
+    bool Job::properlyInitialized() const {
         return this == _initCheck;
     }
 
@@ -416,9 +431,8 @@ namespace System {
     }
 
 
-
     void Job::setJobNr(int jobNr_in) {
-        REQUIRE(jobNr_in>0, "jobnr should be positive");
+        REQUIRE(jobNr_in > 0, "jobnr should be positive");
 
         this->jobNr = jobNr_in;
 
@@ -454,7 +468,6 @@ namespace System {
         REQUIRE(this->properlyInitialized(), "Printer was not initialized when calling addDevices()");
 
 
-
         deviceList.insert(deviceList.end(), device_in.begin(), device_in.end());
 
 
@@ -477,7 +490,7 @@ namespace System {
 
         }
 
-        for (std::map<unsigned int, unsigned int>::iterator mapIt = jobnrs.begin(); mapIt!=jobnrs.end(); mapIt++){
+        for (std::map<unsigned int, unsigned int>::iterator mapIt = jobnrs.begin(); mapIt != jobnrs.end(); mapIt++) {
 
             jobNrMap.insert({mapIt->first, mapIt->second});
 
@@ -541,11 +554,10 @@ namespace System {
         jobNrMap.erase(jobNr);
 
 
-
-
-        for (std::map<unsigned int, unsigned int>::iterator jobMapIt = jobNrMap.begin(); jobMapIt !=jobNrMap.end(); jobMapIt++){
-            if (jobMapIt->second > jobindex){
-               jobMapIt->second = jobMapIt->second - 1;
+        for (std::map<unsigned int, unsigned int>::iterator jobMapIt = jobNrMap.begin();
+             jobMapIt != jobNrMap.end(); jobMapIt++) {
+            if (jobMapIt->second > jobindex) {
+                jobMapIt->second = jobMapIt->second - 1;
             }
 
         }
@@ -563,8 +575,9 @@ namespace System {
 
     bool PrinterSystem::readXML(const char *filename) {
         XMLParser tempXML(filename);
+
         //if parse is not successful return false
-        if(!tempXML.isParseSuccessful()){
+        if (!tempXML.isParseSuccessful()) {
             return false;
         }
         Printer tempPrtr;
