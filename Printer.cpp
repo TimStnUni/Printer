@@ -520,6 +520,7 @@ namespace System {
 
     Device Printer::getDevice(int index) {
         REQUIRE(this->properlyInitialized(), "printer wasn't properly initialized when calling getDevice()");
+        REQUIRE(index >= 0 && index < this->deviceList.size(), "Index should be within bounds");
 
         return deviceList.at(index);
     }

@@ -31,6 +31,10 @@ using namespace std;
 namespace System {
     class Device {
     public:
+
+        /**
+         * \brief Default Constructor
+         */
         Device();
 
         /**
@@ -44,7 +48,7 @@ namespace System {
 
 
         /**
-         * \brief Copy Constructor that should fix the _initCheck to this, but somehow that doesn't seem to happen
+         * \brief Copy Constructor that should fix the _initCheck to this
          * @param inDevice device to be copied
          */
         Device(const Device &inDevice);
@@ -100,6 +104,12 @@ namespace System {
         int getSpeed() const;
 
 
+        /**
+         * \brief overloaded equality operator for getters
+         * @param d device to be compared
+         * @return boolean true or false
+         */
+
         bool operator == (const Device &d){
             if (name == d.name && emissions == d.emissions && speed == d.speed){
                 return true;
@@ -123,7 +133,15 @@ namespace System {
     class Job {
 
     public:
+        /**
+         * \brief Default Constructor
+         */
         Job();
+
+        /**
+         * \brief Copy constructor to fix _initcheck to this
+         * @param inJob
+         */
 
         Job(const Job &inJob);
 
@@ -235,6 +253,12 @@ namespace System {
          */
         XMLParser(const char *filename);
 
+        /**
+         * \brief Additional way to read an XML File through the parser
+         * @param filename
+         * @return
+         */
+
         bool addInputFile(const char * filename);
 
         ~XMLParser();
@@ -278,9 +302,17 @@ namespace System {
         /**
          * \brief Function that returns the amount of jobs. Currently unused
          * @return
+         * //REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getNrOfJobs()")
          */
-        //REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getNrOfJobs()")
+
         int getNrOfJobs();
+
+
+        /**
+         * \brief Getter function for the state of the XMLparser after attempting to parse the input file
+         * @return
+         */
+
         bool isParseSuccessful() const;
 
     private:
@@ -293,6 +325,7 @@ namespace System {
 
         /**
          * \brief Function that parses the XML file supplied to the constructor.
+         * @param errorstream Stream to store errors
          */
 
         bool parse(std::ostream &errorstream);
@@ -335,7 +368,7 @@ namespace System {
 
         //Todo make a version of this function that takes a single device and pushes it back into the devicelist
 
-        //Todo: when getDevice and getJobs is more properly implemented, these should ensure they are correctly set.
+
         /**
          * \brief Function to add a printer device to a printer container
          * @param device_in a vector of devices to be added.
@@ -356,11 +389,13 @@ namespace System {
 
 
 
-        //this is technically not very general
+
         /**
-         * \brief Getter function for a printer device. Currently poorly implemented to always return the first device stored in the printer
+         * \brief Getter function for a printer device from a printer
+         * @param index Index of the device to be gotten
          * @return first device stored in the printer
          * REQUIRE(this->properlyInitialized(), "Printer was not initialized when calling getDevice()")
+         * REQUIRE(index > 0 && index < this->devicelist.size(), "Index should be within bounds");
          */
         Device getDevice(int index);
 
@@ -376,11 +411,26 @@ namespace System {
          */
         std::map<unsigned int, unsigned int> getJobNrMap();
 
+        /**
+         * \brief Getter for all jobnrs to add to the large collection of unique jobnrs for the system
+         * @return
+         */
+
         std::set<unsigned int> getJobNrSet();
+
+        /**
+         * \brief Getter function that returns the index in the JobList of this printer
+         * @param jobNr
+         * @return
+         */
 
         unsigned int getJobIndex(unsigned int &jobNr);
 
 
+        /**
+         * \brief Housekeeping function that keeps all jobnrs pointing to the correct job
+         * @param jobNr
+         */
         void removeJob(unsigned int jobNr);
 
     private:
@@ -425,12 +475,12 @@ namespace System {
          */
         bool readXML(const char *filename);
 
-        //TODO: change cerr to errorstream
 
 
 
 
-        //Todo: add a way to specify where the output should be stored. Look at later tictactoe versions
+
+        //TODO: change this over to a stream to either print to terminal or to file.
         /**
          * \brief Function that prints all know information about the printing system to a file
          * @param filename Filename of the output file
@@ -441,15 +491,17 @@ namespace System {
 
 
 
-        //Todo: add a way to specify where the output should be stored. Look at later tictactoe versions
+
         /**
          * \brief Function that executes a print job. Implementation currently seems to have some issues because of the storage solution for jobnrs
          * @param jobnr JobNr of the job to be executed
+         * @param writeStream Stream where the output is stored
          */
         void doPrintJob(unsigned int jobnr, std::ostream & writeStream);
 
         /**
          * \brief Loops over all jobs and prints that they are finished.
+         * @param writeStream Stream where the output will be stored
          */
 
         void printAll(std::ostream &writeStream);
