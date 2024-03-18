@@ -21,6 +21,7 @@ namespace System {
             std::cerr << InputDoc.ErrorDesc() << std::endl;
         }
 
+
         _initCheck = this;
         std::ofstream outFile; // Create an output file stream
         std::string f = filename;
@@ -40,6 +41,7 @@ namespace System {
 
         TiXmlElement *System = InputDoc.FirstChildElement();
 
+
         REQUIRE(System != nullptr, "There is no system in xml");
 
         for (TiXmlElement *Level1Elem = System->FirstChildElement(); Level1Elem != NULL;
@@ -57,6 +59,7 @@ namespace System {
                      elem = elem->NextSiblingElement()) {
 
                     std::string elemname = elem->Value();
+                    std::string test;
 
 
                     if (elem->FirstChild() == nullptr) {
@@ -70,6 +73,7 @@ namespace System {
 
 
                             std::string name_t = elem->FirstChild()->ToText()->Value();
+
 
                             if (name_t.empty()) {
                                 errorstream << "Name should not be empty" << std::endl;
@@ -94,7 +98,7 @@ namespace System {
 
 
                             }
-//test
+
 
                         } else if (elemname == "speed") {
                             if (std::stoi(elem->FirstChild()->ToText()->Value()) > 0) {
@@ -254,7 +258,7 @@ namespace System {
         return jobNrSet;
     }
 
-    void XMLParser::addInputFile(const char *filename) {
+    bool XMLParser::addInputFile(const char *filename) {
 
         REQUIRE(this->properlyInitialized(), "Parser wasn't properly initialized when calling addInputFile");
 
@@ -267,7 +271,9 @@ namespace System {
         const char *outputFileNameChar = outputFileName.c_str();
         outFile.open(outputFileNameChar); // Open the file
 
-        this->parse(outFile);
+        parseSuccessful = this->parse(outFile);
+
+        return parseSuccessful;
 
     }
 
@@ -453,6 +459,15 @@ namespace System {
         this->userName = userName_in;
 
         ENSURE(this->getUserName() == userName_in, "Username not correctly set");
+    }
+
+    Job &Job::operator=(const Job &inJob) {
+        Job outJob;
+        outJob.userName = inJob.getUserName();
+        outJob.pageCount = inJob.getPageCount();
+        outJob.jobNr = inJob.getJobNr();
+        outJob._initCheck = &outJob;
+        return *this;
     }
 
     Printer::Printer() {
@@ -670,7 +685,7 @@ namespace System {
         return (this == _initcheck);
     }
 
-    void PrinterSystem::doPrintJob(unsigned int jobnr) {
+    void PrinterSystem::doPrintJob(unsigned int jobnr, std::ostream &writeStream) {
 
         int printerindex = jobNrMap.at(jobnr);
 
@@ -692,12 +707,12 @@ namespace System {
             pages--;
         }
 
-        std::cout << "Printer \"" << currentDevice.getNameDev() << "\" finished job:\n";
-        std::cout << "  Number: " << jobnr << "\n";
-        std::cout << "  Submitted by \"" << currentJob.getUserName() << "\"\n";
-        std::cout << "  " << currentJob.getPageCount() << " pages\n";
+        writeStream << "Printer \"" << currentDevice.getNameDev() << "\" finished job:\n";
+        writeStream << "  Number: " << jobnr << "\n";
+        writeStream << "  Submitted by \"" << currentJob.getUserName() << "\"\n";
+        writeStream << "  " << currentJob.getPageCount() << " pages\n";
 
-        std::cout << std::endl;
+        writeStream << std::endl;
         printerList.at(printerindex).removeJob(jobnr);
 
         // Remove the job number from the jobNrSet and jobNrMap
@@ -705,11 +720,11 @@ namespace System {
         jobNrMap.erase(jobnr);
     }
 
-    void PrinterSystem::printAll() {
+    void PrinterSystem::printAll(std::ostream &writeStream) {
 
         for (std::set<unsigned int>::iterator jobNrIt = jobNrSet.begin(); jobNrIt != jobNrSet.end(); jobNrIt++) {
 
-            this->doPrintJob(*jobNrIt);
+            this->doPrintJob(*jobNrIt, writeStream);
         }
 
     }

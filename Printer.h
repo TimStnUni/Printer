@@ -198,14 +198,7 @@ namespace System {
          * @return
          */
 
-        Job operator=(Job const & inJob){
-            Job outJob;
-            outJob.userName = inJob.getUserName();
-            outJob.pageCount = inJob.getPageCount();
-            outJob.jobNr = inJob.getJobNr();
-            outJob._initCheck = &outJob;
-            return outJob;
-        }
+        Job& operator=(Job const & inJob);
 
     private:
         int jobNr, pageCount;
@@ -242,7 +235,7 @@ namespace System {
          */
         XMLParser(const char *filename);
 
-        void addInputFile(const char * filename);
+        bool addInputFile(const char * filename);
 
         ~XMLParser();
 
@@ -423,8 +416,7 @@ namespace System {
         PrinterSystem();
 
 
-        //todo: i believe this should be a private or protected function. I think that means we need to declare the tests as a friend?
-        bool properlyInitialized();
+
 
 
         /**
@@ -454,16 +446,18 @@ namespace System {
          * \brief Function that executes a print job. Implementation currently seems to have some issues because of the storage solution for jobnrs
          * @param jobnr JobNr of the job to be executed
          */
-        void doPrintJob(unsigned int jobnr);
+        void doPrintJob(unsigned int jobnr, std::ostream & writeStream);
 
         /**
          * \brief Loops over all jobs and prints that they are finished.
          */
 
-        void printAll();
+        void printAll(std::ostream &writeStream);
 
 
     private:
+
+        bool properlyInitialized();
         std::vector<Printer> printerList;
 
         PrinterSystem *_initcheck;

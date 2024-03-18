@@ -11,49 +11,44 @@ using namespace std;
 
 using namespace System;
 
-class XMLTest: public ::testing::Test {
+class SystemInputTests: public ::testing:: Test{
 protected:
-    // You should make the members protected s.t. they can be
-    // accessed from sub-classes.
+    friend class Printer;
+    friend class PrinterSystem;
 
-    // virtual void SetUp() will be called before each test is run.  You
-    // should define it if you need to initialize the variables.
-    // Otherwise, this can be skipped.
+    PrinterSystem testSystem;
+
     virtual void SetUp() {
     }
 
-    // virtual void TearDown() will be called after each test is run.
-    // You should define it if there is cleanup work to do.  Otherwise,
-    // you don't have to provide it.
     virtual void TearDown() {
     }
-
-    // Declares the variables your tests want to use.
-    XMLParser ppp_;
 };
 
 
 
-TEST_F(XMLTest, AfterParse){
 
-    ppp_.addInputFile("PrinterTesten/PrinterTestenInputs/test.xml");
-    EXPECT_EQ(ppp_.getJobList().size(), 2);
-    EXPECT_EQ(ppp_.getJobList().begin()->getJobNr(), 89751);
-    //This should read in a valid file, with 2 jobs, and first job should be 89751
-    EXPECT_EQ(ppp_.getDeviceList().size(), 1);
-    EXPECT_EQ(ppp_.getDeviceList().at(0).getNameDev(), "Office_Printer5");
-    EXPECT_EQ(ppp_.getDeviceList().at(0).getEmissions(), 3);
-    EXPECT_EQ(ppp_.getDeviceList().at(0).getSpeed(), 40);
-    //This should read in a valid file, with 1 device, and the correct name, emissions and speed
+TEST_F(SystemInputTests, ValidXMLTest){
 
+    EXPECT_EQ(testSystem.readXML("SystemTesten/test.xml"), true);
+}
+
+TEST_F(SystemInputTests, SystemDomainTests){
+
+    EXPECT_EQ(testSystem.readXML("SystemTesten/SystemInputs/emptyUser.xml"), false);
+    EXPECT_EQ(testSystem.readXML("SystemTesten/SystemInputs/negativeJobnr.xml"), false);
+    EXPECT_EQ(testSystem.readXML("SystemTesten/SystemInputs/NegativePagecount.xml"), false);
+    EXPECT_EQ(testSystem.readXML("SystemTesten/SystemInputs/notuniqueJobnr.xml"), false);
+    EXPECT_EQ(testSystem.readXML("SystemTesten/SystemInputs/emptyDeviceName.xml"), false);
+    EXPECT_EQ(testSystem.readXML("SystemTesten/SystemInputs/negativeEmission.xml"), false);
+    EXPECT_EQ(testSystem.readXML("SystemTesten/SystemInputs/negativeSpeed.xml"), false);
 
 }
 
-TEST_F(XMLTest, DomainInvalids_negEms){
 
-    ppp_.addInputFile("DeviceTesten/DevtestInput/negativeEmission.xml");
 
-}
+
+
 
 
 

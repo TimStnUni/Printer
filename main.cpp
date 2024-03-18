@@ -11,27 +11,28 @@
 
 int main() {
 
-//    char cwd[1024];
-//    if (getcwd(cwd, sizeof(cwd)) != NULL) {
-//        std::cout << "Current working directory: " << cwd << std::endl;
-//    } else {
-//        std::cerr << "getcwd() error" << std::endl;
-//        return 1;
-//    }
-//    return 0;
+
     System::PrinterSystem testSystem;
 
 
-    bool consistent = testSystem.readXML("test.xml");
+    bool consistent = testSystem.readXML("DeviceTesten/DevtestInput/invalidDevice.xml");
 
 
-    std::cout << "consistent is " << consistent << std::endl;
+    std::ofstream outFile; // Create an output file stream
+    std::string f = "PrintOutputTest";
+    std::string outputFileName = f + ".txt";
+    const char *outputFileNameChar = outputFileName.c_str();
+    outFile.open(outputFileNameChar); // Open the file
+
+
+
     if(consistent){
-        testSystem.getInfo("test.txt");
-        testSystem.doPrintJob(89751);
-        testSystem.printAll();
+        //testSystem.getInfo("test.txt");
+        //testSystem.doPrintJob(89751, outFile);
+        //testSystem.printAll(outFile);
 
     }
 
+    outFile.close();
     return 0;
 }
