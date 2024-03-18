@@ -35,9 +35,19 @@ TEST_F(SystemInputTests, ValidXMLTest){
 
 TEST_F(SystemInputTests, SystemDomainTests){
 
+
+    EXPECT_TRUE(FileExists("SystemTesten/SystemInputs/emptyUser.xml"));
+    EXPECT_TRUE(FileExists("SystemTesten/SystemInputs/negativeJobnr.xml"));
+    EXPECT_TRUE(FileExists("SystemTesten/SystemInputs/negativePagecount.xml"));
+    EXPECT_TRUE(FileExists("SystemTesten/SystemInputs/notuniqueJobnr.xml"));
+    EXPECT_TRUE(FileExists("SystemTesten/SystemInputs/emptyDeviceName.xml"));
+    EXPECT_TRUE(FileExists("SystemTesten/SystemInputs/negativeEmission.xml"));
+    EXPECT_TRUE(FileExists("SystemTesten/SystemInputs/negativeSpeed.xml"));
+
+
     EXPECT_EQ(testSystem.readXML("SystemTesten/SystemInputs/emptyUser.xml"), false);
     EXPECT_EQ(testSystem.readXML("SystemTesten/SystemInputs/negativeJobnr.xml"), false);
-    EXPECT_EQ(testSystem.readXML("SystemTesten/SystemInputs/NegativePagecount.xml"), false);
+    EXPECT_EQ(testSystem.readXML("SystemTesten/SystemInputs/negativePagecount.xml"), false);
     EXPECT_EQ(testSystem.readXML("SystemTesten/SystemInputs/notuniqueJobnr.xml"), false);
     EXPECT_EQ(testSystem.readXML("SystemTesten/SystemInputs/emptyDeviceName.xml"), false);
     EXPECT_EQ(testSystem.readXML("SystemTesten/SystemInputs/negativeEmission.xml"), false);
