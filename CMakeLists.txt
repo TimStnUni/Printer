@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.9)
 project(ProjSoftEng)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
@@ -12,6 +12,29 @@ set(CMAKE_EXE_LINKER_FLAGS -pthread)
 include_directories(./gtest/include)
 include_directories(./gtest/include/gtest/internal)
 include_directories(./Libs)
+
+
+#find doxygen
+find_package(Doxygen
+            REQUIRED dot)
+
+doxygen_add_docs(doxygen_doc ALL
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Docs/doxydocs/
+        COMMENT "maybe this works")
+#set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/Docs/Doxyfile)
+#set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+
+#configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+#message("doxygen build started")
+
+
+#add_custom_target(doc_doxygen ALL
+#    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+#    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+#    COMMENT "Generating doxygen documentation"
+#    COMMENT ${CMAKE_CURRENT_BINARY_DIR}
+#    VERBATIM)
 
 # Set Library dir
 link_directories(./gtest/lib)
