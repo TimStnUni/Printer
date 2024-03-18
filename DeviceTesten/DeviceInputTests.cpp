@@ -59,5 +59,8 @@ TEST_F(DeviceInputTests, ValidDeviceInput) {
 
 TEST_F(DeviceInputTests, SpeedIsNegativeDeathTest) {
     System::Device dev;
-    EXPECT_DEATH(dev.setSpeed(-1), "Speed should be positive");
+    int speed = -1;
+    EXPECT_DEATH(dev.setSpeed(speed), "Speed should be positive");
 }
+
+

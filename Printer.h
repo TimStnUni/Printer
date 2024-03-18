@@ -190,12 +190,31 @@ namespace System {
          */
         void setUserName(const std::string &userName);
 
+
+
+        /**
+         * Overload of the = constructor for jobs since it seems to be needed for something
+         * @param inJob
+         * @return
+         */
+
+        Job operator=(Job const & inJob){
+            Job outJob;
+            outJob.userName = inJob.getUserName();
+            outJob.pageCount = inJob.getPageCount();
+            outJob.jobNr = inJob.getJobNr();
+            outJob._initCheck = &outJob;
+            return outJob;
+        }
+
     private:
         int jobNr, pageCount;
         std::string userName;
         Job *_initCheck;
 
         bool properlyInitialized() const;
+
+
 
 
     };
@@ -207,7 +226,7 @@ namespace System {
 
 
 
-        //Todo: Write tests
+
 
 
         XMLParser();

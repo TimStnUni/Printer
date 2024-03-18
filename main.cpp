@@ -22,7 +22,7 @@ int main() {
     System::PrinterSystem testSystem;
 
 
-    bool consistent = testSystem.readXML("test.xml", std::ofstream());
+    bool consistent = testSystem.readXML("test.xml");
 
     if(consistent){
         testSystem.getInfo("test.txt");

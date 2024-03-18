@@ -415,6 +415,8 @@ namespace System {
         ENSURE(this->properlyInitialized(), "job was not properly initialized");
     }
 
+
+
     void Job::setJobNr(int jobNr_in) {
         REQUIRE(jobNr_in>0, "jobnr should be positive");
 
