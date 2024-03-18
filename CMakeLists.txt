@@ -40,7 +40,6 @@ set(DEBUG_SOURCE_FILES
         ./Libs/tinyxmlerror.cpp
         Printer.cpp
         Printer.h
-        Tests.cpp
         TicTacToeUtils.h
         TicTacToeUtils.cpp
         DeviceTesten/JobOutputTests.cpp
