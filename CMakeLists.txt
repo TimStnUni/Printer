@@ -33,17 +33,16 @@ set(RELEASE_SOURCE_FILES
 # Set source files for DEBUG target
 # Only add cpp files, no h files!
 set(DEBUG_SOURCE_FILES
-        tests.cpp
         ./Libs/tinystr.cpp
         ./Libs/tinyxml.cpp
         ./Libs/tinyxmlparser.cpp
         ./Libs/tinyxmlerror.cpp
         Printer.cpp
         Printer.h
-        Tests.cpp
         TicTacToeUtils.h
         TicTacToeUtils.cpp
         DeviceTesten/DeviceInputTests.cpp
+        PrinterTesten/tests.cpp
 
 
 )
