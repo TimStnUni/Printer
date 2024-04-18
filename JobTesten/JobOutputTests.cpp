@@ -1,6 +1,10 @@
-//
-// Created by alyja on 14/03/2024.
-//
+//============================================================================
+// Name        : JobOutputTests.cpp
+// Author      : Tim Standaert, Jasmine Castillo, Thomas D'Archambeau
+// Date        : 14/03/2024
+// Version     : 17++
+// Description : PrinterSystem in C++, Ansi-style
+//============================================================================
 
 #include <iostream>
 #include <fstream>

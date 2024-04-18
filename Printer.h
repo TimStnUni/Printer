@@ -1,6 +1,10 @@
-//
-// Created by tim on 29/02/24.
-//
+//============================================================================
+// Name        : Printer.h
+// Author      : Tim Standaert, Jasmine Castillo, Thomas D'Archambeau
+// Date        : 29/02/2024
+// Version     : 17++
+// Description : PrinterSystem in C++, Ansi-style
+//============================================================================
 
 #ifndef PROJSOFTENG_PRINTER_H
 #define PROJSOFTENG_PRINTER_H

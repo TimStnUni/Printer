@@ -1,8 +1,9 @@
 //============================================================================
 // Name        : main.cpp
-// Author      : Tim Standaert, modified by Jasmine Castillo
-// Version     :
-// Description :
+// Author      : Tim Standaert, Jasmine Castillo, Thomas D'Archambeau
+// Date        : 29/02/2024
+// Version     : 17++
+// Description : PrinterSystem in C++, Ansi-style
 //============================================================================
 
 #include <unistd.h>
@@ -34,6 +35,7 @@ int main() {
     std::string outputFileName2 = f2 + ".txt";
     const char *outputFileNameChar2 = outputFileName2.c_str();
     outFile2.open(outputFileNameChar2); // Open the file
+
 
     if(consistent){
         //Usecase 2: Basic info about the printer system
