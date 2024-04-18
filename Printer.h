@@ -35,6 +35,10 @@ using namespace std;
 namespace System {
     class Device {
     public:
+
+        /**
+         * \brief Default Constructor
+         */
         Device();
 
         /**
@@ -48,7 +52,7 @@ namespace System {
 
 
         /**
-         * \brief Copy Constructor that should fix the _initCheck to this, but somehow that doesn't seem to happen
+         * \brief Copy Constructor that should fix the _initCheck to this
          * @param inDevice device to be copied
          */
         Device(const Device &inDevice);
@@ -104,6 +108,12 @@ namespace System {
         int getSpeed() const;
 
 
+        /**
+         * \brief overloaded equality operator for getters
+         * @param d device to be compared
+         * @return boolean true or false
+         */
+
         bool operator == (const Device &d){
             if (name == d.name && emissions == d.emissions && speed == d.speed){
                 return true;
@@ -127,7 +137,15 @@ namespace System {
     class Job {
 
     public:
+        /**
+         * \brief Default Constructor
+         */
         Job();
+
+        /**
+         * \brief Copy constructor to fix _initcheck to this
+         * @param inJob
+         */
 
         Job(const Job &inJob);
 
@@ -194,12 +212,24 @@ namespace System {
          */
         void setUserName(const std::string &userName);
 
+
+
+        /**
+         * Overload of the = constructor for jobs since it seems to be needed for something
+         * @param inJob
+         * @return
+         */
+
+        Job& operator=(Job const & inJob);
+
     private:
         int jobNr, pageCount;
         std::string userName;
         Job *_initCheck;
 
         bool properlyInitialized() const;
+
+
 
 
     };
@@ -211,7 +241,7 @@ namespace System {
 
 
 
-        //Todo: Write tests
+
 
 
         XMLParser();
@@ -227,7 +257,13 @@ namespace System {
          */
         XMLParser(const char *filename);
 
-        void addInputFile(const char * filename);
+        /**
+         * \brief Additional way to read an XML File through the parser
+         * @param filename
+         * @return
+         */
+
+        bool addInputFile(const char * filename);
 
         ~XMLParser();
 
@@ -270,9 +306,17 @@ namespace System {
         /**
          * \brief Function that returns the amount of jobs. Currently unused
          * @return
+         * //REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getNrOfJobs()")
          */
-        //REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getNrOfJobs()")
+
         int getNrOfJobs();
+
+
+        /**
+         * \brief Getter function for the state of the XMLparser after attempting to parse the input file
+         * @return
+         */
+
         bool isParseSuccessful() const;
 
     private:
@@ -285,6 +329,7 @@ namespace System {
 
         /**
          * \brief Function that parses the XML file supplied to the constructor.
+         * @param errorstream Stream to store errors
          */
 
         bool parse(std::ostream &errorstream);
@@ -327,7 +372,7 @@ namespace System {
 
         //Todo make a version of this function that takes a single device and pushes it back into the devicelist
 
-        //Todo: when getDevice and getJobs is more properly implemented, these should ensure they are correctly set.
+
         /**
          * \brief Function to add a printer device to a printer container
          * @param device_in a vector of devices to be added.
@@ -348,11 +393,13 @@ namespace System {
 
 
 
-        //this is technically not very general
+
         /**
-         * \brief Getter function for a printer device. Currently poorly implemented to always return the first device stored in the printer
+         * \brief Getter function for a printer device from a printer
+         * @param index Index of the device to be gotten
          * @return first device stored in the printer
          * REQUIRE(this->properlyInitialized(), "Printer was not initialized when calling getDevice()")
+         * REQUIRE(index > 0 && index < this->devicelist.size(), "Index should be within bounds");
          */
         Device getDevice(int index);
 
@@ -368,11 +415,26 @@ namespace System {
          */
         std::map<unsigned int, unsigned int> getJobNrMap();
 
+        /**
+         * \brief Getter for all jobnrs to add to the large collection of unique jobnrs for the system
+         * @return
+         */
+
         std::set<unsigned int> getJobNrSet();
+
+        /**
+         * \brief Getter function that returns the index in the JobList of this printer
+         * @param jobNr
+         * @return
+         */
 
         unsigned int getJobIndex(unsigned int &jobNr);
 
 
+        /**
+         * \brief Housekeeping function that keeps all jobnrs pointing to the correct job
+         * @param jobNr
+         */
         void removeJob(unsigned int jobNr);
 
     private:
@@ -408,8 +470,7 @@ namespace System {
         PrinterSystem();
 
 
-        //todo: i believe this should be a private or protected function. I think that means we need to declare the tests as a friend?
-        bool properlyInitialized();
+
 
 
         /**
@@ -418,12 +479,12 @@ namespace System {
          */
         bool readXML(const char *filename);
 
-        //TODO: change cerr to errorstream
 
 
 
 
-        //Todo: add a way to specify where the output should be stored. Look at later tictactoe versions
+
+        //TODO: change this over to a stream to either print to terminal or to file.
         /**
          * \brief Function that prints all know information about the printing system to a file
          * @param filename Filename of the output file
@@ -434,56 +495,32 @@ namespace System {
 
 
 
-        //Todo: add a way to specify where the output should be stored. Look at later tictactoe versions
+
         /**
          * \brief Function that executes a print job. Implementation currently seems to have some issues because of the storage solution for jobnrs
          * @param jobnr JobNr of the job to be executed
+         * @param writeStream Stream where the output is stored
          */
-        void doPrintJob(unsigned int jobnr);
+        void doPrintJob(unsigned int jobnr, std::ostream & writeStream);
 
         /**
          * \brief Loops over all jobs and prints that they are finished.
+         * @param writeStream Stream where the output will be stored
          */
 
-        void printAll();
+        void printAll(std::ostream &writeStream);
 
 
     private:
+
+        bool properlyInitialized();
         std::vector<Printer> printerList;
 
         PrinterSystem *_initcheck;
 
-        //Naming is the same as for printer.
-        //Potentially this should be replaced by a map that maps a jobnr to a pointer to the job, or at least to some
-        //way of identifying which job it belongs to. Right now its own index in the unordered set is also the index of the
-        //printer list. This won't work, since there can be multiple jobs within a Printer container.
-        //This should probably be a map of jobNr's that map to either indices or pointers to printers in the printerList.
-        //Within those there can be a set that simply uses its own index to point to the correct job.
         std::set<unsigned int> jobNrSet;
 
 
-        /*If replaced by the following it could probably be implemented as something like
-        this->addprinter(printer){
-            printerlist.push_back(printer)
-            int printerindex = printerlist.size() - 1;
-
-            std::unordered_set<unsigned int> printernrs = printer.getPrinterNrs();
-
-            for (printernrs.size, iterate over printernrs (should probably be done with iterators, but those are a bit finnicky)){
-                jobNrMap.add({printernrs.at(i), printerindex});
-                }
-        }
-
-
-        this way if later some jobnr needs to be fetched it's a case of
-
-         getJob(jobnr){
-            printerlist.at(jobNrMap.at(jobnr)).getJob(jobnr){
-                //Some relevant code to be implemented in the printer class, don't know what they would want
-
-
-
-        */
         std::map<unsigned int, unsigned int> jobNrMap;
 
     };

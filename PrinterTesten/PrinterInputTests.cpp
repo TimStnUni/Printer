@@ -29,18 +29,38 @@ protected:
     }
 
     // Declares the variables your tests want to use.
-    XMLParser ppp_ = XMLParser("test.xml");
+    XMLParser ppp_;
 };
 
 
 
 TEST_F(XMLTest, AfterParse){
-    //XMLParser testParser("test.xml");
 
+    ppp_.addInputFile("PrinterTesten/PrinterTestenInputs/test.xml");
     EXPECT_EQ(ppp_.getJobList().size(), 2);
     EXPECT_EQ(ppp_.getJobList().begin()->getJobNr(), 89751);
+    //This should read in a valid file, with 2 jobs, and first job should be 89751
+    EXPECT_EQ(ppp_.getDeviceList().size(), 1);
+    EXPECT_EQ(ppp_.getDeviceList().at(0).getNameDev(), "Office_Printer5");
+    EXPECT_EQ(ppp_.getDeviceList().at(0).getEmissions(), 3);
+    EXPECT_EQ(ppp_.getDeviceList().at(0).getSpeed(), 40);
+    //This should read in a valid file, with 1 device, and the correct name, emissions and speed
 
 
+}
+
+TEST_F(XMLTest, DomainInvalids_negEms){
+
+    EXPECT_EQ(ppp_.addInputFile("DeviceTesten/DevtestInput/negativeEmission.xml"), false);
+    EXPECT_EQ(ppp_.addInputFile("DeviceTesten/DevtestInput/negativeSpeed.xml"), false);
+    EXPECT_EQ(ppp_.addInputFile("DeviceTesten/DevtestInput/emptyDeviceName.xml"), false);
+
+
+}
+
+
+TEST_F(XMLTest, ValidTest){
+    EXPECT_EQ(ppp_.addInputFile("DeviceTesten/DevtestInput/validDevice.xml"), true);
 }
 
 

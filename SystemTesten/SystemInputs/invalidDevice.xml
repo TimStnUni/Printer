@@ -1,8 +1,8 @@
 <SYSTEM>
     <DEVICE>
-        <name>Office_Printer7</name>
-        <emissions>8</emissions>
-        <speed>-50</speed>
+        <name>Office_Printer8<name>
+        <emissions>5</emissions>
+        <speed>45</speed>
     </DEVICE>
 <JOB>
         <jobNumber>89751</jobNumber>

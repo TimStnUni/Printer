@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"
 #include <iostream>
 #include <fstream>
 #include <sys/stat.h>
@@ -25,6 +25,7 @@ TEST_F(DeviceInputTests, DeviceNameIsEmpty) {
     ASSERT_TRUE(DirectoryExists("DeviceTesten/DevtestInput"));
     ASSERT_TRUE(FileExists("DeviceTesten/DevtestInput/emptyDeviceName.xml"));
 
+
     System::PrinterSystem testSystem;
     EXPECT_EQ(testSystem.readXML("DeviceTesten/DevtestInput/emptyDeviceName.xml"), false);
     // readXML returns false if the device name is empty
@@ -32,16 +33,13 @@ TEST_F(DeviceInputTests, DeviceNameIsEmpty) {
 
 TEST_F(DeviceInputTests, EmissionsAreNegative) {
     ASSERT_TRUE(DirectoryExists("DeviceTesten/DevtestInput"));
-    ASSERT_TRUE(FileExists("DeviceTesten/DevtestInput/negativeEmissions.xml"));
+    ASSERT_TRUE(FileExists("DeviceTesten/DevtestInput/negativeEmission.xml"));
 
     System::PrinterSystem testSystem;
-    EXPECT_EQ(testSystem.readXML("DeviceTesten/DevtestInput/negativeEmissions.xml"), false);
+    EXPECT_EQ(testSystem.readXML("DeviceTesten/DevtestInput/negativeEmission.xml"), false);
     // readXML returns false if the emissions value is negative
 }
 
-TEST_F(DeviceInputTests, SpeedIsNegative) {
-    ASSERT_TRUE(DirectoryExists("DeviceTesten/DevtestInput"));
-    ASSERT_TRUE(FileExists("DeviceTesten/DevtestInput/negativeSpeed.xml"));
 
     System::PrinterSystem testSystem;
     EXPECT_EQ(testSystem.readXML("DeviceTesten/DevtestInput/negativeSpeed.xml"), false);
@@ -52,7 +50,27 @@ TEST_F(DeviceInputTests, ValidDeviceInput) {
     ASSERT_TRUE(DirectoryExists("DeviceTesten/DevtestInput"));
     ASSERT_TRUE(FileExists("DeviceTesten/DevtestInput/validDevice.xml"));
 
+
+TEST_F(DeviceInputTests, ValidDeviceInput) {
+    ASSERT_TRUE(DirectoryExists("DeviceTesten/DevtestInput"));
+    ASSERT_TRUE(FileExists("DeviceTesten/DevtestInput/validDevice.xml"));
+
     System::PrinterSystem testSystem;
-    EXPECT_EQ(testSystem.readXML("DeviceTesten/DevtestInput/validDevice.xml"), false);
+    EXPECT_EQ(testSystem.readXML("DeviceTesten/DevtestInput/validDevice.xml"), true);
     // readXML returns true if the XML input for the device is valid
 }
+
+TEST_F(DeviceInputTests, SpeedIsNegativeDeathTest) {
+    System::Device dev;
+    int speed = -1;
+    EXPECT_DEATH(dev.setSpeed(speed), "Speed should be positive");
+}
+
+TEST_F(DeviceInputTests, EmissionsAreNegativeDeathTest) {
+    System::Device dev;
+    int emissions = -1;
+    EXPECT_DEATH(dev.setEmissions(emissions), "Emissions should be positive");
+}
+
+
+

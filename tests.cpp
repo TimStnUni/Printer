@@ -18,9 +18,11 @@ using namespace std;
 #include "./PrinterTesten/PrinterInputTests.cpp"
 #include "./JobTesten/JobInputTests.cpp"
 #include "./JobTesten/JobOutputTests.cpp"
+#include "./DeviceTesten/DeviceInputTests.cpp"
+#include "./SystemTesten/SystemInputTests.cpp"
+#include "./SystemTesten/SystemOutputTests.cpp"
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
-

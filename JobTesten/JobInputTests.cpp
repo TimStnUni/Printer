@@ -36,14 +36,6 @@ TEST_F(JobInputTests, jobNrIsNegative){
     ASSERT_TRUE(FileExists("JobTesten/JtestInput/negativeJobnr.xml"));
 
     System::PrinterSystem testSystem;
-//    ofstream outFile; //create an output file stream
-//    string outFileName = "JobTesten/JtestOutput/negativeJobnr.txt";
-//    const char *outFileNameChar = outFileName.c_str(); // open the file
-//    outFile.open(outFileNameChar);
-//    bool readAndPrint = testSystem.readXML("JobTesten/JtestOutput/negativeJobnr.txt", outFile);
-//
-//    ASSERT_TRUE(DirectoryExists("Tests/JtestOutput"));
-//    ASSERT_TRUE(FileExists("JobTesten/JtestOutput/negativeJobnr.txt"));
 
     EXPECT_EQ(testSystem.readXML("JobTesten/JtestInput/negativeJobnr.xml"), false);
     // readXML returns false if the xml is invalid
@@ -78,4 +70,14 @@ TEST_F(JobInputTests, pageCountisnegative){
     // readXML returns false if the xml is invalid
 }
 
+
+TEST_F(JobInputTests, NegativeDeathTests){
+    System::Job job;
+
+    EXPECT_DEATH(job.setUserName(""), "Username should not be empty");
+    EXPECT_DEATH(job.setPageCount(-5), "Pagecount should be positive");
+    EXPECT_DEATH(job.setJobNr(-5), "jobnr should be positive");
+
+
+}
 

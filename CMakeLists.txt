@@ -13,6 +13,15 @@ include_directories(./gtest/include)
 include_directories(./gtest/include/gtest/internal)
 include_directories(./Libs)
 
+
+#find_package(Doxygen
+#        REQUIRED dot)
+#
+#doxygen_add_docs(doxygen_doc ALL
+#        ${CMAKE_CURRENT_SOURCE_DIR}
+#        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Docs/doxydocs/
+#        COMMENT "maybe this works")
+
 # Set Library dir
 link_directories(./gtest/lib)
 
@@ -41,6 +50,7 @@ set(DEBUG_SOURCE_FILES
         Printer.h
         TicTacToeUtils.h
         TicTacToeUtils.cpp
+        DeviceTesten/JobOutputTests.cpp
         DeviceTesten/DeviceInputTests.cpp
         PrinterTesten/tests.cpp
 
