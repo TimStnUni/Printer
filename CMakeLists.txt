@@ -36,6 +36,12 @@ set(RELEASE_SOURCE_FILES
         ./Libs/tinyxmlerror.cpp
         Printer.cpp
         Printer.h
+        Device.cpp
+        Device.h
+        Job.cpp
+        Job.h
+        XMLParser.cpp
+        XMLParser.h
 
 )
 
@@ -52,6 +58,12 @@ set(DEBUG_SOURCE_FILES
         TicTacToeUtils.h
         TicTacToeUtils.cpp
         DeviceTesten/JobOutputTests.cpp
+        Device.cpp
+        Device.h
+        Job.cpp
+        Job.h
+        XMLParser.cpp
+        XMLParser.h
 
 
 )
