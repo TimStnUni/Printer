@@ -14,13 +14,13 @@ include_directories(./gtest/include/gtest/internal)
 include_directories(./Libs)
 
 
-find_package(Doxygen
-        REQUIRED dot)
-
-doxygen_add_docs(doxygen_doc ALL
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Docs/doxydocs/
-        COMMENT "maybe this works")
+#find_package(Doxygen
+#        REQUIRED dot)
+#
+#doxygen_add_docs(doxygen_doc ALL
+#        ${CMAKE_CURRENT_SOURCE_DIR}
+#        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Docs/doxydocs/
+#        COMMENT "maybe this works")
 
 # Set Library dir
 link_directories(./gtest/lib)
@@ -54,25 +54,17 @@ set(DEBUG_SOURCE_FILES
         ./Libs/tinyxmlparser.cpp
         ./Libs/tinyxmlerror.cpp
         Printer.cpp
-        Printer.h
-        TicTacToeUtils.h
         TicTacToeUtils.cpp
-        DeviceTesten/JobOutputTests.cpp
         Device.cpp
-        Device.h
         Job.cpp
-        Job.h
         XMLParser.cpp
-        XMLParser.h
-
-
 )
 
         # Create RELEASE target
 add_executable(release_target ${RELEASE_SOURCE_FILES})
 
 # Create DEBUG target
-add_executable(tests_target ${DEBUG_SOURCE_FILES})
+add_executable(debug_target ${DEBUG_SOURCE_FILES})
 
 # Link library
-target_link_libraries(tests_target gtest)
+target_link_libraries(debug_target gtest)

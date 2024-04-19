@@ -13,9 +13,10 @@ using namespace std;
 #include "./PrinterTesten/PrinterDomainTests.cpp"
 #include "./PrinterTesten/PrinterOutputTests.cpp"
 #include "./PrinterTesten/PrinterInputTests.cpp"
-#include "./JobTesten/JobInputTests.cpp"
-#include "./JobTesten/JobOutputTests.cpp"
-#include "./DeviceTesten/DeviceInputTests.cpp"
+//#include "./JobTesten/JobInputTests.cpp"
+//#include "./JobTesten/JobOutputTests.cpp"
+//#include "./DeviceTesten/DeviceInputTests.cpp"
+#include "./Alletesten/alltests.cpp"
 #include "./SystemTesten/SystemInputTests.cpp"
 #include "./SystemTesten/SystemOutputTests.cpp"
 
