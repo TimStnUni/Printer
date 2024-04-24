@@ -97,7 +97,7 @@ TEST_F(InputTests, Jobnr_unique){
 
 TEST_F(InputTests, emptyUserName){
     ASSERT_TRUE(DirectoryExists("Alletesten/testinput"));
-    ASSERT_TRUE(FileExists("JobTesten/JtestInput/emptyUser.xml"));
+    ASSERT_TRUE(FileExists("Alletesten/testinput/emptyUser.xml"));
 
     System::PrinterSystem testSystem;
     EXPECT_EQ(testSystem.readXML("Alletesten/testinput/emptyUser.xml"), false);

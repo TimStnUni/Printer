@@ -16,7 +16,7 @@ using namespace std;
 //#include "./JobTesten/JobInputTests.cpp"
 //#include "./JobTesten/JobOutputTests.cpp"
 //#include "./DeviceTesten/DeviceInputTests.cpp"
-#include "./Alletesten/alltests.cpp"
+#include "./Alletesten/allinputtests.cpp"
 #include "./SystemTesten/SystemInputTests.cpp"
 #include "./SystemTesten/SystemOutputTests.cpp"
 
