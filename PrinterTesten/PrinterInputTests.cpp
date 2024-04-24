@@ -51,16 +51,16 @@ TEST_F(XMLTest, AfterParse){
 
 TEST_F(XMLTest, DomainInvalids_negEms){
 
-    EXPECT_EQ(ppp_.addInputFile("DeviceTesten/DevtestInput/negativeEmission.xml"), false);
-    EXPECT_EQ(ppp_.addInputFile("DeviceTesten/DevtestInput/negativeSpeed.xml"), false);
-    EXPECT_EQ(ppp_.addInputFile("DeviceTesten/DevtestInput/emptyDeviceName.xml"), false);
+    EXPECT_EQ(ppp_.addInputFile("Alletesten/testinput/negativeEmission.xml"), false);
+    EXPECT_EQ(ppp_.addInputFile("Alletesten/testinput/negativeSpeed.xml"), false);
+    EXPECT_EQ(ppp_.addInputFile("Alletesten/testinput/emptyDeviceName.xml"), false);
 
 
 }
 
 
 TEST_F(XMLTest, ValidTest){
-    EXPECT_EQ(ppp_.addInputFile("DeviceTesten/DevtestInput/validDevice.xml"), true);
+    EXPECT_EQ(ppp_.addInputFile("Alletesten/testinput/validDevice.xml"), true);
 }
 
 
