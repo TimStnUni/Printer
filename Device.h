@@ -26,8 +26,8 @@ namespace System {
          * @param speed : Speed of the printer in p/minute
          * ENSURE(this->properlyInitialized(), "Device is not properly initialized");
          */
-        Device(std::string name, int emissions, int speed, std::string type, float cost);
-
+        Device(std::string name, int emissions, int speed, std::string type);
+//float cost
 
         /**
          * \brief Copy Constructor that should fix the _initCheck to this
@@ -93,7 +93,7 @@ namespace System {
          * ENSURE(this->getType() == type_in, "Type not correctly set")
          */
 
-        void setType(std::string type_in);
+        void setType(std::string &type_in);
         /**
          * \brief a getter function for the device type
          * @return returns the type of the device, either bw (black and white) or color (for color printing)
@@ -109,22 +109,22 @@ namespace System {
          * ENSURE(this->getCost() == cost_in, "Cost not correctly set")
          */
 
-        void setCost(float cost_in);
-
-        /**
-         * \brief a getter function for the printing cost
-         * @return euro cents (= 1/100 euros)
-         * REQUIRE(this->properlyInitialized(), "Device not initialized when calling getCost()")
-         */
-
-        float getCost() const;
-
-
-        /**
-         * \brief overloaded equality operator for getters
-         * @param d device to be compared
-         * @return boolean true or false
-         */
+//        void setCost(float &cost_in);
+//
+//        /**
+//         * \brief a getter function for the printing cost
+//         * @return euro cents (= 1/100 euros)
+//         * REQUIRE(this->properlyInitialized(), "Device not initialized when calling getCost()")
+//         */
+//
+//        float getCost() const;
+//
+//
+//        /**
+//         * \brief overloaded equality operator for getters
+//         * @param d device to be compared
+//         * @return boolean true or false
+//         */
 
         bool operator == (const Device &d){
             if (name == d.name && emissions == d.emissions && speed == d.speed){
@@ -137,7 +137,7 @@ namespace System {
         std::string name;
         int emissions, speed;
         std::string type;
-        float cost;
+//        float cost;
 
         Device *_initCheck;
 

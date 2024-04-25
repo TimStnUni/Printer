@@ -7,7 +7,7 @@
     </DEVICE>
     <DEVICE>
         <name>ColorPrinter</name>
-        <emission>6</emission>
+        <emissions>6</emissions>
         <type>color</type>
         <speed>32</speed>
     </DEVICE>

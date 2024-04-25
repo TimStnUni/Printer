@@ -8,8 +8,8 @@ namespace System {
 
 
 
-    Device::Device(std::string name_in, int emissions_in, int speed_in, std::string type_in, float cost_in) {
-
+    Device::Device(std::string name_in, int emissions_in, int speed_in, std::string type_in) {
+//float cost_in
         //REQUIRE(emissions_in > 0, "Emissions should be positive");
         //REQUIRE(speed_in > 0, "Speed should be positive");
 
@@ -20,7 +20,7 @@ namespace System {
         this->setEmissions(emissions_in);
         this->setSpeed(speed_in);
         this->setType(type_in);
-        this->setCost(cost_in);
+//        this->setCost(cost_in);
 
         ENSURE(this->properlyInitialized(), "Device is not properly initialized");
     }
@@ -54,11 +54,11 @@ namespace System {
         return type;
     }
 
-    float Device::getCost() const {
-
-        REQUIRE(this->properlyInitialized(), "Device not initialized when calling getCost()");
-        return cost;
-    }
+//    float Device::getCost() const {
+//
+//        REQUIRE(this->properlyInitialized(), "Device not initialized when calling getCost()");
+//        return cost;
+//    }
 
     bool Device::properlyInitialized() const {
         return (_initCheck == this);
@@ -73,15 +73,15 @@ namespace System {
         std::string inName = inDevice.getNameDev();
         int emissions_in = inDevice.getEmissions();
         int speed_in = inDevice.getSpeed();
-        std::string inType = inType.getType();
-        float inCost = inCost.getCost();
+        std::string type_in = inDevice.getType();
+//        float cost_in = inDevice.getCost();
 
 
         this->setNameDev(inName);
         this->setEmissions(emissions_in);
         this->setSpeed(speed_in);
         this->setType(type_in);
-        this->setCost(cost_in);
+//        this->setCost(cost_in);
 
 
         ENSURE(this->properlyInitialized(), "Device not properly initialized in copy constructor");
@@ -117,16 +117,16 @@ namespace System {
 
     }
 
-    void Device::setType(const std::string type_in) {
+    void Device::setType(std::string &type_in) {
         REQUIRE(!type_in.empty(), "Type shouldn't be empty");
         this->type = type_in;
         ENSURE(this->getType() == type_in, "Type not correctly set");
     }
 
-    void Device::setCost(float cost_in) {
-        REQUIRE(cost_in >= 0, "Cost should be positive");
-        this->cost = cost_in;
-        ENSURE(this->getCost() == cost_in, "Cost not correctly set");
-    }
+//    void Device::setCost(float &cost_in) {
+//        REQUIRE(cost_in >= 0, "Cost should be positive");
+//        this->cost = cost_in;
+//        ENSURE(this->getCost() == cost_in, "Cost not correctly set");
+//    }
 
 } // System

@@ -7,6 +7,9 @@ set(CMAKE_CXX_STANDARD 17)
 # Remove the "-O2" flag if you have problems with the debugger.
 set(CMAKE_CXX_FLAGS "-std=c++17 -Wall  -O2")
 set(CMAKE_EXE_LINKER_FLAGS -pthread)
+# I'm not sure if this is allowed
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0")
 
 # Set include dir
 include_directories(./gtest/include)

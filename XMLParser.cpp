@@ -40,13 +40,14 @@ namespace System {
         for (TiXmlElement *Level1Elem = System->FirstChildElement(); Level1Elem != NULL;
              Level1Elem = Level1Elem->NextSiblingElement()) {
 
-            std::string type = Level1Elem->Value();
+            std::string type_sys = Level1Elem->Value();
 
 
-            if (type == "DEVICE") {
+            if (type_sys == "DEVICE") {
                 bool readingCorrect = true;
                 std::string name;
                 int emissions, speed;
+                std::string type;
 
                 for (TiXmlElement *elem = Level1Elem->FirstChildElement(); elem != NULL;
                      elem = elem->NextSiblingElement()) {
@@ -91,7 +92,22 @@ namespace System {
 
 
                             }
+//TODO: check if correct, do we need to add cost?
+                        }else if (elemname == "type") {
 
+
+                            std::string type_d = elem->FirstChild()->ToText()->Value();
+
+
+                            if (type_d.empty()) {
+                                errorstream << "Type should not be empty" << std::endl;
+                                readingCorrect = false;
+                                return readingCorrect;
+
+                            } else {
+                                type = type_d;
+                                //std::cout << "type = " << type << std::endl;
+                            }
 
                         } else if (elemname == "speed") {
                             if (std::stoi(elem->FirstChild()->ToText()->Value()) > 0) {
@@ -112,14 +128,15 @@ namespace System {
                     }
                 }
                 if (readingCorrect) {
-                    Device tempPrinter = Device(name, emissions, speed);
+                    Device tempPrinter = Device(name, emissions, speed, type);
                     deviceList.push_back(tempPrinter);
                 }
 
 
-            } else if (type == "JOB") {
+            } else if (type_sys == "JOB") {
                 std::string userName;
                 int pageCount, jobNr;
+                std::string type;
                 bool readingCorrectly = true;
 
                 for (TiXmlElement *elem = Level1Elem->FirstChildElement(); elem != NULL;
@@ -161,6 +178,23 @@ namespace System {
                             return readingCorrectly;
                         }
 
+//TODO: check if correct
+                    }else if (elemname == "type") {
+
+
+                        std::string type_j = elem->FirstChild()->ToText()->Value();
+
+
+                        if (type_j.empty()) {
+                            errorstream << "Type should not be empty" << std::endl;
+                            readingCorrectly = false;
+                            return readingCorrectly;
+
+                        } else {
+                            type = type_j;
+                            //std::cout << "type = " << type << std::endl;
+                        }
+
                     } else {
                         std::cout << "Element name " << elemname << "is either empty or an unexpected element name"
                                   << std::endl;
@@ -180,7 +214,7 @@ namespace System {
                     //Implement better duplicate checking off the return value for insert?
                     if (jobNrSet.find(jobNr) == jobNrSet.end()) {
                         //Job is only added to joblist if its jobnr is unique
-                        Job tempJob = Job(userName, pageCount, jobNr);
+                        Job tempJob = Job(userName, pageCount, jobNr, type);
                         jobList.push_back(tempJob);
                         jobNrMap.insert({jobNr, jobList.size() - 1});
                         jobNrSet.insert(jobNr);
@@ -196,7 +230,7 @@ namespace System {
 
             } else {
 
-                std::cerr << "Element should be either a printer or a Job, is a " << type << std::endl;
+                std::cerr << "Element should be either a printer or a Job, is a " << type_sys << std::endl;
 
 
                 continue;
