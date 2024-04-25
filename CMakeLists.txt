@@ -58,6 +58,8 @@ set(DEBUG_SOURCE_FILES
         Device.cpp
         Job.cpp
         XMLParser.cpp
+        Alletesten/alloutputtests.cpp
+        Alletesten/alldomaintests.cpp
 )
 
         # Create RELEASE target

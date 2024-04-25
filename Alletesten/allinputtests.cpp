@@ -122,13 +122,3 @@ TEST_F(InputTests, NegativeDeathTests){
 
 }
 
-//class OutputTests: public ::testing:: Test {
-//protected:
-//    friend class Job;
-//
-//    virtual void SetUp() {
-//    }
-//
-//    virtual void TearDown() {
-//    }
-//};

@@ -26,7 +26,7 @@ namespace System {
          * @param speed : Speed of the printer in p/minute
          * ENSURE(this->properlyInitialized(), "Device is not properly initialized");
          */
-        Device(std::string name, int emissions, int speed);
+        Device(std::string name, int emissions, int speed, std::string type, float cost);
 
 
         /**
@@ -85,6 +85,40 @@ namespace System {
          */
         int getSpeed() const;
 
+        //TODO:: filled it in, has to get checked
+        /**
+         * \brief A setter function for the printer speed
+         * @param type_in
+         * REQUIRE(!type_in.empty(), "Type shouldn't be empty")
+         * ENSURE(this->getType() == type_in, "Type not correctly set")
+         */
+
+        void setType(std::string type_in);
+        /**
+         * \brief a getter function for the device type
+         * @return returns the type of the device, either bw (black and white) or color (for color printing)
+         * REQUIRE(this->properlyInitialized(), "Device not initialized when calling getType()")
+         */
+
+        std::string getType() const;
+
+        /**
+         * \brief A setter function for the cost of printing
+         * @param cost_in
+         * REQUIRE(cost_in >= 0, "Cost should be positive")
+         * ENSURE(this->getCost() == cost_in, "Cost not correctly set")
+         */
+
+        void setCost(float cost_in);
+
+        /**
+         * \brief a getter function for the printing cost
+         * @return euro cents (= 1/100 euros)
+         * REQUIRE(this->properlyInitialized(), "Device not initialized when calling getCost()")
+         */
+
+        float getCost() const;
+
 
         /**
          * \brief overloaded equality operator for getters
@@ -102,6 +136,8 @@ namespace System {
     protected:
         std::string name;
         int emissions, speed;
+        std::string type;
+        float cost;
 
         Device *_initCheck;
 

@@ -35,7 +35,7 @@ namespace System {
          *
          * ENSURE(this->properlyInitialized(), "Job wasn't properly initialized")
          */
-        Job(std::string userName_in, int pageCount_in, int jobNr_in);
+        Job(std::string userName_in, int pageCount_in, int jobNr_in, std::string type_in);
 
 
         /**
@@ -87,6 +87,24 @@ namespace System {
          */
         void setUserName(const std::string &userName);
 
+        //TODO:: filled it in, has to get checked
+        /**
+         * \brief A setter function for the printer speed
+         * @param type_in
+         * REQUIRE(!type_in.empty(), "Type shouldn't be empty")
+         * ENSURE(this->getType() == type_in, "Type not correctly set")
+         */
+
+        void setType(std::string type_in);
+        /**
+         * \brief a getter function for the device type
+         * @return returns the type of the device, either bw (black and white) or color (for color printing)
+         * REQUIRE(this->properlyInitialized(), "Device not initialized when calling getType()")
+         */
+
+        std::string getType() const;
+
+
 
 
         /**
@@ -101,6 +119,7 @@ namespace System {
         int jobNr, pageCount;
         std::string userName;
         Job *_initCheck;
+        std::string type;
 
         bool properlyInitialized() const;
 

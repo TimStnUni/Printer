@@ -6,7 +6,7 @@
 
 namespace System {
 
-    Job::Job(std::string userName_in, int pageCount_in, int jobNr_in) {
+    Job::Job(std::string userName_in, int pageCount_in, int jobNr_in, std::string type_in) {
 
         REQUIRE(!userName_in.empty(), "Username shouldn't be empty");
         REQUIRE(pageCount_in > 0, "Pagecount should be positive");
@@ -17,6 +17,7 @@ namespace System {
         this->setUserName(userName_in);
         this->setPageCount(pageCount_in);
         this->setJobNr(jobNr_in);
+        this->setType(type_in);
 
 
         ENSURE(this->properlyInitialized(), "Job wasn't properly initialized");
@@ -39,6 +40,12 @@ namespace System {
         return pageCount;
     }
 
+    std::string Job::getType() const {
+
+        REQUIRE(this->properlyInitialized(), "Device not initialized when calling getType()");
+        return type;
+    }
+
     Job::Job() {
         _initCheck = this;
         ENSURE(this->properlyInitialized(), "Default constructor not properly initialized");
@@ -55,6 +62,7 @@ namespace System {
         this->setUserName(inJob.getUserName());
         this->setJobNr(inJob.getJobNr());
         this->setPageCount(inJob.getPageCount());
+        this->setType(inJob.getType());
 
 
         ENSURE(this->properlyInitialized(), "job was not properly initialized");
@@ -85,11 +93,18 @@ namespace System {
         ENSURE(this->getUserName() == userName_in, "Username not correctly set");
     }
 
+    void Job::setType(const std::string type_in) {
+        REQUIRE(!type_in.empty(), "Type shouldn't be empty");
+        this->type = type_in;
+        ENSURE(this->getType() == type_in, "Type not correctly set");
+    }
+
     Job &Job::operator=(const Job &inJob) {
         Job outJob;
         outJob.userName = inJob.getUserName();
         outJob.pageCount = inJob.getPageCount();
         outJob.jobNr = inJob.getJobNr();
+        outJob.type = inJob.getType();
         outJob._initCheck = &outJob;
         return *this;
     }
