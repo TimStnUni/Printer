@@ -83,6 +83,16 @@ namespace System {
         return deviceList.at(index);
     }
 
+//    Device Printer::getDeviceList() {
+//        REQUIRE(this->properlyInitialized(), "printer wasn't properly initialized when calling getDevice()");
+//        return deviceList;
+//    }
+//TODO: use this function to iterate and search for the right devicetype for a jobtype
+    std::vector<Device> Printer::getDeviceList() {
+        REQUIRE(this->properlyInitialized(), "Printer was not initialized when calling getDeviceList()");
+        return deviceList;
+    }
+
     std::deque<Job> Printer::getJobList() {
         REQUIRE(this->properlyInitialized(), "printer wasn't properly initialized when calling getDevice()");
         return jobList;
@@ -206,12 +216,13 @@ namespace System {
 
         for (std::vector<Printer>::iterator printIt = printerList.begin(); printIt != printerList.end(); ++printIt) {
 
-
+//TODO: index kunnen veranderen
             Device currentPrinter = printIt->getDevice(0);
 
 
-            outfile << currentPrinter.getNameDev() << " (CO2: " << currentPrinter.getEmissions() << "g/page; speed "
-                    << currentPrinter.getSpeed() << "p/minute):\n";
+            outfile << currentPrinter.getNameDev() << " (CO2: " << currentPrinter.getEmissions()
+            <<"; type is "<< currentPrinter.getType()
+            << "; g/page; speed " << currentPrinter.getSpeed() << "p/minute):\n";
 
             std::deque<Job> currentJobs = printIt->getJobList();
 
@@ -244,6 +255,8 @@ namespace System {
         return (this == _initcheck);
     }
 
+    //TODO: create a check to see if the devicetype matches the jobtype and if not
+    // go to a different device in the devicelist and search until you find one that matches the type of jobtype
     void PrinterSystem::doPrintJob(unsigned int jobnr, std::ostream &writeStream) {
 
         int printerindex = jobNrMap.at(jobnr);
@@ -283,8 +296,28 @@ namespace System {
 
         for (std::set<unsigned int>::iterator jobNrIt = jobNrSet.begin(); jobNrIt != jobNrSet.end(); jobNrIt++) {
 
+
             this->doPrintJob(*jobNrIt, writeStream);
         }
 
     }
+//    void PrinterSystem::printAll(unsigned int jobnr, std::ostream &writeStream) {
+//        // Find the job with the given number
+//        Job job; // Initialize this with the job that has the given number
+//
+//        // Iterate over all printers
+//        for (std::vector<Printer>::iterator printerIt = printerList.begin(); printerIt != printerList.end(); ++printerIt) {
+//            // Iterate over all devices in the current printer
+//            for (int i = 0; i < printerIt->getDeviceList().size(); i++) {
+//                Device device = printerIt->getDevice(i);
+//
+//                // Check if the device's type matches the job's type
+//                if (device.getType() == job.getType()) {
+//                    this->doPrintJob(*printerIt, writeStream)
+//                }else{
+//
+//                }
+//            }
+//            }
+//        }
 } // Printer

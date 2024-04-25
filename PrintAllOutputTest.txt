@@ -8,3 +8,8 @@ Printer "Office_Printer5" finished job:
   Submitted by "SergeDemeyer"
   2 pages
 
+Printer "Office_Printer5" finished job:
+  Number: 98632
+  Submitted by "anonymous_user"
+  3 pages
+

@@ -1,6 +1,8 @@
-Office_Printer5 (CO2: 3g/page; speed 40p/minute):
+Office_Printer5 (CO2: 3; type is bw; g/page; speed 40p/minute):
     * Current: 
         [#89751|SergeDemeyer|2]
     * Queue: 
         [#2189|anonymous_user|3]
+    * Queue: 
+        [#98632|Peter Selie|10]
 

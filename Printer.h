@@ -92,6 +92,9 @@ namespace System {
          */
         Device getDevice(int index);
 
+        //TODO: getDeviceList gemaakt om list van devices in bij te houden?
+        std::vector<Device> getDeviceList();
+
         /**
          * \brief Getter for all jobs
          * @return
@@ -175,7 +178,7 @@ namespace System {
 
         //TODO: change this over to a stream to either print to terminal or to file.
         /**
-         * \brief Function that prints all know information about the printing system to a file
+         * \brief Function that prints all known information about the printing system to a file
          * @param filename Filename of the output file
          *REQUIRE(properlyInitialized(), "the printer system was not properly initialized")
          */

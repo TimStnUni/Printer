@@ -48,6 +48,7 @@ namespace System {
                 std::string name;
                 int emissions, speed;
                 std::string type;
+                float cost;
 
                 for (TiXmlElement *elem = Level1Elem->FirstChildElement(); elem != NULL;
                      elem = elem->NextSiblingElement()) {
@@ -92,6 +93,18 @@ namespace System {
 
 
                             }
+                        } else if (elemname == "cost") {
+
+                            if (std::stof(elem->FirstChild()->ToText()->Value()) > 0) {
+                                cost = std::stof(elem->FirstChild()->ToText()->Value());
+
+                            } else {
+                                errorstream << "Cost should be positive" << std::endl;
+                                readingCorrect = false;
+                                return readingCorrect;
+
+
+                            }
 //TODO: check if correct, do we need to add cost?
                         }else if (elemname == "type") {
 
@@ -105,7 +118,11 @@ namespace System {
                                 return readingCorrect;
 
                             } else {
-                                type = type_d;
+                                if(type == "bw" || type == "scan" || type == "color"){
+                                    type = type_d;
+                                }else{
+                                    errorstream << "Invalid type for device" << std::endl;
+                                }
                                 //std::cout << "type = " << type << std::endl;
                             }
 
@@ -128,7 +145,7 @@ namespace System {
                     }
                 }
                 if (readingCorrect) {
-                    Device tempPrinter = Device(name, emissions, speed, type);
+                    Device tempPrinter = Device(name, emissions, speed, type, cost);
                     deviceList.push_back(tempPrinter);
                 }
 
@@ -191,7 +208,11 @@ namespace System {
                             return readingCorrectly;
 
                         } else {
-                            type = type_j;
+                            if(type == "bw" || type == "scan" || type == "color"){
+                                type = type_j;
+                            }else{
+                                errorstream << "Invalid type for job" << std::endl;
+                            }
                             //std::cout << "type = " << type << std::endl;
                         }
 
