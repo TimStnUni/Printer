@@ -6,10 +6,13 @@
 #define PROJSOFTENG_PRINTERSYSTEM_H
 
 #include "Printer.h"
+#include "XMLParser.h"
 
 namespace System {
 
+
     class PrinterSystem {
+        friend class Device;
 
     public:
         //Should simply always be running, no input in constructor.
@@ -18,9 +21,6 @@ namespace System {
          * \brief Constructor for the printer system. Does not take any inputs, simply sets the system running.
          */
         PrinterSystem();
-
-
-
 
 
         /**
@@ -48,7 +48,7 @@ namespace System {
          * @param jobnr JobNr of the job to be executed
          * @param writeStream Stream where the output is stored
          */
-        void doPrintJob(unsigned int jobnr, std::ostream & writeStream);
+        void doPrintJob(unsigned int jobnr, std::ostream &writeStream);
 
         /**
          * \brief Loops over all jobs and prints that they are finished.
@@ -62,7 +62,7 @@ namespace System {
          * Adder function for a single job
          * @param inJob
          */
-        void addJob(Job& inJob);
+        void addJob(Job &inJob);
 
         /**
          * adder function for a single device
@@ -70,10 +70,16 @@ namespace System {
          */
         void addDevice(Device inDevice);
 
+        const Job *getMRJob();
+        void takeParseInput(Device & inDev, std::deque<Job>& inJobs);
+
 
     private:
 
+
+
         bool properlyInitialized();
+
         std::vector<Printer> printerList;
 
         PrinterSystem *_initcheck;

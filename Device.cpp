@@ -4,6 +4,7 @@
 
 #include "Device.h"
 #include "Job.h"
+#include "PrinterSystem.h"
 
 namespace System {
 
@@ -71,6 +72,7 @@ namespace System {
 
 //TODO: something is wrong here, but I don't know how to fix it
         std::string inName = inDevice.getNameDev();
+
         int emissions_in = inDevice.getEmissions();
         int speed_in = inDevice.getSpeed();
         std::string type_in = inDevice.getType();
@@ -82,6 +84,8 @@ namespace System {
         this->setSpeed(speed_in);
         this->setType(type_in);
         this->setCost(cost_in);
+        this->jobPtrList = inDevice.jobPtrList;
+
 
 
         ENSURE(this->properlyInitialized(), "Device not properly initialized in copy constructor");
@@ -127,6 +131,28 @@ namespace System {
         REQUIRE(cost_in >= 0, "Cost should be positive");
         this->cost = cost_in;
         ENSURE(this->getCost() == cost_in, "Cost not correctly set");
+    }
+
+    void Device::addJob(PrinterSystem *ownSystem) {
+
+        this->jobPtrList.push_back(&*(ownSystem->jobVect.end()-1));
+
+    }
+
+    Device &Device::operator=(const Device &inDevice) {
+        std::cout << "using the operator " << std::endl;
+
+        Device outDevice;
+        outDevice.name = inDevice.getNameDev();
+        outDevice.emissions = inDevice.getEmissions();
+        outDevice.speed = inDevice.getSpeed();
+        outDevice.cost = inDevice.getCost();
+        outDevice.type = inDevice.getType();
+        outDevice.jobPtrList = inDevice.jobPtrList;
+        outDevice._initCheck = &outDevice;
+
+
+        return *this;
     }
 
 } // System

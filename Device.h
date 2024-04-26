@@ -15,6 +15,7 @@
 namespace System {
 
     class Job;
+    class PrinterSystem;
 
     class Device {
     public:
@@ -131,6 +132,10 @@ namespace System {
          * @return boolean true or false
          */
 
+
+
+        void addJob(PrinterSystem * ownSystem);
+
         bool operator == (const Device &d){
             if (name == d.name && emissions == d.emissions && speed == d.speed){
                 return true;
@@ -138,6 +143,9 @@ namespace System {
             return false;
         }
 
+
+
+        Device& operator=(Device const & inDevice);
 
 
         Device *_initCheck;

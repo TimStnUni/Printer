@@ -8,6 +8,10 @@
 namespace System {
 
 
+
+
+
+
     XMLParser::XMLParser(const char *filename, PrinterSystem * system) {
 //        std::cout <<  InputDoc.LoadFile(filename) << std::endl;
         //Todo: check whether inputdoc isn't empty
@@ -43,6 +47,9 @@ namespace System {
 
 
         REQUIRE(System != nullptr, "There is no system in xml");
+
+
+
 
         for (TiXmlElement *Level1Elem = System->FirstChildElement(); Level1Elem != NULL;
              Level1Elem = Level1Elem->NextSiblingElement()) {
@@ -154,8 +161,20 @@ namespace System {
                 }
                 if (readingCorrect) {
                     Device tempPrinter = Device(name, emissions, speed, type, cost);
+
+
+
+
+                    if (!jobList.empty()){
+                        std::cout << "we're doing it " << std::endl;
+                        ownSystem->takeParseInput(deviceList.at(0), jobList);
+                        std::cout << "we've done it " << std::endl;
+
+                    }
+
+
                     deviceList.push_back(tempPrinter);
-                    ownSystem->addDevice(tempPrinter);
+
                 }
 
 
@@ -245,7 +264,7 @@ namespace System {
                     if (jobNrSet.find(jobNr) == jobNrSet.end()) {
                         //Job is only added to joblist if its jobnr is unique
                         Job tempJob = Job(userName, pageCount, jobNr, type);
-                        ownSystem->addJob(tempJob);
+
 
                         jobList.push_back(tempJob);
                         jobNrMap.insert({jobNr, jobList.size() - 1});
@@ -277,7 +296,7 @@ namespace System {
 
 
 
-
+        ownSystem->takeParseInput(deviceList.at(0), jobList);
 
         return true;
     }

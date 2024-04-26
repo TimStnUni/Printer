@@ -57,7 +57,7 @@ namespace System {
 
         }
 
-        std::cout << this->jobVect.at(0).getOwnDevice()->getNameDev() << std::endl;
+        //std::cout << this->jobVect.at(0).getOwnDevice()->getNameDev() << std::endl;
 
 
         return true;
@@ -206,6 +206,30 @@ namespace System {
 
     void PrinterSystem::addDevice(Device inDevice) {
         this->deviceVect.emplace_back(inDevice);
+        std::cout << "pointer in vect " << &(*deviceVect.end()) << std::endl;
+
+
+    }
+
+    const Job *PrinterSystem::getMRJob() {
+        return &*(jobVect.end() - 1);
+    }
+
+    void PrinterSystem::takeParseInput(Device & inDev, std::deque<Job> & inJobs) {
+
+
+
+        std::cout << "before adding" << std::endl;
+        this->addDevice(inDev);
+        std::cout << "device has been added " << this->deviceVect.size() << " " << this->deviceVect.back().getNameDev() << std::endl;
+
+        for (std::deque<Job>::iterator jobIt = inJobs.begin(); jobIt != inJobs.end(); ++jobIt){
+            this->addJob(*jobIt);
+            this->deviceVect.back().addJob(this);
+        }
+
+
+
 
     }
 //    void PrinterSystem::printAll(unsigned int jobnr, std::ostream &writeStream) {

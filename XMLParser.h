@@ -107,6 +107,8 @@ namespace System {
 
         bool isParseSuccessful() const;
 
+
+
     private:
 
         XMLParser *_initCheck;

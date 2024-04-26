@@ -107,6 +107,7 @@ namespace System {
         outJob.pageCount = inJob.getPageCount();
         outJob.jobNr = inJob.getJobNr();
         outJob.type = inJob.getType();
+        outJob.ownerDevice = inJob.getOwnDevice();
         outJob._initCheck = &outJob;
         return *this;
     }
