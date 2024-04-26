@@ -118,8 +118,9 @@ namespace System {
                                 return readingCorrect;
 
                             } else {
-                                if(type == "bw" || type == "scan" || type == "color"){
+                                if(type_d == "bw" || type_d == "scan" || type_d == "color"){
                                     type = type_d;
+
                                 }else{
                                     errorstream << "Invalid type for device" << std::endl;
                                 }
@@ -208,7 +209,7 @@ namespace System {
                             return readingCorrectly;
 
                         } else {
-                            if(type == "bw" || type == "scan" || type == "color"){
+                            if(type_j == "bw" || type_j == "scan" || type_j == "color"){
                                 type = type_j;
                             }else{
                                 errorstream << "Invalid type for job" << std::endl;
@@ -320,7 +321,6 @@ namespace System {
         outFile.open(outputFileNameChar); // Open the file
 
         parseSuccessful = this->parse(outFile);
-
         return parseSuccessful;
 
     }

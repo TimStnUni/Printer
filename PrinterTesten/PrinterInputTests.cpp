@@ -36,6 +36,8 @@ protected:
 
 TEST_F(XMLTest, AfterParse){
 
+    //Todo: Should add a test for type
+
     ppp_.addInputFile("PrinterTesten/PrinterTestenInputs/test.xml");
     EXPECT_EQ(ppp_.getJobList().size(), 2);
     EXPECT_EQ(ppp_.getJobList().begin()->getJobNr(), 89751);
