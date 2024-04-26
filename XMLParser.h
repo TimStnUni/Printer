@@ -21,6 +21,8 @@
 
 namespace System {
 
+    class PrinterSystem;
+
     class XMLParser {
 
     public:
@@ -41,7 +43,7 @@ namespace System {
          * ENSURE(properlyInitialized(), "Parser not properly initialized");
 
          */
-        XMLParser(const char *filename);
+        XMLParser(const char *filename, PrinterSystem * system);
 
         /**
          * \brief Additional way to read an XML File through the parser
@@ -123,7 +125,7 @@ namespace System {
         TiXmlDocument InputDoc;
 
 
-
+        PrinterSystem * ownSystem;
 
         //new datamembers
         std::vector<Device> deviceList;

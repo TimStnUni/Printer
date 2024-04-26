@@ -3,6 +3,7 @@
 //
 
 #include "Job.h"
+#include "Device.h"
 
 namespace System {
 
@@ -63,6 +64,7 @@ namespace System {
         this->setJobNr(inJob.getJobNr());
         this->setPageCount(inJob.getPageCount());
         this->setType(inJob.getType());
+        this->setOwnDevice(inJob.getOwnDevice());
 
 
         ENSURE(this->properlyInitialized(), "job was not properly initialized");
@@ -109,6 +111,17 @@ namespace System {
         return *this;
     }
 
+    void Job::setOwnDevice(System::Device *ownDevice) {
+
+        this->ownerDevice = ownDevice;
+
+        ENSURE(this->getOwnDevice() == ownDevice, "ownerDevice not correctly set");
+
+    }
+
+    System::Device *Job::getOwnDevice() const{
+        return this->ownerDevice;
+    }
 
 
 } // System

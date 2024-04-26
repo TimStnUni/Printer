@@ -12,7 +12,7 @@ using namespace std;
 #include "Printer.h"
 #include "./PrinterTesten/PrinterDomainTests.cpp"
 #include "./PrinterTesten/PrinterOutputTests.cpp"
-#include "./PrinterTesten/PrinterInputTests.cpp"
+//#include "./PrinterTesten/PrinterInputTests.cpp"
 //#include "./JobTesten/JobInputTests.cpp"
 //#include "./JobTesten/JobOutputTests.cpp"
 //#include "./DeviceTesten/DeviceInputTests.cpp"

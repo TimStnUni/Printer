@@ -8,8 +8,13 @@
 #include "DesignByContract.h"
 #include <iostream>
 #include <string>
+#include <vector>
+
+
 
 namespace System {
+
+    class Job;
 
     class Device {
     public:
@@ -133,14 +138,18 @@ namespace System {
             return false;
         }
 
+
+
+        Device *_initCheck;
     protected:
         std::string name;
         int emissions, speed;
         std::string type;
         float cost;
 
-        Device *_initCheck;
 
+
+        std::vector<System::Job *> jobPtrList;
 
         bool properlyInitialized() const;
 

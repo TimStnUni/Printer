@@ -8,7 +8,8 @@
 
 using namespace std;
 
-#include "../Printer.h"
+
+#include "../PrinterSystem.h"
 #include "../TicTacToeUtils.h"
 
 class InputTests: public ::testing::Test {

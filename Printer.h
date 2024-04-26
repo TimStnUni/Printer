@@ -56,8 +56,7 @@ namespace System {
 
         Printer(const Printer &inPrinter);
 
-        //todo: make references again
-        //As of now these do not work with references, but this should be possible to be remedied
+
 
         //Todo make a version of this function that takes a single device and pushes it back into the devicelist
 
@@ -151,68 +150,6 @@ namespace System {
 
     };
 
-    class PrinterSystem {
-
-    public:
-        //Should simply always be running, no input in constructor.
-
-        /**
-         * \brief Constructor for the printer system. Does not take any inputs, simply sets the system running.
-         */
-        PrinterSystem();
-
-
-
-
-
-        /**
-         * \brief Reads an XML file and adds all devices/jobs inside to the printer system
-         * @param filename
-         */
-        bool readXML(const char *filename);
-
-
-
-
-
-
-        //TODO: change this over to a stream to either print to terminal or to file.
-        /**
-         * \brief Function that prints all known information about the printing system to a file
-         * @param filename Filename of the output file
-         *REQUIRE(properlyInitialized(), "the printer system was not properly initialized")
-         */
-        void getInfo(std::string filename);
-
-
-        /**
-         * \brief Function that executes a print job. Implementation currently seems to have some issues because of the storage solution for jobnrs
-         * @param jobnr JobNr of the job to be executed
-         * @param writeStream Stream where the output is stored
-         */
-        void doPrintJob(unsigned int jobnr, std::ostream & writeStream);
-
-        /**
-         * \brief Loops over all jobs and prints that they are finished.
-         * @param writeStream Stream where the output will be stored
-         */
-
-        void printAll(std::ostream &writeStream);
-
-
-    private:
-
-        bool properlyInitialized();
-        std::vector<Printer> printerList;
-
-        PrinterSystem *_initcheck;
-
-        std::set<unsigned int> jobNrSet;
-
-
-        std::map<unsigned int, unsigned int> jobNrMap;
-
-    };
 
 } // Printer
 

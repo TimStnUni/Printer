@@ -9,6 +9,7 @@
 #include "DesignByContract.h"
 namespace System {
 
+    class Device;
     class Job {
 
     public:
@@ -69,6 +70,24 @@ namespace System {
 
         void setJobNr(int jobNr);
 
+
+        /**
+         * \brief Setter function for ownerDevice
+         * @param ownDevice
+         * REQUIRE() probably something with nullptr?
+         * ENSURE(this->getOwnDevice() == ownDevice, "OwnDevice not correctly set")
+         */
+
+        void setOwnDevice(System::Device * ownDevice);
+
+
+        /**
+         * \brief getter function for ownerDevice
+         * @return
+         * REQUIRE() probably something with nullptr
+         */
+        System::Device * getOwnDevice() const;
+
         /**
          * \brief Setter function for the pagecount
          * @param pageCount
@@ -122,7 +141,7 @@ namespace System {
         std::string type;
 
         bool properlyInitialized() const;
-
+        System::Device * ownerDevice;
 
 
 

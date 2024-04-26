@@ -3,19 +3,21 @@
 //
 
 #include "XMLParser.h"
+#include "PrinterSystem.h"
 
 namespace System {
 
 
-    XMLParser::XMLParser(const char *filename) {
+    XMLParser::XMLParser(const char *filename, PrinterSystem * system) {
 //        std::cout <<  InputDoc.LoadFile(filename) << std::endl;
         //Todo: check whether inputdoc isn't empty
         if (!InputDoc.LoadFile(filename)) {
             std::cerr << InputDoc.ErrorDesc() << std::endl;
         }
 
-
+        this->ownSystem = system;
         _initCheck = this;
+
         std::ofstream outFile; // Create an output file stream
         std::string f = filename;
         std::string outputFileName = f + ".txt";
@@ -32,6 +34,11 @@ namespace System {
 
     bool XMLParser::parse(std::ostream &errorstream) {
 
+        //Todo: According to usecase 1.1, we shouldn't simply return when something is incorrect. We should continue reading
+        // I think this means we'll have to set whatever is missing to some dummy variable. Since later on if type is missing
+        // the require's will fail.
+
+
         TiXmlElement *System = InputDoc.FirstChildElement();
 
 
@@ -41,7 +48,7 @@ namespace System {
              Level1Elem = Level1Elem->NextSiblingElement()) {
 
             std::string type_sys = Level1Elem->Value();
-
+            std::cout << type_sys << std::endl;
 
             if (type_sys == "DEVICE") {
                 bool readingCorrect = true;
@@ -105,7 +112,7 @@ namespace System {
 
 
                             }
-//TODO: check if correct, do we need to add cost?
+                        //TODO: check if correct, do we need to add cost?
                         }else if (elemname == "type") {
 
 
@@ -148,6 +155,7 @@ namespace System {
                 if (readingCorrect) {
                     Device tempPrinter = Device(name, emissions, speed, type, cost);
                     deviceList.push_back(tempPrinter);
+                    ownSystem->addDevice(tempPrinter);
                 }
 
 
@@ -237,6 +245,8 @@ namespace System {
                     if (jobNrSet.find(jobNr) == jobNrSet.end()) {
                         //Job is only added to joblist if its jobnr is unique
                         Job tempJob = Job(userName, pageCount, jobNr, type);
+                        ownSystem->addJob(tempJob);
+
                         jobList.push_back(tempJob);
                         jobNrMap.insert({jobNr, jobList.size() - 1});
                         jobNrSet.insert(jobNr);
@@ -261,6 +271,13 @@ namespace System {
 
 
         }
+
+
+        //Realistically atm we only ever have 1 device, so this will work, but it won't be good
+
+
+
+
 
         return true;
     }

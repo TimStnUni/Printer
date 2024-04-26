@@ -3,6 +3,7 @@
 //
 
 #include "Device.h"
+#include "Job.h"
 
 namespace System {
 

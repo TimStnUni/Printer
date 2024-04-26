@@ -45,6 +45,8 @@ set(RELEASE_SOURCE_FILES
         Job.h
         XMLParser.cpp
         XMLParser.h
+        PrinterSystem.cpp
+        PrinterSystem.h
 
 )
 
@@ -63,6 +65,8 @@ set(DEBUG_SOURCE_FILES
         XMLParser.cpp
         Alletesten/alloutputtests.cpp
         Alletesten/alldomaintests.cpp
+        PrinterSystem.cpp
+        PrinterSystem.h
 )
 
         # Create RELEASE target

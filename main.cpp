@@ -7,7 +7,7 @@
 
 #include <unistd.h>
 #include <iostream>
-#include "Printer.h"
+#include "PrinterSystem.h"
 
 int main() {
 
