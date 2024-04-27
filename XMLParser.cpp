@@ -55,7 +55,7 @@ namespace System {
              Level1Elem = Level1Elem->NextSiblingElement()) {
 
             std::string type_sys = Level1Elem->Value();
-            std::cout << type_sys << std::endl;
+
 
             if (type_sys == "DEVICE") {
                 bool readingCorrect = true;
@@ -165,10 +165,15 @@ namespace System {
 
 
 
-                    if (!jobList.empty()){
-                        std::cout << "we're doing it " << std::endl;
-                        ownSystem->takeParseInput(deviceList.at(0), jobList);
-                        std::cout << "we've done it " << std::endl;
+                    if (!deviceList.empty()){
+
+                        ownSystem->takeParseInput(deviceList.back(), jobList);
+
+
+                        //The clearing needs to be put on hold while the rest of the program still needs jobs
+
+                        deviceList.clear();
+                        jobList.clear();
 
                     }
 
@@ -296,7 +301,7 @@ namespace System {
 
 
 
-        ownSystem->takeParseInput(deviceList.at(0), jobList);
+        ownSystem->takeParseInput(deviceList.back(), jobList);
 
         return true;
     }
@@ -311,7 +316,7 @@ namespace System {
         return deviceList;
     }
 
-    std::deque<Job> XMLParser::getJobList() {
+    std::vector<Job> XMLParser::getJobList() {
         REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getJobList()");
         return jobList;
     }

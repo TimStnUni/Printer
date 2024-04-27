@@ -15,7 +15,7 @@
 #include <map>
 #include <set>
 #include <vector>
-#include <deque>
+#include <vector>
 #include <fstream>
 
 
@@ -71,7 +71,7 @@ namespace System {
          */
 
 
-        std::deque<Job> getJobList();
+        std::vector<Job> getJobList();
 
 
         /**
@@ -131,7 +131,7 @@ namespace System {
 
         //new datamembers
         std::vector<Device> deviceList;
-        std::deque<Job> jobList;
+        std::vector<Job> jobList;
         std::map<unsigned int, unsigned int> jobNrMap;
         std::set<unsigned int> jobNrSet;
 

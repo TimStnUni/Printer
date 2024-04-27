@@ -43,11 +43,12 @@ namespace System {
 
     std::string Job::getType() const {
 
-        REQUIRE(this->properlyInitialized(), "Device not initialized when calling getType()");
+        REQUIRE(this->properlyInitialized(), "Job not initialized when calling getType()");
         return type;
     }
 
     Job::Job() {
+        std::cout << "job default constructor is being used " << std::endl;
         _initCheck = this;
         ENSURE(this->properlyInitialized(), "Default constructor not properly initialized");
     }
@@ -58,6 +59,9 @@ namespace System {
 
     Job::Job(const Job &inJob) {
 
+
+
+
         _initCheck = this;
 
         this->setUserName(inJob.getUserName());
@@ -66,6 +70,9 @@ namespace System {
         this->setType(inJob.getType());
         this->setOwnDevice(inJob.getOwnDevice());
 
+        if (inJob.getOwnDevice() != nullptr) {
+            this->ownerDevice->updatePointer(this, &inJob);
+        }
 
         ENSURE(this->properlyInitialized(), "job was not properly initialized");
     }
@@ -101,14 +108,22 @@ namespace System {
         ENSURE(this->getType() == type_in, "Type not correctly set");
     }
 
+
+
     Job &Job::operator=(const Job &inJob) {
-        Job outJob;
-        outJob.userName = inJob.getUserName();
-        outJob.pageCount = inJob.getPageCount();
-        outJob.jobNr = inJob.getJobNr();
-        outJob.type = inJob.getType();
-        outJob.ownerDevice = inJob.getOwnDevice();
-        outJob._initCheck = &outJob;
+
+        //I'm ninety percent sure this doesn't work anymore, but atm it isn't used so it should be fine
+
+        std::cout << "Assignment operator called for job " << inJob.getJobNr() << std::endl;
+        Job outJob(inJob.getUserName(), inJob.getPageCount(), inJob.getJobNr(), inJob.type);
+
+        outJob.setOwnDevice(inJob.getOwnDevice());
+
+
+
+        //outJob._initCheck = &outJob;
+
+
         return *this;
     }
 

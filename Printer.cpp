@@ -50,7 +50,7 @@ namespace System {
         }
     }
 
-    void Printer::addJobs(std::deque<Job> &jobs, std::map<unsigned int, unsigned int> &jobnrs,
+    void Printer::addJobs(std::vector<Job> &jobs, std::map<unsigned int, unsigned int> &jobnrs,
                           std::set<unsigned int> &jobNrSet) {
         REQUIRE(this->properlyInitialized(), "Printer was not initialized when calling addJobs()");
 
@@ -93,7 +93,7 @@ namespace System {
         return deviceList;
     }
 
-    std::deque<Job> Printer::getJobList() {
+    std::vector<Job> Printer::getJobList() {
         REQUIRE(this->properlyInitialized(), "printer wasn't properly initialized when calling getDevice()");
         return jobList;
     }

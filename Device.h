@@ -18,7 +18,13 @@ namespace System {
     class PrinterSystem;
 
     class Device {
+
+        friend class PrinterSystem;
+        friend class Job;
+
     public:
+
+        Device * getInitCheck();
 
         /**
          * \brief Default Constructor
@@ -133,6 +139,7 @@ namespace System {
          */
 
 
+        std::vector<Job*> getJobs();
 
         void addJob(PrinterSystem * ownSystem);
 
@@ -155,7 +162,9 @@ namespace System {
         std::string type;
         float cost;
 
+        void updatePointer(Job * inPointer, const Job * prevPointer);
 
+        void removeJob(unsigned int jobnr);
 
         std::vector<System::Job *> jobPtrList;
 

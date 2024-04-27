@@ -71,13 +71,13 @@ namespace System {
         void addDevice(Device inDevice);
 
         const Job *getMRJob();
-        void takeParseInput(Device & inDev, std::deque<Job>& inJobs);
+        void takeParseInput(Device & inDev, std::vector<Job>& inJobs);
 
 
     private:
 
 
-
+        float totalCO2_system = 0;
         bool properlyInitialized();
 
         std::vector<Printer> printerList;

@@ -27,7 +27,7 @@ namespace System {
         tempPrtr.addDevices(tempXML.getDeviceList());
 
         std::map<unsigned int, unsigned int> jobnrs = tempXML.getJobNrMap();
-        std::deque<Job> tempJobList = tempXML.getJobList();
+        std::vector<Job> tempJobList = tempXML.getJobList();
         std::set<unsigned int> tempJobSet = tempXML.getJobNrSet();
         tempPrtr.addJobs(tempJobList, jobnrs, tempJobSet);
 
@@ -77,67 +77,82 @@ namespace System {
 
         outfile << "# === [System Status] === #\n" << std::endl;
 
-        for (std::vector<Printer>::iterator printIt = printerList.begin(); printIt != printerList.end(); ++printIt) {
+        for (std::vector<Device>::iterator printIt = deviceVect.begin(); printIt != deviceVect.end(); ++printIt) {
 
-            //TODO: index kunnen veranderen
-            // In principe gaat dit moeten loopen over devices (die stored zullen zijn in printersystem, het tussenliggend
-            // Niveau printer gaat verwijderd worden. Elke Device zal dan een lijst van pointers naar jobs bevatten
-            // Zodat er simpelweg vanuit elk device een lijst van jobs opgebouwd kan worden.
-            Device currentPrinter = printIt->getDevice(0);
+            //TODO: layout aanpassen?
+
 
             std::string printType;
 
-            if (currentPrinter.getType() == "bw") {
+            if (printIt->getType() == "bw") {
                 printType = "Black-and-white printer";
-            } else if (currentPrinter.getType() == "color") {
+            } else if (printIt->getType() == "color") {
                 printType = "Colour printer";
-            }else if (currentPrinter.getType() == "scanner"){
+            } else if (printIt->getType() == "scan") {
                 printType = "Scanner";
             }
 
-            outfile << currentPrinter.getNameDev() << std::endl;
-            outfile << "* CO2: " << currentPrinter.getEmissions() << " g/page" << "\n"
+            Device testDev = *printIt;
+
+            outfile << printIt->getNameDev() << std::endl;
+            outfile << "* CO2: " << printIt->getEmissions() << " g/page" << "\n"
                     << "* " << printType << "\n"
-                    << "* "  << currentPrinter.getSpeed() << " pages/minute\n"
-                    << "* " << currentPrinter.getCost() << " cents/page \n";
+                    << "* " << printIt->getSpeed() << " pages/minute\n"
+                    << "* " << printIt->getCost() << " cents/page \n";
 
-            std::deque<Job> currentJobs = printIt->getJobList();
+            //std::vector<Job*> currentJobs = printIt->getJobs();
+        }
+        for (std::vector<Job>::iterator jobIt = this->jobVect.begin();
+             jobIt != this->jobVect.end(); ++jobIt) {
 
-            for (std::deque<Job>::iterator jobIt = currentJobs.begin(); jobIt != currentJobs.end(); ++jobIt) {
+            std::string jobType;
 
-                std::string jobType;
 
-                if (jobIt->getType() == "bw") {
-                    jobType = "Black-and-white job";
-                } else if (jobIt->getType() == "color") {
-                    jobType = "Colour job";
-                }else if (jobIt->getType() == "scanner"){
-                    jobType = "Scanning job";
-                }
+            /*
+            if (printIt->jobPtrList.size() > 1) {
+                std::cout << "we are getting in loop " << std::endl;
+                Job curJob = *printIt->jobPtrList.at(1);
+                std::cout << "we aren't getting here right?" << std::endl;
+                std::cout << (*jobIt)->getType() << std::endl;
+            }
+            */
+            if (jobIt->getType() == "bw") {
+                jobType = "Black-and-white job ";
+            } else if ((jobIt)->getType() == "color") {
+                jobType = "Colour job ";
+            } else if ((jobIt)->getType() == "scan") {
+                jobType = "Scanning job ";
+            }
 
-                if (jobIt == currentJobs.begin()) {
+            if (jobIt == jobVect.begin()) {
 
-                    outfile << "    * Current: \n";
-                }
-                //Todo: Add device when device and job have been overhauled. Also add total co2 and cost when that's gettable
-                outfile << "        [Job #" << jobIt->getJobNr() << "]\n"
-                        << "            * Owner: " << jobIt->getUserName() << "\n"
-                        << "            * Total Pages: " << jobIt->getPageCount() << "\n"
-                        << "            * Type: " << jobType << "\n"
-                        << "            * Device: " << "jobIt->getOwnDevice()->getNameDev() this gives a segfault bcause of course it does" <<"\n"
-                        << "            * Total CO2: \n"
-                        << "            * Total cost: \n";
-
-                if (jobIt == currentJobs.begin()) {
-
-                    outfile << "    * Queue: \n";
-                }
+                outfile << "    * Current: \n";
             }
 
 
-            outfile << std::endl;
 
+
+
+            float totalcost = (jobIt)->getPageCount() * jobIt->getOwnDevice()->getCost();
+            float totalCO2 = (jobIt)->getPageCount() * jobIt->getOwnDevice()->getEmissions();
+
+            //Todo: Add device when device and job have been overhauled. Also add total co2 and cost when that's gettable
+            outfile << "        [Job #" << (jobIt)->getJobNr() << "]\n"
+                    << "            * Owner: " << (jobIt)->getUserName() << "\n"
+                    << "            * Total Pages: " << (jobIt)->getPageCount() << "\n"
+                    << "            * Type: " << jobType << "\n"
+                    << "            * Device: " << jobIt->getOwnDevice()->getNameDev() << "\n"
+                    << "            * Total CO2: " << totalCO2 << "\n"
+                    << "            * Total cost: " << totalcost << "\n";
+
+            if (jobIt == jobVect.begin()) {
+
+                outfile << "    * Queue: \n";
+            }
         }
+
+
+        outfile << std::endl;
 
 
         outfile.close();
@@ -152,40 +167,98 @@ namespace System {
     // go to a different device in the devicelist and search until you find one that matches the type of jobtype
     void PrinterSystem::doPrintJob(unsigned int jobnr, std::ostream &writeStream) {
 
-        int printerindex = jobNrMap.at(jobnr);
 
-        Printer Currentprinter = printerList.at(printerindex);
-
-        Device currentDevice = Currentprinter.getDevice(0);
-
-        std::set<unsigned int> currentJobNrList = Currentprinter.getJobNrSet();
+        std::vector<Job>::iterator jobPoint;
+        for (std::vector<Job>::iterator jobIt = this->jobVect.begin(); jobIt != this->jobVect.end(); ++jobIt) {
 
 
-        unsigned int jobnrindex = Currentprinter.getJobIndex(jobnr);
+            if (jobIt->getJobNr() == jobnr) {
+                jobPoint = jobIt;
 
-        Job currentJob = Currentprinter.getJobList().at(jobnrindex);
+                break;
+            }
+            if (jobIt == (this->jobVect.end())) {
 
 
-        int pages = currentJob.getPageCount();
+                std::cerr << "JobNr not found" << std::endl;
+                return;
+            }
+        }
+
+
+        Device *printPoint = jobPoint->getOwnDevice();
+
+        if (jobPoint->getType() != printPoint->getType()){
+
+            std::cerr << "types don't match" << std::endl;
+            for (std::vector<Device>::iterator devIt = this->deviceVect.begin(); devIt != this->deviceVect.end(); devIt++){
+
+                if (devIt->getType() == jobPoint->getType()){
+                    jobPoint->setOwnDevice(&(*devIt));
+                    printPoint = jobPoint->getOwnDevice();
+                    std::cerr << "Rerouting to device \"" << printPoint->getNameDev() << "\"" << std::endl;
+                    break;
+                }
+                if (devIt == (this->deviceVect.end() - 1)){
+                    std::cerr << "No viable replacement device found, aborting print job " << jobPoint->getJobNr() << " from user " << jobPoint->getUserName() << std::endl;
+                    return;
+                }
+
+            }
+
+        }
+
+
+        int pages = jobPoint->getPageCount();
+
 
         while (pages > 0) {
             pages--;
         }
 
-        writeStream << "Printer \"" << currentDevice.getNameDev() << "\" finished job:\n";
+
+        std::string printType;
+
+        if (jobPoint->getType() == "bw") {
+            printType = "black-and-white-printing ";
+        } else if (jobPoint->getType() == "color") {
+            printType = "color-printing ";
+        } else if (jobPoint->getType() == "scan") {
+            printType = "scanning ";
+        }
+
+        writeStream << "Printer \"" << printPoint->getNameDev() << "\" finished "<< printType <<"job:\n";
         writeStream << "  Number: " << jobnr << "\n";
-        writeStream << "  Submitted by \"" << currentJob.getUserName() << "\"\n";
-        writeStream << "  " << currentJob.getPageCount() << " pages\n";
+        writeStream << "  Submitted by \"" << jobPoint->getUserName() << "\"\n";
+        writeStream << "  " << jobPoint->getPageCount() << " pages\n";
 
         writeStream << std::endl;
-        printerList.at(printerindex).removeJob(jobnr);
+
+
+        //Increment CO2 emissions
+
+
+
+
+        float newCO2 = (jobPoint->getPageCount()) * (printPoint->getEmissions());
+
+        totalCO2_system += newCO2;
+
+        //std::cout << "total CO2 emissions for now " << totalCO2_system << std::endl;
+
 
         // Remove the job number from the jobNrSet and jobNrMap
         jobNrSet.erase(jobnr);
-        jobNrMap.erase(jobnr);
+
+        //TODO: Figure out why erasing seems to miss.
+        //jobVect.erase(jobPoint);
+        //jobPoint->getOwnDevice()->removeJob(jobnr);
+
+
     }
 
     void PrinterSystem::printAll(std::ostream &writeStream) {
+
 
         for (std::set<unsigned int>::iterator jobNrIt = jobNrSet.begin(); jobNrIt != jobNrSet.end(); jobNrIt++) {
 
@@ -193,20 +266,27 @@ namespace System {
             this->doPrintJob(*jobNrIt, writeStream);
         }
 
+
+        std::cout << "Total CO2 emitted by jobs until now is " << totalCO2_system << " gram" << std::endl;
+
     }
 
     void PrinterSystem::addJob(Job &inJob) {
 
         this->jobVect.emplace_back(inJob);
 
-        this->jobVect.back().setOwnDevice(&deviceVect.back());
+        this->jobVect.back().setOwnDevice(&(*(deviceVect.end() - 1)));
 
+        /*
 
-       }
+        std::cout << "these should be the same " << &(*(deviceVect.end()-1)) << " and " << (deviceVect.end()-1)->getInitCheck() << " and " << jobVect.back().getOwnDevice() << std::endl;
+        std::cout << "and these should exist " << (deviceVect.end()-1)->getInitCheck()->getNameDev() << std::endl;
+        std::cout << "and be equal to " << jobVect.back().getOwnDevice()->getNameDev() << std::endl;
+        */
+    }
 
     void PrinterSystem::addDevice(Device inDevice) {
         this->deviceVect.emplace_back(inDevice);
-        std::cout << "pointer in vect " << &(*deviceVect.end()) << std::endl;
 
 
     }
@@ -215,20 +295,20 @@ namespace System {
         return &*(jobVect.end() - 1);
     }
 
-    void PrinterSystem::takeParseInput(Device & inDev, std::deque<Job> & inJobs) {
+    void PrinterSystem::takeParseInput(Device &inDev, std::vector<Job> &inJobs) {
 
 
-
-        std::cout << "before adding" << std::endl;
         this->addDevice(inDev);
-        std::cout << "device has been added " << this->deviceVect.size() << " " << this->deviceVect.back().getNameDev() << std::endl;
 
-        for (std::deque<Job>::iterator jobIt = inJobs.begin(); jobIt != inJobs.end(); ++jobIt){
+
+        for (std::vector<Job>::iterator jobIt = inJobs.begin(); jobIt != inJobs.end(); ++jobIt) {
+
+
             this->addJob(*jobIt);
+
             this->deviceVect.back().addJob(this);
+
         }
-
-
 
 
     }

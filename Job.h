@@ -141,7 +141,7 @@ namespace System {
         std::string type;
 
         bool properlyInitialized() const;
-        System::Device * ownerDevice;
+        System::Device * ownerDevice = nullptr;
 
 
 

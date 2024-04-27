@@ -77,7 +77,7 @@ namespace System {
          * REQUIRE(this->properlyInitialized(), "Printer was not initialized when calling addJobs()")
          */
         void
-        addJobs(std::deque<Job> &jobs, std::map<unsigned int, unsigned int> &jobnrs, std::set<unsigned int> &jobnrSet);
+        addJobs(std::vector<Job> &jobs, std::map<unsigned int, unsigned int> &jobnrs, std::set<unsigned int> &jobnrSet);
 
 
 
@@ -98,7 +98,7 @@ namespace System {
          * \brief Getter for all jobs
          * @return
          */
-        std::deque<Job> getJobList();
+        std::vector<Job> getJobList();
 
         /**
          * \brief Getter for all jobnrs. This should be deprecated
@@ -138,13 +138,13 @@ namespace System {
 
 
 
-        //The deque idea was cute but ultimately uneccesary since we never actually loop over it.
+        //The vector idea was cute but ultimately uneccesary since we never actually loop over it.
         //The entire idea of using sets and maps for duplicate checking is neat, but ultimately should probably not be
         //outside of this. Do I really want to reengineer all the functions? No. Should I? probably.
 
-        //The deque is nice for the looping over all jobs since then it's a simple pop-front or pop-back operation
+        //The vector is nice for the looping over all jobs since then it's a simple pop-front or pop-back operation
         //but now it's simply a more complicated joblist.
-        std::deque<Job> jobList;
+        std::vector<Job> jobList;
         std::map<unsigned int, unsigned int> jobNrMap;
         std::set<unsigned int> jobNrSet;
 

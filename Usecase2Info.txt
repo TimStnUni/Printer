@@ -5,27 +5,32 @@ Office_Printer5
 * Black-and-white printer
 * 40 pages/minute
 * 20 cents/page 
+Default Scanner
+* CO2: 8 g/page
+* Scanner
+* 11 pages/minute
+* 110 cents/page 
     * Current: 
         [Job #89751]
             * Owner: SergeDemeyer
             * Total Pages: 2
-            * Type: Black-and-white job
-            * Device: jobIt->getOwnDevice()->getNameDev() this gives a segfault bcause of course it does
-            * Total CO2: 
-            * Total cost: 
+            * Type: Black-and-white job 
+            * Device: Office_Printer5
+            * Total CO2: 6
+            * Total cost: 40
     * Queue: 
         [Job #2189]
             * Owner: anonymous_user
             * Total Pages: 3
-            * Type: Black-and-white job
-            * Device: jobIt->getOwnDevice()->getNameDev() this gives a segfault bcause of course it does
-            * Total CO2: 
-            * Total cost: 
+            * Type: Black-and-white job 
+            * Device: Office_Printer5
+            * Total CO2: 9
+            * Total cost: 60
         [Job #98632]
             * Owner: Peter Selie
             * Total Pages: 10
-            * Type: Black-and-white job
-            * Device: jobIt->getOwnDevice()->getNameDev() this gives a segfault bcause of course it does
-            * Total CO2: 
-            * Total cost: 
+            * Type: Scanning job 
+            * Device: Default Scanner
+            * Total CO2: 80
+            * Total cost: 1100
 

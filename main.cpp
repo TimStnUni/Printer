@@ -18,7 +18,7 @@ int main() {
     bool consistent = testSystem.readXML("test.xml");
     System::PrinterSystem testSystem2 = testSystem;
 
-    testSystem.getInfo("Usecase2Info.txt");
+    //testSystem.getInfo("Usecase2Info.txt");
 
 
 
@@ -37,13 +37,13 @@ int main() {
 
     if(consistent){
         //Usecase 2: Basic info about the printer system
-        testSystem.getInfo("test.txt");
+        testSystem.getInfo("usecase2info.txt");
 
         //Usecase 3.1: manual processing
-        testSystem.doPrintJob(89751, outFile);
-
+        //testSystem.doPrintJob(2189, outFile);
+        testSystem.printAll(outFile2);
         //Usecase 3.2: automatic processing
-        testSystem2.printAll(outFile2);
+        //testSystem2.printAll(std::cout);
 
     }
 

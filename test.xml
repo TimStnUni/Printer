@@ -21,7 +21,7 @@
     <DEVICE>
         <name>Default Scanner</name>
         <emissions>8</emissions>
-        <type>bw</type>
+        <type>scan</type>
 <!--        <type>scan</type>-->
         <speed>11</speed>
         <cost>110</cost>
@@ -29,7 +29,7 @@
     <JOB>
         <jobNumber>98632</jobNumber>
         <pageCount>10</pageCount>
-        <type>bw</type>
+        <type>scan</type>
 <!--        <type>scan</type>-->
         <userName>Peter Selie</userName>
     </JOB>

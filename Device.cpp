@@ -86,6 +86,9 @@ namespace System {
         this->setCost(cost_in);
         this->jobPtrList = inDevice.jobPtrList;
 
+        for (std::vector<Job*>::const_iterator ptrIt = inDevice.jobPtrList.begin(); ptrIt != inDevice.jobPtrList.end(); ++ptrIt){
+            (*ptrIt)->setOwnDevice(this);
+        }
 
 
         ENSURE(this->properlyInitialized(), "Device not properly initialized in copy constructor");
@@ -137,9 +140,14 @@ namespace System {
 
         this->jobPtrList.push_back(&*(ownSystem->jobVect.end()-1));
 
+
+
+
     }
 
     Device &Device::operator=(const Device &inDevice) {
+
+        //Ninety percent sure this doesn't work, but atm it isn't used so I will ignore that
         std::cout << "using the operator " << std::endl;
 
         Device outDevice;
@@ -151,8 +159,51 @@ namespace System {
         outDevice.jobPtrList = inDevice.jobPtrList;
         outDevice._initCheck = &outDevice;
 
+        if (inDevice.jobPtrList.size()>0) {
 
+            for (std::vector<Job *>::const_iterator ptrIt = inDevice.jobPtrList.begin();
+                 ptrIt != inDevice.jobPtrList.end(); ++ptrIt) {
+                (*ptrIt)->setOwnDevice(this);
+            }
+        }
         return *this;
+    }
+
+    std::vector<Job *> Device::getJobs() {
+        return this->jobPtrList;
+    }
+
+    Device *Device::getInitCheck() {
+        return this->_initCheck;
+    }
+
+    void Device::updatePointer(Job *inPointer, const Job *prevPointer) {
+
+        for (std::vector<Job*>::iterator ptrIt = this->jobPtrList.begin(); ptrIt != this->jobPtrList.end(); ++ptrIt){
+
+            if ((*ptrIt) == prevPointer){
+                *ptrIt = inPointer;
+            }
+        }
+
+
+    }
+
+    void Device::removeJob(unsigned int jobNr) {
+
+        for (std::vector<Job*>::iterator ptrIt = this->jobPtrList.begin(); ptrIt != this->jobPtrList.end(); ++ptrIt){
+
+            if ((*ptrIt)->getJobNr() == jobNr){
+                this->jobPtrList.erase(ptrIt);
+                break;
+            }
+            if (ptrIt == (this->jobPtrList.end()-1)){
+                std::cerr << "jobNr not found, mysterious" << std::endl;
+                return;
+            }
+
+        }
+
     }
 
 } // System
