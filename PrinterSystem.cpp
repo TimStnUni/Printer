@@ -24,6 +24,7 @@ namespace System {
         Printer tempPrtr;
 
 
+
         tempPrtr.addDevices(tempXML.getDeviceList());
 
         std::map<unsigned int, unsigned int> jobnrs = tempXML.getJobNrMap();
@@ -69,6 +70,9 @@ namespace System {
         REQUIRE(properlyInitialized(), "the printer system was not properly initialized");
 
 
+
+
+
         std::ofstream outfile;
         outfile.open(filename);
         if (!outfile.is_open()) {
@@ -76,6 +80,9 @@ namespace System {
         }
 
         outfile << "# === [System Status] === #\n" << std::endl;
+
+
+
 
         for (std::vector<Device>::iterator printIt = deviceVect.begin(); printIt != deviceVect.end(); ++printIt) {
 
@@ -92,7 +99,9 @@ namespace System {
                 printType = "Scanner";
             }
 
-            Device testDev = *printIt;
+
+
+
 
             outfile << printIt->getNameDev() << std::endl;
             outfile << "* CO2: " << printIt->getEmissions() << " g/page" << "\n"
@@ -101,6 +110,9 @@ namespace System {
                     << "* " << printIt->getCost() << " cents/page \n";
 
             //std::vector<Job*> currentJobs = printIt->getJobs();
+
+
+
         }
         for (std::vector<Job>::iterator jobIt = this->jobVect.begin();
              jobIt != this->jobVect.end(); ++jobIt) {
@@ -128,9 +140,6 @@ namespace System {
 
                 outfile << "    * Current: \n";
             }
-
-
-
 
 
             float totalcost = (jobIt)->getPageCount() * jobIt->getOwnDevice()->getCost();
@@ -188,19 +197,21 @@ namespace System {
 
         Device *printPoint = jobPoint->getOwnDevice();
 
-        if (jobPoint->getType() != printPoint->getType()){
+        if (jobPoint->getType() != printPoint->getType()) {
 
             std::cerr << "types don't match" << std::endl;
-            for (std::vector<Device>::iterator devIt = this->deviceVect.begin(); devIt != this->deviceVect.end(); devIt++){
+            for (std::vector<Device>::iterator devIt = this->deviceVect.begin();
+                 devIt != this->deviceVect.end(); devIt++) {
 
-                if (devIt->getType() == jobPoint->getType()){
+                if (devIt->getType() == jobPoint->getType()) {
                     jobPoint->setOwnDevice(&(*devIt));
                     printPoint = jobPoint->getOwnDevice();
                     std::cerr << "Rerouting to device \"" << printPoint->getNameDev() << "\"" << std::endl;
                     break;
                 }
-                if (devIt == (this->deviceVect.end() - 1)){
-                    std::cerr << "No viable replacement device found, aborting print job " << jobPoint->getJobNr() << " from user " << jobPoint->getUserName() << std::endl;
+                if (devIt == (this->deviceVect.end() - 1)) {
+                    std::cerr << "No viable replacement device found, aborting print job " << jobPoint->getJobNr()
+                              << " from user " << jobPoint->getUserName() << std::endl;
                     return;
                 }
 
@@ -227,7 +238,7 @@ namespace System {
             printType = "scanning ";
         }
 
-        writeStream << "Printer \"" << printPoint->getNameDev() << "\" finished "<< printType <<"job:\n";
+        writeStream << "Printer \"" << printPoint->getNameDev() << "\" finished " << printType << "job:\n";
         writeStream << "  Number: " << jobnr << "\n";
         writeStream << "  Submitted by \"" << jobPoint->getUserName() << "\"\n";
         writeStream << "  " << jobPoint->getPageCount() << " pages\n";
@@ -286,8 +297,34 @@ namespace System {
     }
 
     void PrinterSystem::addDevice(Device inDevice) {
-        this->deviceVect.emplace_back(inDevice);
 
+        std::vector<string> devicenames;
+        std::vector<std::vector<Job *>> jobPtrs;
+
+        for (std::vector<Device>::iterator devIt = this->deviceVect.begin(); devIt != this->deviceVect.end(); devIt++) {
+
+            devicenames.push_back(devIt->getNameDev());
+            jobPtrs.push_back(devIt->getJobs());
+
+        }
+
+        this->deviceVect.emplace_back(inDevice);
+/*
+        for (int i = 0; i < devicenames.size(); i++) {
+
+            for (std::vector<Device>::iterator devIt2 = this->deviceVect.begin();
+                 devIt2 != this->deviceVect.end(); devIt2++) {
+                std::vector<Job *> tempJobVect = jobPtrs.at(i);
+                if (devIt2->getNameDev() == devicenames.at(i)) {
+                    for (std::vector<Job *>::iterator jobIt = tempJobVect.begin();
+                         jobIt != tempJobVect.end(); jobIt++) {
+                        (*jobIt)->setOwnDevice(&(*devIt2));
+                    }
+                }
+
+            }
+        }
+*/
 
     }
 

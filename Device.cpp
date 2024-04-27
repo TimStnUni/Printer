@@ -86,6 +86,7 @@ namespace System {
         this->setCost(cost_in);
         this->jobPtrList = inDevice.jobPtrList;
 
+
         for (std::vector<Job*>::const_iterator ptrIt = inDevice.jobPtrList.begin(); ptrIt != inDevice.jobPtrList.end(); ++ptrIt){
             (*ptrIt)->setOwnDevice(this);
         }
@@ -159,13 +160,17 @@ namespace System {
         outDevice.jobPtrList = inDevice.jobPtrList;
         outDevice._initCheck = &outDevice;
 
-        if (inDevice.jobPtrList.size()>0) {
+        /*
+
+
+         if (inDevice.jobPtrList.size()>0) {
 
             for (std::vector<Job *>::const_iterator ptrIt = inDevice.jobPtrList.begin();
                  ptrIt != inDevice.jobPtrList.end(); ++ptrIt) {
                 (*ptrIt)->setOwnDevice(this);
             }
         }
+         */
         return *this;
     }
 

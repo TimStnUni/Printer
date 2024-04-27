@@ -16,7 +16,7 @@ int main() {
 
     //UseCase 1: Reads an XML file into the printersystem
     bool consistent = testSystem.readXML("test.xml");
-    System::PrinterSystem testSystem2 = testSystem;
+    //System::PrinterSystem testSystem2 = testSystem;
 
     //testSystem.getInfo("Usecase2Info.txt");
 
