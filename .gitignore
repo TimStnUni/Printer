@@ -239,4 +239,4 @@ cmake-build-debug
 
 ### Designbycontract differs between windows and linux
 DesignByContract.h
-
+gtest
