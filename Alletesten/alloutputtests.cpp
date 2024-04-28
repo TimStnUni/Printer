@@ -37,10 +37,10 @@ protected:
 TEST_F(OutputTests, SingleJobTest){
 
 
-    testSystem.readXML("SystemTesten/test.xml");
+    testSystem.readXML("Alletesten/testoutput/outputtest.xml");
 
     std::ofstream outFile; // Create an output file stream
-    std::string f = "SystemTesten/PrintOutput";
+    std::string f = "Alletesten/testoutput/PrintOutput";
     std::string outputFileName = f + ".txt";
     const char *outputFileNameChar = outputFileName.c_str();
     outFile.open(outputFileNameChar); // Open the file
@@ -50,37 +50,33 @@ TEST_F(OutputTests, SingleJobTest){
 
     outFile.close();
 
-    EXPECT_TRUE(FileExists("SystemTesten/PrintOutputTest.txt"));
-    EXPECT_TRUE(FileExists("SystemTesten/PrintOutput.txt"));
-    EXPECT_TRUE(FileCompare("SystemTesten/PrintOutputTest.txt", "SystemTesten/PrintOutput.txt"));
-    EXPECT_TRUE(FileCompare("SystemTesten/PrintOutput.txt", "SystemTesten/PrintOutputTest.txt"));
-
+    EXPECT_TRUE(FileExists("Alletesten/testoutput/PrintOutputTest.txt"));
+    EXPECT_TRUE(FileExists("Alletesten/testoutput/PrintOutput.txt"));
+    EXPECT_TRUE(FileCompare("Alletesten/testoutput/PrintOutputTest.txt", "Alletesten/testoutput/PrintOutput.txt"));
+    EXPECT_TRUE(FileCompare("Alletesten/testoutput/PrintOutput.txt", "Alletesten/testoutput/PrintOutputTest.txt"));
 
 }
 
 
 TEST_F(OutputTests, AllJobTest){
 
-
-    testSystem.readXML("SystemTesten/test.xml");
+    testSystem.readXML("Alletesten/testoutput/outputtest.xml");
 
     std::ofstream outFile; // Create an output file stream
-    std::string f = "SystemTesten/PrintAllOutput";
+    std::string f = "Alletesten/testoutput/PrintAllOutput";
     std::string outputFileName = f + ".txt";
     const char *outputFileNameChar = outputFileName.c_str();
     outFile.open(outputFileNameChar); // Open the file
-
-
 
 
     testSystem.printAll(outFile);
 
     outFile.close();
 
-    EXPECT_TRUE(FileExists("SystemTesten/PrintAllOutput.txt"));
-    EXPECT_TRUE(FileExists("SystemTesten/PrintAllOutputTest.txt"));
-    EXPECT_TRUE(FileCompare("SystemTesten/PrintAllOutput.txt", "SystemTesten/PrintAllOutputTest.txt"));
-    EXPECT_TRUE(FileCompare("SystemTesten/PrintAllOutputTest.txt", "SystemTesten/PrintAllOutput.txt"));
+    EXPECT_TRUE(FileExists("Alletesten/testoutput/PrintAllOutput.txt"));
+    EXPECT_TRUE(FileExists("Alletesten/testoutput/PrintAllOutputTest.txt"));
+    EXPECT_TRUE(FileCompare("Alletesten/testoutput/PrintAllOutput.txt", "Alletesten/testoutput/PrintAllOutputTest.txt"));
+    EXPECT_TRUE(FileCompare("Alletesten/testoutput/PrintAllOutputTest.txt", "Alletesten/testoutput/PrintAllOutput.txt"));
 
 
 }

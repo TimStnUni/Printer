@@ -1,0 +1,5 @@
+Printer "Color_Printer" finished color-printing job:
+  Number: 2189
+  Submitted by "anonymous_user"
+  3 pages
+

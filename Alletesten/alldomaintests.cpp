@@ -30,6 +30,7 @@ protected:
  * domainTests for Device
  */
 
+
 TEST_F(DomainTests, SpeedIsNegativeDeathTest) {
     System::Device dev;
     int speed = -1;
@@ -42,12 +43,30 @@ TEST_F(DomainTests, EmissionsAreNegativeDeathTest) {
     EXPECT_DEATH(dev.setEmissions(emissions), "Emissions should be positive");
 }
 
+TEST_F(DomainTests, CostAreNegativeDeathTest) {
+    System::Device dev;
+    float cost = -1;
+    EXPECT_DEATH(dev.setCost(cost), "Cost should be positive");
+}
+
+//TEST_F(DomainTests, EmptyTypeDevTests){
+//    System::Device dev;
+//
+//    EXPECT_DEATH(dev.setType(""), "Type shouldn't be empty");
+//}
+//
+//TEST_F(DomainTests, EmptyNameTests){
+//    System::Device dev;
+//
+//    EXPECT_DEATH(dev.setNameDev(""), "name should not be empty");
+//}
+
 
 /**
  * domainTests for Job
  */
 
-TEST_F(DomainTests, NegativeDeathTests){
+TEST_F(DomainTests, NegativeJobDeathTests){
     System::Job job;
 
     EXPECT_DEATH(job.setPageCount(-5), "Pagecount should be positive");
@@ -62,7 +81,7 @@ TEST_F(DomainTests, EmptyJobNameTests){
     EXPECT_DEATH(job.setUserName(""), "Username should not be empty");
 }
 
-TEST_F(DomainTests, EmptyTypeTests){
+TEST_F(DomainTests, EmptyTypeJobTests){
     System::Job job;
 
     EXPECT_DEATH(job.setType(""), "Type should not be empty");

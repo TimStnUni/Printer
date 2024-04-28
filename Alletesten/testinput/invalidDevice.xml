@@ -1,6 +1,6 @@
 <SYSTEM>
     <DEVICE>
-        <name>Office_Printer8<name>
+        <name>Office_Printer8</name>
         <emissions>5</emissions>
         <type>bw</type>
         <speed>45</speed>
