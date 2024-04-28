@@ -33,6 +33,9 @@ protected:
     }
 };
 
+/**
+ * Tests if the doPrintJob works correctly and has the right output
+ */
 
 TEST_F(OutputTests, SingleJobTest){
 
@@ -53,10 +56,12 @@ TEST_F(OutputTests, SingleJobTest){
     EXPECT_TRUE(FileExists("Alletesten/testoutput/PrintOutputTest.txt"));
     EXPECT_TRUE(FileExists("Alletesten/testoutput/PrintOutput.txt"));
     EXPECT_TRUE(FileCompare("Alletesten/testoutput/PrintOutputTest.txt", "Alletesten/testoutput/PrintOutput.txt"));
-    EXPECT_TRUE(FileCompare("Alletesten/testoutput/PrintOutput.txt", "Alletesten/testoutput/PrintOutputTest.txt"));
 
 }
 
+/**
+ * Tests if the function printAll works correctly and has the right output
+ */
 
 TEST_F(OutputTests, AllJobTest){
 
@@ -76,7 +81,33 @@ TEST_F(OutputTests, AllJobTest){
     EXPECT_TRUE(FileExists("Alletesten/testoutput/PrintAllOutput.txt"));
     EXPECT_TRUE(FileExists("Alletesten/testoutput/PrintAllOutputTest.txt"));
     EXPECT_TRUE(FileCompare("Alletesten/testoutput/PrintAllOutput.txt", "Alletesten/testoutput/PrintAllOutputTest.txt"));
-    EXPECT_TRUE(FileCompare("Alletesten/testoutput/PrintAllOutputTest.txt", "Alletesten/testoutput/PrintAllOutput.txt"));
+
+
+}
+
+/**
+ * Tests if the function
+ */
+
+
+TEST_F(OutputTests, ScheduledJobTest){
+
+    testSystem.readXML("Alletesten/testoutput/outputtest.xml");
+
+    std::ofstream outFile; // Create an output file stream
+    std::string f = "Alletesten/testoutput/ScheduleJobOutput";
+    std::string outputFileName = f + ".txt";
+    const char *outputFileNameChar = outputFileName.c_str();
+    outFile.open(outputFileNameChar); // Open the file
+
+
+    testSystem.printAll(outFile);
+
+    outFile.close();
+
+    EXPECT_TRUE(FileExists("Alletesten/testoutput/ScheduleJobOutput.txt"));
+    EXPECT_TRUE(FileExists("Alletesten/testoutput/ScheduleJobOutputTest.txt"));
+    EXPECT_TRUE(FileCompare("Alletesten/testoutput/ScheduleJobOutput.txt", "Alletesten/testoutput/ScheduleJobOutputTest.txt"));
 
 
 }

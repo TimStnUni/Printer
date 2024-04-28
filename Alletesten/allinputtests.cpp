@@ -25,8 +25,9 @@ protected:
     }
 };
 
+
 /**
- *  inputTests for Device
+ * Test to see if the check for Device name works correctly and is not empty
  */
 
 TEST_F(InputTests, DeviceNameIsEmpty) {
@@ -38,6 +39,10 @@ TEST_F(InputTests, DeviceNameIsEmpty) {
     // readXML returns false if the device name is empty
 }
 
+/**
+ * Test to see if the check for emissions works correctly
+ */
+
 TEST_F(InputTests, EmissionsAreNegative) {
     ASSERT_TRUE(DirectoryExists("Alletesten/testinput"));
     ASSERT_TRUE(FileExists("Alletesten/testinput/negativeEmission.xml"));
@@ -47,6 +52,9 @@ TEST_F(InputTests, EmissionsAreNegative) {
     // readXML returns false if the emissions value is negative
 }
 
+/**
+ * Test to see if the check for device input works correctly
+ */
 
 TEST_F(InputTests, ValidDeviceInput) {
     ASSERT_TRUE(DirectoryExists("Alletesten/testinput"));
@@ -57,6 +65,9 @@ TEST_F(InputTests, ValidDeviceInput) {
     // readXML returns true if the XML input for the device is valid
 }
 
+/**
+ * Test to see if the check for type works correctly and is not empty
+ */
 
 TEST_F(InputTests, TypeIsEmpty) {
     ASSERT_TRUE(DirectoryExists("Alletesten/testinput"));
@@ -69,9 +80,8 @@ TEST_F(InputTests, TypeIsEmpty) {
 
 
 
-
 /**
- * inputTests for Job
+ * Test to see if the check for jobnumbers works correctly
  */
 
 TEST_F(InputTests, jobNrIsNegative){
@@ -84,6 +94,10 @@ TEST_F(InputTests, jobNrIsNegative){
     // readXML returns false if the xml is invalid
 }
 
+/**
+ * Test to see if the check for Jobnumber works correctly and the Jobnumbers are unique
+ */
+
 TEST_F(InputTests, Jobnr_unique){
     ASSERT_TRUE(DirectoryExists("Alletesten/testinput"));
     ASSERT_TRUE(FileExists("Alletesten/testinput/notuniqueJobnr.xml"));
@@ -95,6 +109,10 @@ TEST_F(InputTests, Jobnr_unique){
 }
 
 
+/**
+ * Test to see if the check for Username works correctly and is not empty
+ */
+
 TEST_F(InputTests, emptyUserName){
     ASSERT_TRUE(DirectoryExists("Alletesten/testinput"));
     ASSERT_TRUE(FileExists("Alletesten/testinput/emptyUser.xml"));
@@ -103,6 +121,10 @@ TEST_F(InputTests, emptyUserName){
     EXPECT_EQ(testSystem.readXML("Alletesten/testinput/emptyUser.xml"), false);
 
 }
+
+/**
+ * Test to see if the check for page count works correctly
+ */
 
 TEST_F(InputTests, pageCountisnegative){
     ASSERT_TRUE(DirectoryExists("Alletesten/testinput"));
