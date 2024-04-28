@@ -23,6 +23,7 @@ protected:
     friend class Device;
     friend class Job;
     friend class PrinterSystem;
+    friend class Scheduler;
 
     PrinterSystem testSystem;
 
@@ -100,8 +101,8 @@ TEST_F(OutputTests, ScheduledJobTest){
     const char *outputFileNameChar = outputFileName.c_str();
     outFile.open(outputFileNameChar); // Open the file
 
-
-    testSystem.printAll(outFile);
+    //TODO:create scheduler for test
+    testSystem.doPrintJob(2189, outFile);
 
     outFile.close();
 
