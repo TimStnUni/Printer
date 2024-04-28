@@ -8,9 +8,10 @@
 namespace System {
     Scheduler::Scheduler(PrinterSystem *PrintSystem) {
 
+        _initcheck = this;
 
         this->ownSystem = PrintSystem;
-        _initcheck = this;
+
 
 
         ENSURE(this->properlyInitialized(), "Scheduler was not properly initialized");
@@ -23,6 +24,8 @@ namespace System {
     }
 
     void Scheduler::schedule(Job * jobIn) {
+
+        REQUIRE(properlyInitialized(), "Scheduler not properly initialized when attempting to schedule a job");
 
         //This should be reworked to jobnr's;
 
@@ -61,13 +64,13 @@ namespace System {
 
         _initcheck = this;
 
-        ENSURE(this->properlyInitialized(), "Scheduler was not properly initialized");
+        ENSURE(properlyInitialized(), "Scheduler was not properly initialized");
 
     }
 
     void Scheduler::setSystem(PrinterSystem *PrintSystem) {
 
-        REQUIRE(this->properlyInitialized(), "Scheduler was not properly initialized when attempting to set its ownsystem");
+        REQUIRE(properlyInitialized(), "Scheduler was not properly initialized when attempting to set its ownsystem");
 
 
         ownSystem = PrintSystem;

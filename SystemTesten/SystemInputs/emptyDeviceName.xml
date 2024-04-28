@@ -4,6 +4,7 @@
         <emissions>10</emissions>
         <type>bw</type>
         <speed>30</speed>
+        <cost>8</cost>
     </DEVICE>
     <JOB>
         <jobNumber>89751</jobNumber>

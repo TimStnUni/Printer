@@ -10,8 +10,10 @@ namespace System {
 
 
     Device::Device(std::string name_in, int emissions_in, int speed_in, std::string type_in, float cost_in) {
-        //REQUIRE(emissions_in > 0, "Emissions should be positive");
-        //REQUIRE(speed_in > 0, "Speed should be positive");
+        REQUIRE(emissions_in > 0, "Emissions should be positive");
+        REQUIRE(speed_in > 0, "Speed should be positive");
+        REQUIRE(!type_in.empty(), "type should not be blank");
+        REQUIRE(cost_in>0, "Cost should be positive");
 
         _initCheck = this;
 
@@ -129,26 +131,31 @@ namespace System {
 
     void Device::setType(std::string &type_in) {
         REQUIRE(!type_in.empty(), "Type shouldn't be empty");
+        REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to set type");
         this->type = type_in;
         ENSURE(this->getType() == type_in, "Type not correctly set");
     }
 
     void Device::setCost(float &cost_in) {
         REQUIRE(cost_in >= 0, "Cost should be positive");
+        REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to set cost");
         this->cost = cost_in;
         ENSURE(this->getCost() == cost_in, "Cost not correctly set");
     }
 
+
+    /*
     void Device::addJob(PrinterSystem *ownSystem) {
 
         this->jobPtrList.push_back(&*(ownSystem->jobVect.end() - 1));
 
 
     }
+     */
 
     Device &Device::operator=(const Device &inDevice) {
 
-        //Ninety percent sure this doesn't work, but atm it isn't used so I will ignore that
+
         std::cout << "using the operator " << std::endl;
 
         Device outDevice;
@@ -174,14 +181,10 @@ namespace System {
         return *this;
     }
 
-    std::vector<Job *> Device::getJobs() {
-        return this->jobPtrList;
-    }
 
-    Device *Device::getInitCheck() {
-        return this->_initCheck;
-    }
 
+
+/*
     void Device::updatePointer(Job *inPointer, const Job *prevPointer) {
 
         for (std::vector<Job *>::iterator ptrIt = this->jobPtrList.begin(); ptrIt != this->jobPtrList.end(); ++ptrIt) {
@@ -193,8 +196,11 @@ namespace System {
 
 
     }
+    */
 
     void Device::removeJob(unsigned int jobNr) {
+
+        REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to remove a job from queu");
 
         for (std::vector<Job *>::iterator ptrIt = this->jobPtrList.begin(); ptrIt != this->jobPtrList.end(); ++ptrIt) {
 
@@ -212,6 +218,8 @@ namespace System {
     }
 
     int Device::getTotalPages() {
+
+        REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to get total pages");
 
         int pages = 0;
 
@@ -233,6 +241,8 @@ namespace System {
 
 
         this->jobPtrList.push_back(jobIn);
+
+        ENSURE(*jobPtrList.back() == *jobIn, "Job was not correctly added");
 
     }
 

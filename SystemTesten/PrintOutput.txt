@@ -1,4 +1,4 @@
-Printer "Office_Printer5" finished job:
+Printer "Office_Printer5" finished black-and-white-printing job:
   Number: 2189
   Submitted by "anonymous_user"
   3 pages

@@ -11,7 +11,7 @@ namespace System {
 
         REQUIRE(!userName_in.empty(), "Username shouldn't be empty");
         REQUIRE(pageCount_in > 0, "Pagecount should be positive");
-
+        REQUIRE(!type_in.empty(), "Type should not be empty");
 
         _initCheck = this;
 
@@ -48,7 +48,7 @@ namespace System {
     }
 
     Job::Job() {
-        std::cout << "job default constructor is being used " << std::endl;
+
         _initCheck = this;
         ENSURE(this->properlyInitialized(), "Default constructor not properly initialized");
     }
@@ -134,6 +134,9 @@ namespace System {
 
     void Job::setOwnDevice(System::Device *ownDevice) {
 
+        REQUIRE(properlyInitialized(), "Job not properly initialized when attempting to set owner device");
+        //REQUIRE(ownDevice != nullptr, "Input pointer should definitely not be a nullptr");
+
         this->ownerDevice = ownDevice;
 
         ENSURE(this->getOwnDevice() == ownDevice, "ownerDevice not correctly set");
@@ -141,6 +144,9 @@ namespace System {
     }
 
     System::Device *Job::getOwnDevice() const{
+
+        REQUIRE(properlyInitialized(), "Job nor properly initialized when attempting to get owner device");
+        //REQUIRE(this->ownerDevice != nullptr, "own device should definitely not be the nullptr");
         return this->ownerDevice;
     }
 

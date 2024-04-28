@@ -15,12 +15,14 @@ namespace System {
     public:
         /**
          * \brief Default Constructor
+         * ENSURE(this->properlyInitialized(), "Default constructor not properly initialized")
          */
         Job();
 
         /**
-         * \brief Copy constructor to fix _initcheck to this
+         * \brief Copy constructor
          * @param inJob
+         * ENSURE(this->properlyInitialized(), "job was not properly initialized")
          */
 
         Job(const Job &inJob);
@@ -33,7 +35,7 @@ namespace System {
          *
          *REQUIRE(!userName_in.empty(), "Username shouldn't be empty");
          *REQUIRE(pageCount_in>0, "Pagecount should be positive");
-         *
+         *REQUIRE(!type_in.empty(), "Type should not be empty")
          * ENSURE(this->properlyInitialized(), "Job wasn't properly initialized")
          */
         Job(std::string userName_in, int pageCount_in, int jobNr_in, std::string type_in);
@@ -74,7 +76,7 @@ namespace System {
         /**
          * \brief Setter function for ownerDevice
          * @param ownDevice
-         * REQUIRE() probably something with nullptr?
+         *  REQUIRE(properlyInitialized(), "Job not properly initialized when attempting to set owner device");
          * ENSURE(this->getOwnDevice() == ownDevice, "OwnDevice not correctly set")
          */
 
@@ -84,7 +86,8 @@ namespace System {
         /**
          * \brief getter function for ownerDevice
          * @return
-         * REQUIRE() probably something with nullptr
+         * REQUIRE(properlyInitialized(), "Job nor properly initialized when attempting to get owner device");
+         *
          */
         System::Device * getOwnDevice() const;
 
@@ -133,6 +136,19 @@ namespace System {
          */
 
         Job& operator=(Job const & inJob);
+
+
+        /**
+         * Overload of the == operator for tests
+         * @param d
+         * @return
+         */
+        bool operator == (const Job &J){
+            if (jobNr == J.jobNr && pageCount == J.pageCount && type == J.type){
+                return true;
+            }
+            return false;
+        }
 
     private:
         int jobNr, pageCount;

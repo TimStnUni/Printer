@@ -10,11 +10,14 @@ namespace System {
 
         system_scheduler.setSystem(this);
         _initcheck = this;
-
+        ENSURE(properlyInitialized(), "System wasn't properly initialized");
 
     }
 
     bool PrinterSystem::readXML(const char *filename) {
+
+        REQUIRE(properlyInitialized(), "System wasn't properly initialized when attempting to read an XML file");
+
         XMLParser tempXML(filename, this);
 
         //if parse is not successful return false
@@ -45,7 +48,7 @@ namespace System {
 
             if (jobNrSet.find(*it) == jobNrSet.end()) {
 
-                jobNrMap.insert({*it, printerIndex});
+                //jobNrMap.insert({*it, printerIndex});
                 jobNrSet.insert(*it);
 
             } else {
@@ -282,7 +285,7 @@ namespace System {
     }
 
     void PrinterSystem::printAll(std::ostream &writeStream) {
-
+        REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to print all jobs");
 
         for (std::set<unsigned int>::iterator jobNrIt = jobNrSet.begin(); jobNrIt != jobNrSet.end(); jobNrIt++) {
 
@@ -291,17 +294,24 @@ namespace System {
         }
 
 
-        std::cout << "Total CO2 emitted by jobs until now is " << totalCO2_system << " gram" << std::endl;
+        writeStream << "Total CO2 emitted by jobs until now is " << totalCO2_system << " gram" << std::endl;
 
     }
 
     void PrinterSystem::addJob(Job &inJob) {
 
+        REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to add a job");
+
         this->jobVect.emplace_back(inJob);
 
+
+        //This should be removable but isn't? Weird
         this->jobVect.back().setOwnDevice(&(*(deviceVect.end() - 1)));
 
+        ENSURE(jobVect.back() == inJob, "Job was not correctly added");
+
         /*
+
 
         std::cout << "these should be the same " << &(*(deviceVect.end()-1)) << " and " << (deviceVect.end()-1)->getInitCheck() << " and " << jobVect.back().getOwnDevice() << std::endl;
         std::cout << "and these should exist " << (deviceVect.end()-1)->getInitCheck()->getNameDev() << std::endl;
@@ -310,6 +320,8 @@ namespace System {
     }
 
     void PrinterSystem::addDevice(Device inDevice) {
+
+        REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to add a device");
 
         std::vector<string> devicenames;
 
@@ -322,6 +334,9 @@ namespace System {
         }
 
         this->deviceVect.emplace_back(inDevice);
+
+
+        ENSURE(deviceVect.back() == inDevice, "Device was not correctly added");
 /*
         for (int i = 0; i < devicenames.size(); i++) {
 
@@ -341,12 +356,15 @@ namespace System {
 
     }
 
+
+    /*
     const Job *PrinterSystem::getMRJob() {
         return &*(jobVect.end() - 1);
     }
-
+*/
     void PrinterSystem::takeParseInput(Device &inDev, std::vector<Job> &inJobs) {
 
+        REQUIRE(properlyInitialized(), "System wasn't properly initialized when attempting to add devices and jobs");
 
         this->addDevice(inDev);
 

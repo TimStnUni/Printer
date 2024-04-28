@@ -19,8 +19,28 @@ namespace System {
 
 
     public:
+
+        /**
+         * \brief Constructor for an InfoPrinter
+         * ENSURE(this->properlyInitialized(), "Infoprinter was not properly initialized")
+         */
         InfoPrinter();
+
+        /**
+         * \brief Setter function for the system for which we are printing
+         * @param inSystem
+         * REQUIRE(properlyInitialized(), "InfoPrinter not properly initialized when attempting to set system")
+         * ENSURE(ownSystem == inSystem, "System was not correclty assigned")
+         */
+
         void setSystem(PrinterSystem * inSystem);
+
+        /**
+         * \brief Function that prints info about the system in an ASCII format, and gives it to the writestream
+         * @param writestream
+         * REQUIRE(properlyInitialized(), "InfoPrinter was not properly initialized when attempting to print ASCII")
+         */
+
         void printAscii(std::ostream &writestream);
 
 

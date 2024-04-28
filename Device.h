@@ -24,10 +24,11 @@ namespace System {
 
     public:
 
-        Device * getInitCheck();
+
 
         /**
          * \brief Default Constructor
+         * ENSURE(this->properlyInitialized(), "device was not properly initialized in the default constructor")
          */
         Device();
 
@@ -36,14 +37,19 @@ namespace System {
          * @param name : Name of the printer as a string
          * @param emissions : Emissions of the printer in g/page
          * @param speed : Speed of the printer in p/minute
+         * REQUIRE(emissions_in > 0, "Emissions should be positive");
+         *REQUIRE(speed_in > 0, "Speed should be positive");
+         *REQUIRE(!type_in.empty(), "type should not be blank");
+         *REQUIRE(cost_in>0, "Cost should be positive");
          * ENSURE(this->properlyInitialized(), "Device is not properly initialized");
          */
         Device(std::string name, int emissions, int speed, std::string type, float cost);
-//float cost
+
 
         /**
          * \brief Copy Constructor that should fix the _initCheck to this
          * @param inDevice device to be copied
+         * ENSURE(this->properlyInitialized(), "Device not properly initialized in copy constructor")
          */
         Device(const Device &inDevice);
 
@@ -102,6 +108,7 @@ namespace System {
          * \brief A setter function for the printer speed
          * @param type_in
          * REQUIRE(!type_in.empty(), "Type shouldn't be empty")
+         * REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to set type")
          * ENSURE(this->getType() == type_in, "Type not correctly set")
          */
 
@@ -118,6 +125,7 @@ namespace System {
          * \brief A setter function for the cost of printing
          * @param cost_in
          * REQUIRE(cost_in >= 0, "Cost should be positive")
+         * REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to set cost")
          * ENSURE(this->getCost() == cost_in, "Cost not correctly set")
          */
 
@@ -132,18 +140,30 @@ namespace System {
         float getCost() const;
 
 
-
+        /**
+         * \brief getter function for the total nr of pages in the queue for this printer
+         * @return
+         * REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to get total pages")
+         */
         int getTotalPages();
 
 
+
+
+        /**
+         * \brief function to add a job to the queue for this device
+         * @param jobIn
+         * REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to add job")
+         * ENSURE(*jobPtrList.back() == *jobIn, "Job was not correctly added")
+         */
         void addJob(Job * jobIn);
 
 
 
 
-        std::vector<Job*> getJobs();
 
-        void addJob(PrinterSystem * ownSystem);
+
+        //void addJob(PrinterSystem * ownSystem);
 
 
         /**
@@ -159,19 +179,35 @@ namespace System {
             return false;
         }
 
+
+        /**
+         * \brief Function to remove a job from the queue
+         * @param jobnr
+         * REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to remove a job from queu")
+         * ENSURE should check that it was actually removed, this is currently not done
+         */
+
         void removeJob(unsigned int jobnr);
+
+
+        /**
+         * Overloaded assingment operator. Currently does not seem to be used
+         * @param inDevice
+         * @return
+         */
 
         Device& operator=(Device const & inDevice);
 
 
-        Device *_initCheck;
+
     protected:
         std::string name;
         int emissions, speed;
         std::string type;
         float cost;
+        Device *_initCheck;
 
-        void updatePointer(Job * inPointer, const Job * prevPointer);
+        //void updatePointer(Job * inPointer, const Job * prevPointer);
 
 
 

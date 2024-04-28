@@ -20,6 +20,8 @@ bool System::InfoPrinter::properlyInitialized() {
 
 void System::InfoPrinter::printAscii(std::ostream &outfile) {
 
+    REQUIRE(properlyInitialized(), "InfoPrinter was not properly initialized when attempting to print ASCII");
+
 
     outfile << "# === [System Status] === #\n\n" << std::endl;
 
@@ -103,6 +105,10 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
 }
     void System::InfoPrinter::setSystem(System::PrinterSystem *inSystem) {
 
+        REQUIRE(properlyInitialized(), "InfoPrinter not properly initialized when attempting to set system");
+
         this->ownSystem = inSystem;
+
+        ENSURE(ownSystem == inSystem, "System was not correclty assigned");
 
     }
