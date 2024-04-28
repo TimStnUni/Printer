@@ -21,7 +21,6 @@ int main() {
     //testSystem.getInfo("Usecase2Info.txt");
 
 
-
     std::ofstream outFile; // Create an output file stream
     std::string f = "PrintOutputTestScheduled";
     std::string outputFileName = f + ".txt";
@@ -47,7 +46,7 @@ int main() {
 
     }
 
-    outFile.close();
-    outFile2.close();
+//    outFile.close();
+//    outFile2.close();
     return 0;
 }
