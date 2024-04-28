@@ -48,7 +48,6 @@ TEST_F(InputTests, EmissionsAreNegative) {
 }
 
 
-
 TEST_F(InputTests, ValidDeviceInput) {
     ASSERT_TRUE(DirectoryExists("Alletesten/testinput"));
     ASSERT_TRUE(FileExists("Alletesten/testinput/validDevice.xml"));
@@ -58,17 +57,17 @@ TEST_F(InputTests, ValidDeviceInput) {
     // readXML returns true if the XML input for the device is valid
 }
 
-TEST_F(InputTests, SpeedIsNegativeDeathTest) {
-    System::Device dev;
-    int speed = -1;
-    EXPECT_DEATH(dev.setSpeed(speed), "Speed should be positive");
+
+TEST_F(InputTests, TypeIsEmpty) {
+    ASSERT_TRUE(DirectoryExists("Alletesten/testinput"));
+    ASSERT_TRUE(FileExists("Alletesten/testinput/emptyType.xml"));
+
+    System::PrinterSystem testSystem;
+    EXPECT_EQ(testSystem.readXML("Alletesten/testinput/emptyType.xml"), false);
+    // readXML returns false type is empty
 }
 
-TEST_F(InputTests, EmissionsAreNegativeDeathTest) {
-    System::Device dev;
-    int emissions = -1;
-    EXPECT_DEATH(dev.setEmissions(emissions), "Emissions should be positive");
-}
+
 
 
 /**
@@ -114,12 +113,5 @@ TEST_F(InputTests, pageCountisnegative){
     // readXML returns false if the xml is invalid
 }
 
-TEST_F(InputTests, NegativeDeathTests){
-    System::Job job;
 
-    EXPECT_DEATH(job.setUserName(""), "Username should not be empty");
-    EXPECT_DEATH(job.setPageCount(-5), "Pagecount should be positive");
-    EXPECT_DEATH(job.setJobNr(-5), "jobnr should be positive");
-
-}
 

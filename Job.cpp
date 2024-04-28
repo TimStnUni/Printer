@@ -106,7 +106,7 @@ namespace System {
     }
 
     void Job::setType(const std::string type_in) {
-        REQUIRE(!type_in.empty(), "Type shouldn't be empty");
+        REQUIRE(!type_in.empty(), "Type should not be empty");
         this->type = type_in;
         ENSURE(this->getType() == type_in, "Type not correctly set");
     }

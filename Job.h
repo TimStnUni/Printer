@@ -113,7 +113,7 @@ namespace System {
         /**
          * \brief A setter function for the printer speed
          * @param type_in
-         * REQUIRE(!type_in.empty(), "Type shouldn't be empty")
+         * REQUIRE(!type_in.empty(), "Type should not be empty")
          * ENSURE(this->getType() == type_in, "Type not correctly set")
          */
 

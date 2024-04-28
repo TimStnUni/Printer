@@ -38,8 +38,6 @@ TEST_F(SystemOutputTests, SingleJobTest){
     outFile.open(outputFileNameChar); // Open the file
 
 
-
-
     testSystem.doPrintJob(2189, outFile);
 
     outFile.close();
