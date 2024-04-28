@@ -9,7 +9,6 @@
 namespace System {
 
 
-
     Device::Device(std::string name_in, int emissions_in, int speed_in, std::string type_in, float cost_in) {
         //REQUIRE(emissions_in > 0, "Emissions should be positive");
         //REQUIRE(speed_in > 0, "Speed should be positive");
@@ -87,10 +86,13 @@ namespace System {
         this->jobPtrList = inDevice.jobPtrList;
 
 
-        for (std::vector<Job*>::const_iterator ptrIt = inDevice.jobPtrList.begin(); ptrIt != inDevice.jobPtrList.end(); ++ptrIt){
+        /*
+         * Pointer bullshittery that should no longer be needed
+        for (std::vector<Job *>::const_iterator ptrIt = inDevice.jobPtrList.begin();
+             ptrIt != inDevice.jobPtrList.end(); ++ptrIt) {
             (*ptrIt)->setOwnDevice(this);
         }
-
+        */
 
         ENSURE(this->properlyInitialized(), "Device not properly initialized in copy constructor");
 
@@ -139,9 +141,7 @@ namespace System {
 
     void Device::addJob(PrinterSystem *ownSystem) {
 
-        this->jobPtrList.push_back(&*(ownSystem->jobVect.end()-1));
-
-
+        this->jobPtrList.push_back(&*(ownSystem->jobVect.end() - 1));
 
 
     }
@@ -184,9 +184,9 @@ namespace System {
 
     void Device::updatePointer(Job *inPointer, const Job *prevPointer) {
 
-        for (std::vector<Job*>::iterator ptrIt = this->jobPtrList.begin(); ptrIt != this->jobPtrList.end(); ++ptrIt){
+        for (std::vector<Job *>::iterator ptrIt = this->jobPtrList.begin(); ptrIt != this->jobPtrList.end(); ++ptrIt) {
 
-            if ((*ptrIt) == prevPointer){
+            if ((*ptrIt) == prevPointer) {
                 *ptrIt = inPointer;
             }
         }
@@ -196,13 +196,13 @@ namespace System {
 
     void Device::removeJob(unsigned int jobNr) {
 
-        for (std::vector<Job*>::iterator ptrIt = this->jobPtrList.begin(); ptrIt != this->jobPtrList.end(); ++ptrIt){
+        for (std::vector<Job *>::iterator ptrIt = this->jobPtrList.begin(); ptrIt != this->jobPtrList.end(); ++ptrIt) {
 
-            if ((*ptrIt)->getJobNr() == jobNr){
+            if ((*ptrIt)->getJobNr() == jobNr) {
                 this->jobPtrList.erase(ptrIt);
                 break;
             }
-            if (ptrIt == (this->jobPtrList.end()-1)){
+            if (ptrIt == (this->jobPtrList.end() - 1)) {
                 std::cerr << "jobNr not found, mysterious" << std::endl;
                 return;
             }
@@ -210,5 +210,32 @@ namespace System {
         }
 
     }
+
+    int Device::getTotalPages() {
+
+        int pages = 0;
+
+        if (this->jobPtrList.size() > 0) {
+            for (std::vector<Job *>::iterator jobIt = jobPtrList.begin(); jobIt != jobPtrList.end(); jobIt++) {
+                pages += (*jobIt)->getPageCount();
+            }
+            return pages;
+        } else {
+            return 0;
+        }
+
+
+    }
+
+    void Device::addJob(Job *jobIn) {
+
+        REQUIRE(this->properlyInitialized(), "Device was not properly initialized when attempting to add a job");
+
+
+        this->jobPtrList.push_back(jobIn);
+
+    }
+
+
 
 } // System

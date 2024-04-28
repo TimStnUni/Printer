@@ -132,16 +132,25 @@ namespace System {
         float getCost() const;
 
 
-        /**
-         * \brief overloaded equality operator for getters
-         * @param d device to be compared
-         * @return boolean true or false
-         */
+
+        int getTotalPages();
+
+
+        void addJob(Job * jobIn);
+
+
 
 
         std::vector<Job*> getJobs();
 
         void addJob(PrinterSystem * ownSystem);
+
+
+        /**
+         * \brief overloaded equality operator for getters
+         * @param d device to be compared
+         * @return boolean true or false
+         */
 
         bool operator == (const Device &d){
             if (name == d.name && emissions == d.emissions && speed == d.speed){
@@ -150,7 +159,7 @@ namespace System {
             return false;
         }
 
-
+        void removeJob(unsigned int jobnr);
 
         Device& operator=(Device const & inDevice);
 
@@ -164,7 +173,7 @@ namespace System {
 
         void updatePointer(Job * inPointer, const Job * prevPointer);
 
-        void removeJob(unsigned int jobnr);
+
 
         std::vector<System::Job *> jobPtrList;
 

@@ -15,9 +15,9 @@ Default Scanner
             * Owner: SergeDemeyer
             * Total Pages: 2
             * Type: Black-and-white job 
-            * Device: Office_Printer5
-            * Total CO2: 6
-            * Total cost: 40
+            * Device: Default Scanner
+            * Total CO2: 16
+            * Total cost: 220
     * Queue: 
         [Job #2189]
             * Owner: anonymous_user

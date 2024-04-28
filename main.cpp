@@ -23,7 +23,7 @@ int main() {
 
 
     std::ofstream outFile; // Create an output file stream
-    std::string f = "PrintOutputTest";
+    std::string f = "PrintOutputTestScheduled";
     std::string outputFileName = f + ".txt";
     const char *outputFileNameChar = outputFileName.c_str();
     outFile.open(outputFileNameChar); // Open the file
@@ -37,13 +37,13 @@ int main() {
 
     if(consistent){
         //Usecase 2: Basic info about the printer system
-        testSystem.getInfo("usecase2info.txt");
+        testSystem.getInfo(std::cout, "ASCII");
 
         //Usecase 3.1: manual processing
         //testSystem.doPrintJob(2189, outFile);
-        testSystem.printAll(outFile2);
+        //testSystem.printAll(outFile2);
         //Usecase 3.2: automatic processing
-        //testSystem2.printAll(std::cout);
+        //testSystem.printAll(std::cout);
 
     }
 

@@ -7,12 +7,19 @@
 
 #include "Printer.h"
 #include "XMLParser.h"
+#include "Device.h"
+#include "Job.h"
+#include "InfoPrinter.h"
+#include "Scheduler.h"
+#include "DesignByContract.h"
 
 namespace System {
 
 
     class PrinterSystem {
         friend class Device;
+        friend class Scheduler;
+        friend class InfoPrinter;
 
     public:
         //Should simply always be running, no input in constructor.
@@ -40,7 +47,7 @@ namespace System {
          * @param filename Filename of the output file
          *REQUIRE(properlyInitialized(), "the printer system was not properly initialized")
          */
-        void getInfo(std::string filename);
+        void getInfo(std::ostream &writestream, std::string outputType);
 
 
         /**
@@ -74,7 +81,7 @@ namespace System {
         void takeParseInput(Device & inDev, std::vector<Job>& inJobs);
 
 
-    private:
+    protected:
 
 
         float totalCO2_system = 0;
@@ -92,6 +99,8 @@ namespace System {
         std::vector<Job> jobVect;
         std::vector<Device> deviceVect;
 
+
+        Scheduler system_scheduler;
 
     };
 

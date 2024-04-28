@@ -70,10 +70,13 @@ namespace System {
         this->setType(inJob.getType());
         this->setOwnDevice(inJob.getOwnDevice());
 
+
+        /*
+         * Pointer bullshittery that should no longer be needed
         if (inJob.getOwnDevice() != nullptr) {
             this->ownerDevice->updatePointer(this, &inJob);
         }
-
+        */
         ENSURE(this->properlyInitialized(), "job was not properly initialized");
     }
 
@@ -117,7 +120,9 @@ namespace System {
         std::cout << "Assignment operator called for job " << inJob.getJobNr() << std::endl;
         Job outJob(inJob.getUserName(), inJob.getPageCount(), inJob.getJobNr(), inJob.type);
 
-        outJob.setOwnDevice(inJob.getOwnDevice());
+
+        //Pointer bullshittery that should no longer be needed
+        //outJob.setOwnDevice(inJob.getOwnDevice());
 
 
 

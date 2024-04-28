@@ -47,6 +47,10 @@ set(RELEASE_SOURCE_FILES
         XMLParser.h
         PrinterSystem.cpp
         PrinterSystem.h
+        InfoPrinter.cpp
+        InfoPrinter.h
+        Scheduler.cpp
+        Scheduler.h
 
 )
 
@@ -67,6 +71,10 @@ set(DEBUG_SOURCE_FILES
         Alletesten/alldomaintests.cpp
         PrinterSystem.cpp
         PrinterSystem.h
+        InfoPrinter.cpp
+        InfoPrinter.h
+        Scheduler.cpp
+        Scheduler.h
 )
 
         # Create RELEASE target
