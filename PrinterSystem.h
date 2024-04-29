@@ -59,7 +59,7 @@ namespace System {
          * @param writeStream Stream where the output is stored
          * REQUIRE(properlyInitialized()
          */
-        void doPrintJob(unsigned int jobnr, std::ostream &writeStream);
+        void doPrintJob(unsigned int jobnr, std::ostream &writeStream, bool erasebool = true);
 
         /**
          * \brief Loops over all jobs and prints that they are finished.

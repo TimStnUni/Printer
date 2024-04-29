@@ -38,6 +38,8 @@ int main() {
 
 
 
+
+
     if(consistent){
         //Usecase 2: Basic info about the printer system
         //testSystem.getInfo(std::cout, "ASCII");

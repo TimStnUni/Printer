@@ -187,11 +187,14 @@ namespace System {
 
     //TODO: create a check to see if the devicetype matches the jobtype and if not
     // go to a different device in the devicelist and search until you find one that matches the type of jobtype
-    void PrinterSystem::doPrintJob(unsigned int jobnr, std::ostream &writeStream) {
+    void PrinterSystem::doPrintJob(unsigned int jobnr, std::ostream &writeStream, bool eraseBool) {
+
+
+
 
         std::vector<Job>::iterator jobPoint;
 
-        /*
+
         for (std::vector<Job>::iterator jobIt = this->jobVect.begin(); jobIt != this->jobVect.end(); ++jobIt) {
             if (jobIt->getJobNr() == jobnr) {
                 jobPoint = jobIt;
@@ -202,30 +205,37 @@ namespace System {
                 return;
             }
         }
-*/
 
+
+        /*
         for (std::set<unsigned int>::reverse_iterator jobnrIt = jobNrSet.rbegin();
              jobnrIt != jobNrSet.rend(); jobnrIt++) {
 
-            for (std::vector<Job>::iterator jobsIt = jobVect.begin(); jobsIt != jobVect.end(); jobsIt++) {
+            std::cout << "jobnr is " << *jobnrIt << std::endl;
 
-                if (jobsIt->getJobNr() == *jobnrIt) {
+            for (std::vector<Job>::reverse_iterator jobsIt = jobVect.rbegin(); jobsIt != jobVect.rend(); jobsIt++) {
+
+                std::cout << "checking jobnr" << std::endl;
+                if (jobsIt->getJobNr() == jobnr) {
+                    std::cout << "jobnr " << jobsIt->getJobNr() << " matched to " << jobnr << std::endl;
                     system_scheduler.schedule(&(*jobsIt));
                     jobPoint=jobsIt;
                     break;
                 }
             }
-
+            if (jobPoint->getJobNr() == jobnr){
+                break;
+            }
         }
+*/
 
 
-/*
         if (this->jobNrSet.find(jobnr) != jobNrSet.end()){
             //This means the job has not yet been scheduled
             system_scheduler.schedule(&(*jobPoint));
         }
 
-*/
+
 
         Device *printPoint = jobPoint->getOwnDevice();
 
@@ -298,14 +308,16 @@ namespace System {
 
 
 
-        // Remove the job number from the jobNrSet and jobNrMap
-        //This is now already done in scheduler
-        jobNrSet.erase(jobnr);
+        if (eraseBool) {
 
-        //TODO: Figure out why erasing seems to miss.
-        //jobVect.erase(jobPoint);
-        jobPoint->getOwnDevice()->removeJob(jobnr);
+            // Remove the job number from the jobNrSet and jobNrMap
+            //This is now already done in scheduler
+            jobNrSet.erase(jobnr);
 
+            //TODO: Figure out why erasing seems to miss.
+            //jobVect.erase(jobPoint);
+            jobPoint->getOwnDevice()->removeJob(jobnr);
+        }
 
 
     }
@@ -315,10 +327,13 @@ namespace System {
 
 
 
+
+
         for (std::set<unsigned int>::reverse_iterator jobNrIt = jobNrSet.rbegin(); jobNrIt != jobNrSet.rend(); jobNrIt++) {
 
 
-            this->doPrintJob(*jobNrIt, writeStream);
+            std::cout << "Jobnr is "<< *jobNrIt << std::endl;
+            this->doPrintJob(*jobNrIt, writeStream, false);
 
         }
 

@@ -55,7 +55,7 @@ namespace System {
             jobIn->setOwnDevice(&(*stopIt));
 
             //Job is now scheduled and should be removed from jobnrset
-            ownSystem->jobNrSet.erase(jobIn->getJobNr());
+            //ownSystem->jobNrSet.erase(jobIn->getJobNr());
 
 
         }
