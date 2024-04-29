@@ -87,10 +87,15 @@ TEST_F(InputTests, TypeIsEmpty) {
 TEST_F(InputTests, jobNrIsNegative){
     ASSERT_TRUE(DirectoryExists("Alletesten/testinput"));
     ASSERT_TRUE(FileExists("Alletesten/testinput/negativeJobnr.xml"));
+    ASSERT_TRUE(FileExists("Alletesten/testinput/negativeJobnr.xmltest.txt"));
 
     System::PrinterSystem testSystem;
 
     EXPECT_EQ(testSystem.readXML("Alletesten/testinput/negativeJobnr.xml"), false);
+
+    EXPECT_TRUE(FileExists("Alletesten/testinput/negativeJobnr.xmltest.txt"));
+    EXPECT_TRUE(FileCompare("Alletesten/testinput/negativeJobnr.xml.txt", "Alletesten/testinput/negativeJobnr.xmltest.txt"));
+
     // readXML returns false if the xml is invalid
 }
 
@@ -116,10 +121,14 @@ TEST_F(InputTests, Jobnr_unique){
 TEST_F(InputTests, emptyUserName){
     ASSERT_TRUE(DirectoryExists("Alletesten/testinput"));
     ASSERT_TRUE(FileExists("Alletesten/testinput/emptyUser.xml"));
+    ASSERT_TRUE(FileExists("Alletesten/testinput/emptyUser.xmltest.txt"));
 
     System::PrinterSystem testSystem;
+
     EXPECT_EQ(testSystem.readXML("Alletesten/testinput/emptyUser.xml"), false);
 
+    EXPECT_TRUE(FileExists("Alletesten/testinput/emptyUser.xmltest.txt"));
+    EXPECT_TRUE(FileCompare("Alletesten/testinput/emptyUser.xmltest.txt", "Alletesten/testinput/emptyUser.xmltest.txt"));
 }
 
 /**
@@ -129,10 +138,14 @@ TEST_F(InputTests, emptyUserName){
 TEST_F(InputTests, pageCountisnegative){
     ASSERT_TRUE(DirectoryExists("Alletesten/testinput"));
     ASSERT_TRUE(FileExists("Alletesten/testinput/negativePagecount.xml"));
+    ASSERT_TRUE(FileExists("Alletesten/testinput/negativePagecount.xmltest.txt"));
 
     System::PrinterSystem testSystem;
+
     EXPECT_EQ(testSystem.readXML("Alletesten/testinput/negativePagecount.xml"), false);
-    // readXML returns false if the xml is invalid
+
+    EXPECT_TRUE(FileExists("Alletesten/testinput/negativePagecount.xml.txt"));
+    EXPECT_TRUE(FileCompare("Alletesten/testinput/negativePagecount.xml.txt", "Alletesten/testinput/negativePagecount.xmltest.txt"));
 }
 
 

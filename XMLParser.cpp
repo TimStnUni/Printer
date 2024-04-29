@@ -228,7 +228,7 @@ namespace System {
                             return readingCorrectly;
                         }
 
-//TODO: check if correct
+
                     }else if (elemname == "type") {
 
 

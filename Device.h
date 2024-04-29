@@ -41,6 +41,7 @@ namespace System {
          *REQUIRE(speed_in > 0, "Speed should be positive");
          *REQUIRE(!type_in.empty(), "type should not be blank");
          *REQUIRE(cost_in>0, "Cost should be positive");
+         * REQUIRE(!(name_in.empty()), "name shouldn't be empty")
          * ENSURE(this->properlyInitialized(), "Device is not properly initialized");
          */
         Device(std::string name, int emissions, int speed, std::string type, float cost);
@@ -58,6 +59,7 @@ namespace System {
          * \brief Setter function for the name of a device
          * @param inName string name of device
          * REQUIRE(!inName.emtpy(), "name should not be empty")
+         * REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to set name")
          * ENSURE(getNameDev() == inName, "name was not correctly set")
          */
         void setNameDev(std::string &inName);
@@ -74,6 +76,7 @@ namespace System {
          * \brief A setter function for the printer emissions
          * @param emissions_in
          * REQUIRE(emissions_in>0, "emissions should be positive")
+         * REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to set emissions")
          * ENSURE(this->getEmissions == emissions_in, "Emissions not correctly set")
          */
 
@@ -91,6 +94,7 @@ namespace System {
          * \brief A setter function for the printer speed
          * @param speed_in
          * REQUIRE(speed_in > 0, "Speed should be positive")
+         * REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to set speed")
          * ENSURE(this->getSpeed() == speed_in, "Speed wasn't correctly set")
          */
 

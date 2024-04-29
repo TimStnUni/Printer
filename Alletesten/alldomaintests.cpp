@@ -13,10 +13,12 @@ using namespace std;
 #include "../PrinterSystem.h"
 #include "../TicTacToeUtils.h"
 
-class DomainTests: public ::testing::Test {
+class DomainTests : public ::testing::Test {
 protected:
     friend class Printer;
+
     friend class Device;
+
     friend class Job;
 
     virtual void SetUp() {
@@ -49,24 +51,26 @@ TEST_F(DomainTests, CostAreNegativeDeathTest) {
     EXPECT_DEATH(dev.setCost(cost), "Cost should be positive");
 }
 
-//TEST_F(DomainTests, EmptyTypeDevTests){
-//    System::Device dev;
-//
-//    EXPECT_DEATH(dev.setType(""), "Type shouldn't be empty");
-//}
-//
-//TEST_F(DomainTests, EmptyNameTests){
-//    System::Device dev;
-//
-//    EXPECT_DEATH(dev.setNameDev(""), "name should not be empty");
-//}
+TEST_F(DomainTests, EmptyTypeDevTests) {
+    System::Device dev;
+
+    std::string teststring;
+    EXPECT_DEATH(dev.setType(teststring), "Type shouldn't be empty");
+}
+
+TEST_F(DomainTests, EmptyNameTests) {
+    System::Device dev;
+
+    std::string teststring;
+    EXPECT_DEATH(dev.setNameDev(teststring), "name shouldn't be empty");
+}
 
 
 /**
  * domainTests for Job
  */
 
-TEST_F(DomainTests, NegativeJobDeathTests){
+TEST_F(DomainTests, NegativeJobDeathTests) {
     System::Job job;
 
     EXPECT_DEATH(job.setPageCount(-5), "Pagecount should be positive");
@@ -75,13 +79,13 @@ TEST_F(DomainTests, NegativeJobDeathTests){
     EXPECT_DEATH(job.setJobNr(-5), "jobnr should be positive");
 }
 
-TEST_F(DomainTests, EmptyJobNameTests){
+TEST_F(DomainTests, EmptyJobNameTests) {
     System::Job job;
 
     EXPECT_DEATH(job.setUserName(""), "Username should not be empty");
 }
 
-TEST_F(DomainTests, EmptyTypeJobTests){
+TEST_F(DomainTests, EmptyTypeJobTests) {
     System::Job job;
 
     EXPECT_DEATH(job.setType(""), "Type should not be empty");
