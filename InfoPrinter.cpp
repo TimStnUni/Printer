@@ -26,7 +26,7 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
     outfile << "# === [System Status] === #\n\n" << std::endl;
 
 
-    outfile << "   --=== Printers: ===--   \n" << std::endl;
+    outfile << "   --=== Printers: ===--\n" << std::endl;
 
 
     for (std::vector<Device>::iterator printIt = ownSystem->deviceVect.begin(); printIt != ownSystem->deviceVect.end(); ++printIt) {
@@ -49,7 +49,7 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
         outfile << "    * CO2: " << printIt->getEmissions() << " g/page" << "\n"
                 << "    * " << printType << "\n"
                 << "    * " << printIt->getSpeed() << " pages/minute\n"
-                << "    * " << printIt->getCost() << " cents/page \n";
+                << "    * " << printIt->getCost() << " cents/page\n";
 
 
 
@@ -58,7 +58,7 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
     }
 
 
-    outfile << "      --=== Jobs ===--     \n" << std::endl;
+    outfile << "      --=== Jobs ===--\n" << std::endl;
 
     for (std::vector<Job>::iterator jobIt = ownSystem->jobVect.begin();
          jobIt != ownSystem->jobVect.end(); ++jobIt) {
@@ -68,16 +68,16 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
 
 
         if (jobIt->getType() == "bw") {
-            jobType = "Black-and-white job ";
+            jobType = "Black-and-white job";
         } else if ((jobIt)->getType() == "color") {
-            jobType = "Colour job ";
+            jobType = "Colour job";
         } else if ((jobIt)->getType() == "scan") {
-            jobType = "Scanning job ";
+            jobType = "Scanning job";
         }
 
         if (jobIt == ownSystem->jobVect.begin()) {
 
-            outfile << "    * Current: \n";
+            outfile << "    * Current:\n";
         }
 
 
@@ -95,7 +95,7 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
 
         if (jobIt == ownSystem->jobVect.begin()) {
 
-            outfile << "    * Queue: \n";
+            outfile << "    * Queue:\n";
         }
     }
 

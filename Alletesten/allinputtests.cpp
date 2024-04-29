@@ -149,4 +149,27 @@ TEST_F(InputTests, pageCountisnegative){
 }
 
 
+TEST_F(InputTests, InfoPrinter){
+
+    ASSERT_TRUE(DirectoryExists("Alletesten/testinput"));
+    ASSERT_TRUE(FileExists("Alletesten/testinput/infoPrinter.xml"));
+    ASSERT_TRUE(FileExists("Alletesten/testinput/infoPrinter.xmltest.txt"));
+
+    System::PrinterSystem testSystem;
+
+    EXPECT_EQ(testSystem.readXML("Alletesten/testinput/infoPrinter.xml"), true);
+
+    std::ofstream outFile; // Create an output file stream
+    std::string f = "Alletesten/testOutput/infoPrinter.xml";
+    std::string outputFileName = f + ".txt";
+    const char *outputFileNameChar = outputFileName.c_str();
+    outFile.open(outputFileNameChar); // Open the file
+
+    testSystem.getInfo(outFile, "ASCII");
+    outFile.close();
+
+    EXPECT_TRUE(FileCompare("Alletesten/testOutput/infoPrinter.xml.txt", "Alletesten/testinput/infoPrinter.xmltest.txt"));
+
+}
+
 
