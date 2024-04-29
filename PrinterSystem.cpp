@@ -258,16 +258,15 @@ namespace System {
         writeStream << "  Submitted by \"" << jobPoint->getUserName() << "\"\n";
         writeStream << "  " << jobPoint->getPageCount() << " pages\n";
 
-        writeStream << std::endl;
-
-
-        //Increment CO2 emissions
-
 
 
 
         float newCO2 = (jobPoint->getPageCount()) * (printPoint->getEmissions());
 
+        writeStream << "  Job CO2 emissions: " << newCO2 << " gram\n";
+        writeStream << std::endl;
+
+        //Increment CO2 emissions
         totalCO2_system += newCO2;
 
         //std::cout << "total CO2 emissions for now " << totalCO2_system << std::endl;
