@@ -160,7 +160,7 @@ TEST_F(InputTests, InfoPrinter){
     EXPECT_EQ(testSystem.readXML("Alletesten/testinput/infoPrinter.xml"), true);
 
     std::ofstream outFile; // Create an output file stream
-    std::string f = "Alletesten/testOutput/infoPrinter.xml";
+    std::string f = "Alletesten/testoutput/infoPrinter.xml";
     std::string outputFileName = f + ".txt";
     const char *outputFileNameChar = outputFileName.c_str();
     outFile.open(outputFileNameChar); // Open the file
@@ -168,7 +168,11 @@ TEST_F(InputTests, InfoPrinter){
     testSystem.getInfo(outFile, "ASCII");
     outFile.close();
 
-    EXPECT_TRUE(FileCompare("Alletesten/testOutput/infoPrinter.xml.txt", "Alletesten/testinput/infoPrinter.xmltest.txt"));
+
+    EXPECT_TRUE(FileExists("Alletesten/testoutput/infoPrinter.xml.txt"));
+
+
+    EXPECT_TRUE(FileCompare("Alletesten/testoutput/infoPrinter.xml.txt", "Alletesten/testinput/infoPrinter.xmltest.txt"));
 
 }
 
