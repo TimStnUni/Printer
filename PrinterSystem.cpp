@@ -332,7 +332,7 @@ namespace System {
         for (std::set<unsigned int>::reverse_iterator jobNrIt = jobNrSet.rbegin(); jobNrIt != jobNrSet.rend(); jobNrIt++) {
 
 
-            std::cout << "Jobnr is "<< *jobNrIt << std::endl;
+            //Erasing jobnr's is having issues
             this->doPrintJob(*jobNrIt, writeStream, false);
 
         }

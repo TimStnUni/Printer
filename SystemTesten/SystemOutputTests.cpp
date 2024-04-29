@@ -56,7 +56,7 @@ TEST_F(SystemOutputTests, AllJobTest){
     ASSERT_TRUE(FileExists("SystemTesten/test.xml"));
     testSystem.readXML("SystemTesten/test.xml");
 
-    std::cout << "we get here " << std::endl;
+
 
     std::ofstream outFile; // Create an output file stream
     std::string f = "SystemTesten/PrintAllOutput";
@@ -64,7 +64,7 @@ TEST_F(SystemOutputTests, AllJobTest){
     const char *outputFileNameChar = outputFileName.c_str();
     outFile.open(outputFileNameChar); // Open the file
 
-    std::cout << "we get here 2" << std::endl;
+
 
 
 
@@ -78,6 +78,6 @@ TEST_F(SystemOutputTests, AllJobTest){
     EXPECT_TRUE(FileCompare("SystemTesten/PrintAllOutputTest.txt", "SystemTesten/PrintAllOutput.txt"));
 
 
-    std::cout << "we get here 3" << std::endl;
+
 
 }
