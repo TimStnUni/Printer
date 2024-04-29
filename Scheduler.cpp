@@ -4,6 +4,7 @@
 
 #include "Scheduler.h"
 #include "PrinterSystem.h"
+#include <climits>
 
 namespace System {
     Scheduler::Scheduler(PrinterSystem *PrintSystem) {
@@ -25,15 +26,20 @@ namespace System {
 
     void Scheduler::schedule(Job * jobIn) {
 
+
+
         REQUIRE(properlyInitialized(), "Scheduler not properly initialized when attempting to schedule a job");
 
         //This should be reworked to jobnr's;
+
 
         std::string jobType = jobIn->getType();
 
         std::vector<Device>::iterator stopIt = ownSystem->deviceVect.end();
 
         int pageQueue = INT_MAX;
+
+
         for (std::vector<Device>::iterator devIt = ownSystem->deviceVect.begin(); devIt!=ownSystem->deviceVect.end(); devIt++){
 
             if (devIt->getTotalPages() < pageQueue && devIt->getType() == jobType){

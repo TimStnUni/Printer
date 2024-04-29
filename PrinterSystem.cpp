@@ -190,6 +190,8 @@ namespace System {
     void PrinterSystem::doPrintJob(unsigned int jobnr, std::ostream &writeStream) {
 
         std::vector<Job>::iterator jobPoint;
+
+        /*
         for (std::vector<Job>::iterator jobIt = this->jobVect.begin(); jobIt != this->jobVect.end(); ++jobIt) {
             if (jobIt->getJobNr() == jobnr) {
                 jobPoint = jobIt;
@@ -200,19 +202,40 @@ namespace System {
                 return;
             }
         }
+*/
+
+        for (std::set<unsigned int>::reverse_iterator jobnrIt = jobNrSet.rbegin();
+             jobnrIt != jobNrSet.rend(); jobnrIt++) {
+
+            for (std::vector<Job>::iterator jobsIt = jobVect.begin(); jobsIt != jobVect.end(); jobsIt++) {
+
+                if (jobsIt->getJobNr() == *jobnrIt) {
+                    system_scheduler.schedule(&(*jobsIt));
+                    jobPoint=jobsIt;
+                    break;
+                }
+            }
+
+        }
 
 
+/*
         if (this->jobNrSet.find(jobnr) != jobNrSet.end()){
             //This means the job has not yet been scheduled
             system_scheduler.schedule(&(*jobPoint));
         }
+
+*/
 
         Device *printPoint = jobPoint->getOwnDevice();
 
 
         //This rerouting is already done in scheduler now.
 
+
+
         if (jobPoint->getType() != printPoint->getType()) {
+
 
             std::cerr << "types don't match" << std::endl;
             for (std::vector<Device>::iterator devIt = this->deviceVect.begin();
@@ -233,6 +256,8 @@ namespace System {
             }
 
         }
+
+
 
 
         int pages = jobPoint->getPageCount();
@@ -272,6 +297,7 @@ namespace System {
         //std::cout << "total CO2 emissions for now " << totalCO2_system << std::endl;
 
 
+
         // Remove the job number from the jobNrSet and jobNrMap
         //This is now already done in scheduler
         jobNrSet.erase(jobnr);
@@ -281,15 +307,19 @@ namespace System {
         jobPoint->getOwnDevice()->removeJob(jobnr);
 
 
+
     }
 
     void PrinterSystem::printAll(std::ostream &writeStream) {
         REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to print all jobs");
 
-        for (std::set<unsigned int>::iterator jobNrIt = jobNrSet.begin(); jobNrIt != jobNrSet.end(); jobNrIt++) {
+
+
+        for (std::set<unsigned int>::reverse_iterator jobNrIt = jobNrSet.rbegin(); jobNrIt != jobNrSet.rend(); jobNrIt++) {
 
 
             this->doPrintJob(*jobNrIt, writeStream);
+
         }
 
 

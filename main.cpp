@@ -34,11 +34,8 @@ int main() {
     const char *outputFileNameChar2 = outputFileName2.c_str();
     outFile2.open(outputFileNameChar2); // Open the file
 
-    std::string teststring;
 
-    if (teststring.empty()){
-        std::cout << "teststring was empty" << std::endl;
-    }
+
 
 
     if(consistent){
@@ -49,7 +46,7 @@ int main() {
         //testSystem.doPrintJob(2189, outFile);
         //testSystem.printAll(outFile2);
         //Usecase 3.2: automatic processing
-        //testSystem.printAll(std::cout);
+        testSystem.printAll(std::cout);
 
     }
 
