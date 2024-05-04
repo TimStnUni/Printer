@@ -74,7 +74,7 @@ namespace System {
                     if (elem->FirstChild() == nullptr) {
                         readingCorrect = false;
 
-                        errorstream << elemname << "should not be empty" << std::endl;
+                        errorstream << elemname << " should not be empty" << std::endl;
                         return readingCorrect;
                     } else {
 
