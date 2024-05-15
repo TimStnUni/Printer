@@ -18,10 +18,13 @@ bool System::InfoPrinter::properlyInitialized() {
     return (_initcheck == this);
 }
 
+
+//TODO: create if loop so that we have an ASCII representation of the infoprinter and a text output for printer
+//TODO: pseudo: while properly init, if ... output ASCII elif text output Text
+
 void System::InfoPrinter::printAscii(std::ostream &outfile) {
 
     REQUIRE(properlyInitialized(), "InfoPrinter was not properly initialized when attempting to print ASCII");
-
 
     outfile << "# === [System Status] === #\n\n" << std::endl;
 
@@ -103,6 +106,23 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
     outfile << std::endl;
 
 }
+
+void System::InfoPrinter::printText(std::ostream &outfile) {
+    REQUIRE(properlyInitialized(), "InfoPrinter was not properly initialized when attempting to print Text");
+
+    for (std::vector<Device>::iterator printIt = ownSystem->deviceVect.begin(); printIt != ownSystem->deviceVect.end(); ++printIt) {
+        outfile << printIt->getNameDev() << std::endl;
+    }
+
+    outfile << std::endl;
+
+    for (std::vector<Job>::iterator jobIt = ownSystem->jobVect.begin(); jobIt != ownSystem->jobVect.end(); ++jobIt) {
+        outfile << "[" << jobIt->getPageCount() << "/" << jobIt->getPageCount() << "] | [" << jobIt->getJobNr() << "][" << jobIt->getOwnDevice()->getEmissions() << "][" << jobIt->getOwnDevice()->getCost() << "]" << std::endl;
+    }
+}
+
+
+
     void System::InfoPrinter::setSystem(System::PrinterSystem *inSystem) {
 
         REQUIRE(properlyInitialized(), "InfoPrinter not properly initialized when attempting to set system");

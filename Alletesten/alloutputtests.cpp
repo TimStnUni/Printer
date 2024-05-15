@@ -112,3 +112,32 @@ TEST_F(OutputTests, ScheduledJobTest){
 
 
 }
+
+
+
+TEST_F(OutputTests, InfoPrinter){
+
+    ASSERT_TRUE(DirectoryExists("Alletesten/testoutput"));
+    ASSERT_TRUE(FileExists("Alletesten/testoutput/outputtest.xml"));
+
+    System::PrinterSystem testSystem;
+
+    EXPECT_EQ(testSystem.readXML("Alletesten/testoutput/outputtest.xml"), true);
+
+    std::ofstream outFile; // Create an output file stream
+    std::string f = "Alletesten/testoutput/infoPrinter.xml";
+    std::string outputFileName = f + ".txt";
+    const char *outputFileNameChar = outputFileName.c_str();
+    outFile.open(outputFileNameChar); // Open the file
+
+    testSystem.getInfo(outFile, "ASCII");
+    outFile.close();
+
+
+    ASSERT_TRUE(FileExists("Alletesten/testoutput/infoPrinter.xml.txt"));
+    ASSERT_TRUE(FileExists("Alletesten/testoutput/infoPrinter.txt"));
+
+    EXPECT_TRUE(FileCompare("Alletesten/testoutput/infoPrinter.xml.txt",
+                            "Alletesten/testoutput/infoPrinter.txt"));
+
+}

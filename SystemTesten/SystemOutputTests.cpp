@@ -78,6 +78,4 @@ TEST_F(SystemOutputTests, AllJobTest){
     EXPECT_TRUE(FileCompare("SystemTesten/PrintAllOutputTest.txt", "SystemTesten/PrintAllOutput.txt"));
 
 
-
-
 }
