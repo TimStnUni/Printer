@@ -1,0 +1,36 @@
+# === [System Status] === #
+
+Office_Printer5
+* CO2: 3 g/page
+* Black-and-white printer
+* 40 pages/minute
+* 20 cents/page 
+Default Scanner
+* CO2: 8 g/page
+* Scanner
+* 11 pages/minute
+* 110 cents/page 
+    * Current: 
+        [Job #89751]
+            * Owner: SergeDemeyer
+            * Total Pages: 2
+            * Type: Black-and-white job 
+            * Device: Default Scanner
+            * Total CO2: 16
+            * Total cost: 220
+    * Queue: 
+        [Job #2189]
+            * Owner: anonymous_user
+            * Total Pages: 3
+            * Type: Black-and-white job 
+            * Device: Office_Printer5
+            * Total CO2: 9
+            * Total cost: 60
+        [Job #98632]
+            * Owner: Peter Selie
+            * Total Pages: 10
+            * Type: Scanning job 
+            * Device: Default Scanner
+            * Total CO2: 80
+            * Total cost: 1100
+

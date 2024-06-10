@@ -21,7 +21,7 @@
     <DEVICE>
         <name>Default Scanner</name>
         <emissions>8</emissions>
-        <type>scan</type>
+        <type></type>
         <speed>11</speed>
         <cost>110</cost>
     </DEVICE>

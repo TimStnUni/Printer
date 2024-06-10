@@ -223,6 +223,8 @@ $RECYCLE.BIN/
 /gtest/lib/libgtest.a
 /gtest/lib/**/*
 
+PrintOutputTestScheduled.txt
+
 # technical files
 .idea
 .idea/**/*

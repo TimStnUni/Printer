@@ -4,7 +4,6 @@
         <emissions>3</emissions>
         <type>bw</type>
         <speed>40</speed>
-        <cost>20</cost>
     </DEVICE>
     <JOB>
         <jobNumber>89751</jobNumber>
@@ -17,18 +16,5 @@
         <pageCount>3</pageCount>
         <type>bw</type>
         <userName>anonymous_user</userName>
-    </JOB>
-    <DEVICE>
-        <name>Default Scanner</name>
-        <emissions>8</emissions>
-        <type>scan</type>
-        <speed>11</speed>
-        <cost>110</cost>
-    </DEVICE>
-    <JOB>
-        <jobNumber>98632</jobNumber>
-        <pageCount>10</pageCount>
-        <type>scan</type>
-        <userName>Peter Selie</userName>
     </JOB>
 </SYSTEM>
