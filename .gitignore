@@ -240,3 +240,5 @@ cmake-build-debug
 ### Designbycontract differs between windows and linux
 DesignByContract.h
 
+### Some Garbage Files
+test.txt
