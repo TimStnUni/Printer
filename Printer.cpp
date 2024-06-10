@@ -138,6 +138,7 @@ namespace System {
         jobNrMap.erase(jobNr);
 
 
+
         for (std::map<unsigned int, unsigned int>::iterator jobMapIt = jobNrMap.begin();
              jobMapIt != jobNrMap.end(); jobMapIt++) {
             if (jobMapIt->second > jobindex) {
@@ -149,4 +150,6 @@ namespace System {
 
     }
 
+
 }
+
