@@ -17,6 +17,8 @@ namespace System {
 
 
     class PrinterSystem {
+
+        //Todo: Remove friend classes
         friend class Device;
         friend class Scheduler;
         friend class InfoPrinter;
@@ -30,18 +32,12 @@ namespace System {
          */
         PrinterSystem();
 
-
         /**
          * \brief Reads an XML file and adds all devices/jobs inside to the printer system
          * @param filename XML file to read from
          * REQUIRE(properlyInitialized(), "System wasn't properly initialized when attempting to read an XML file")
          */
         bool readXML(const char *filename);
-
-
-
-
-
 
 
         /**
@@ -84,14 +80,9 @@ namespace System {
          * REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to add a device")
          * ENSURE(deviceVect.back == inDevice, "Device was not correctly added");
          */
-        void addDevice(Device inDevice);
+        void addDevice(Device &inDevice);
 
 
-        /**
-         * \brief Function to retrieve the most recently added job. Currently unused
-         * @return pointer to most recently added job
-         */
-        //const Job *getMRJob();
 
         /**
          * \brief Function that takes input from the parsing. Currently still using an outdated plan for parser, but still works.

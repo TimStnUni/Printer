@@ -34,19 +34,20 @@ namespace System {
 
         XMLParser();
 
+        //Todo: Look through all of these requires/ensures
 
         /**
          *
          * \brief Constructor for parser
          * @param filename : Name of file to parse as a const char *
-         *
+         * REQUIRE inputfile not empty i guess?
          * ENSURE(properlyInitialized(), "Parser not properly initialized");
 
          */
         XMLParser(const char *filename, PrinterSystem * system);
 
         /**
-         * \brief Additional way to read an XML File through the parser
+         * \brief Additional way to read an XML File through the parser, never used
          * @param filename
          * @return
          */
@@ -57,7 +58,7 @@ namespace System {
 
 
         /**
-         * \brief Getter function that returns all Devices read in from xml
+         * \brief Getter function that returns all Devices read in from xml, shouldn't be used any longer
          * @return
          * REQUIRE(this->properlyInitialized, "XMLParser wasn't properly initialized)
          */
@@ -65,7 +66,7 @@ namespace System {
 
 
         /**
-         * \brief Getter function for getting a joblist
+         * \brief Getter function for getting a joblist, shouldn't be used any longer
          * @return double ended queue of jobs
          * REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getJobList()")
          */
@@ -75,7 +76,7 @@ namespace System {
 
 
         /**
-         * \brief Getter function for the map of jobNr's to jobs
+         * \brief Getter function for the map of jobNr's to jobs, shouldn't be used any longer
          * @return
          * //REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getJobNrList()")
          */
@@ -83,7 +84,7 @@ namespace System {
         std::map<unsigned int, unsigned int> getJobNrMap();
 
         /**
-         * \brief Getter function for the set of jobnr's
+         * \brief Getter function for the set of jobnr's. Might still be usable?
          * @return
          * REQUIRE(this->properlyInitialized(), "parser not properly initialized when calling getJobNrSet()");
          */
@@ -120,6 +121,7 @@ namespace System {
         /**
          * \brief Function that parses the XML file supplied to the constructor.
          * @param errorstream Stream to store errors
+         * REQUIRE(System != nullptr, "There is no system in xml");
          */
 
         bool parse(std::ostream &errorstream);

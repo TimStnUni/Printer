@@ -27,6 +27,8 @@ namespace System {
         Printer tempPrtr;
 
 
+        //Todo: remove this part of the code, it shouldn't be needed anymore
+
         tempPrtr.addDevices(tempXML.getDeviceList());
 
         std::map<unsigned int, unsigned int> jobnrs = tempXML.getJobNrMap();
@@ -363,7 +365,7 @@ namespace System {
         */
     }
 
-    void PrinterSystem::addDevice(Device inDevice) {
+    void PrinterSystem::addDevice(Device &inDevice) {
 
         REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to add a device");
 

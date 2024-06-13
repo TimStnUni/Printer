@@ -51,7 +51,7 @@ namespace System {
 
 
 
-        for (TiXmlElement *Level1Elem = System->FirstChildElement(); Level1Elem != NULL;
+        for (TiXmlElement *Level1Elem = System->FirstChildElement(); Level1Elem != nullptr;
              Level1Elem = Level1Elem->NextSiblingElement()) {
 
             std::string type_sys = Level1Elem->Value();
@@ -64,7 +64,7 @@ namespace System {
                 std::string type;
                 float cost;
 
-                for (TiXmlElement *elem = Level1Elem->FirstChildElement(); elem != NULL;
+                for (TiXmlElement *elem = Level1Elem->FirstChildElement(); elem != nullptr;
                      elem = elem->NextSiblingElement()) {
 
                     std::string elemname = elem->Value();
@@ -189,7 +189,7 @@ namespace System {
                 std::string type;
                 bool readingCorrectly = true;
 
-                for (TiXmlElement *elem = Level1Elem->FirstChildElement(); elem != NULL;
+                for (TiXmlElement *elem = Level1Elem->FirstChildElement(); elem != nullptr;
                      elem = elem->NextSiblingElement()) {
 
 
@@ -198,7 +198,7 @@ namespace System {
 
                     if (elemname == "userName") {
                         auto t = elem->FirstChild();
-                        if (t == NULL) {
+                        if (t == nullptr) {
                             errorstream << "username should not be empty" << std::endl;
                             readingCorrectly = false;
                             return readingCorrectly;
