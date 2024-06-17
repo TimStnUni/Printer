@@ -8,11 +8,7 @@
 namespace System {
 
 
-
-
-
-
-    XMLParser::XMLParser(const char *filename, PrinterSystem * system) {
+    XMLParser::XMLParser(const char *filename, PrinterSystem *system) {
 //        std::cout <<  InputDoc.LoadFile(filename) << std::endl;
         //Todo: check whether inputdoc isn't empty
         if (!InputDoc.LoadFile(filename)) {
@@ -49,9 +45,7 @@ namespace System {
         REQUIRE(System != nullptr, "There is no system in xml");
 
 
-
-
-        for (TiXmlElement *Level1Elem = System->FirstChildElement(); Level1Elem != NULL;
+        for (TiXmlElement *Level1Elem = System->FirstChildElement(); Level1Elem != nullptr;
              Level1Elem = Level1Elem->NextSiblingElement()) {
 
             std::string type_sys = Level1Elem->Value();
@@ -64,7 +58,7 @@ namespace System {
                 std::string type;
                 float cost;
 
-                for (TiXmlElement *elem = Level1Elem->FirstChildElement(); elem != NULL;
+                for (TiXmlElement *elem = Level1Elem->FirstChildElement(); elem != nullptr;
                      elem = elem->NextSiblingElement()) {
 
                     std::string elemname = elem->Value();
@@ -119,8 +113,8 @@ namespace System {
 
 
                             }
-                        //TODO: check if correct, do we need to add cost?
-                        }else if (elemname == "type") {
+                            //TODO: check if correct, do we need to add cost?
+                        } else if (elemname == "type") {
 
 
                             std::string type_d = elem->FirstChild()->ToText()->Value();
@@ -132,10 +126,10 @@ namespace System {
                                 return readingCorrect;
 
                             } else {
-                                if(type_d == "bw" || type_d == "scan" || type_d == "color"){
+                                if (type_d == "bw" || type_d == "scan" || type_d == "color") {
                                     type = type_d;
 
-                                }else{
+                                } else {
                                     errorstream << "Invalid type for device" << std::endl;
                                 }
                                 //std::cout << "type = " << type << std::endl;
@@ -160,25 +154,22 @@ namespace System {
                     }
                 }
                 if (readingCorrect) {
-                    Device tempPrinter = Device(name, emissions, speed, type, cost);
 
+                    Device *outPtr = nullptr;
 
-
-
-                    if (!deviceList.empty()){
-
-                        ownSystem->takeParseInput(deviceList.back(), jobList);
-
-
-                        //The clearing needs to be put on hold while the rest of the program still needs jobs
-
-                        deviceList.clear();
-                        jobList.clear();
-
+                    if (type == "color") {
+                        outPtr = new CPrinter(name, emissions, speed, cost);
+                    } else if (type == "bw") {
+                        outPtr = new BWPrinter(name, emissions, speed, cost);
+                    } else if (type == "scan") {
+                        outPtr = new Scanner(name, emissions, speed, cost);
                     }
 
 
-                    deviceList.push_back(tempPrinter);
+                    ownSystem->addDevice(outPtr);
+
+
+                    deviceList.push_back(*outPtr);
 
                 }
 
@@ -189,7 +180,7 @@ namespace System {
                 std::string type;
                 bool readingCorrectly = true;
 
-                for (TiXmlElement *elem = Level1Elem->FirstChildElement(); elem != NULL;
+                for (TiXmlElement *elem = Level1Elem->FirstChildElement(); elem != nullptr;
                      elem = elem->NextSiblingElement()) {
 
 
@@ -197,8 +188,8 @@ namespace System {
 
 
                     if (elemname == "userName") {
-                        auto t = elem->FirstChild();
-                        if (t == NULL) {
+                        TiXmlNode * t = elem->FirstChild();
+                        if (t == nullptr) {
                             errorstream << "username should not be empty" << std::endl;
                             readingCorrectly = false;
                             return readingCorrectly;
@@ -229,7 +220,7 @@ namespace System {
                         }
 
 
-                    }else if (elemname == "type") {
+                    } else if (elemname == "type") {
 
 
                         std::string type_j = elem->FirstChild()->ToText()->Value();
@@ -241,12 +232,12 @@ namespace System {
                             return readingCorrectly;
 
                         } else {
-                            if(type_j == "bw" || type_j == "scan" || type_j == "color"){
+                            if (type_j == "bw" || type_j == "scan" || type_j == "color") {
                                 type = type_j;
-                            }else{
+                            } else {
                                 errorstream << "Invalid type for job" << std::endl;
                             }
-                            //std::cout << "type = " << type << std::endl;
+
                         }
 
                     } else {
@@ -263,16 +254,32 @@ namespace System {
 
 
 
+
                     //todo loops twice for some reason, investigate
 
                     //Implement better duplicate checking off the return value for insert?
                     if (jobNrSet.find(jobNr) == jobNrSet.end()) {
+
                         //Job is only added to joblist if its jobnr is unique
                         Job tempJob = Job(userName, pageCount, jobNr, type);
 
 
+
+                        Job * outJobPtr = nullptr;
+
+                        if (type == "bw"){
+                            outJobPtr = new BWJob(userName, pageCount, jobNr);
+                        }else if (type == "color"){
+                            outJobPtr = new CJob(userName, pageCount, jobNr);
+                        }else if (type == "scan"){
+                            outJobPtr = new ScanJob(userName, pageCount, jobNr);
+                        }
+
+                        ownSystem->addJob(outJobPtr);
+
+
                         jobList.push_back(tempJob);
-                        jobNrMap.insert({jobNr, jobList.size() - 1});
+
                         jobNrSet.insert(jobNr);
 
                     } else {
@@ -301,7 +308,7 @@ namespace System {
 
 
 
-        ownSystem->takeParseInput(deviceList.back(), jobList);
+        //ownSystem->takeParseInput(deviceList.back(), jobList);
 
         return true;
     }

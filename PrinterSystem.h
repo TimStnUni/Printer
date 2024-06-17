@@ -5,18 +5,30 @@
 #ifndef PROJSOFTENG_PRINTERSYSTEM_H
 #define PROJSOFTENG_PRINTERSYSTEM_H
 
-#include "Printer.h"
+//#include "Printer.h"
 #include "XMLParser.h"
-#include "Device.h"
+
 #include "Job.h"
+#include "CJob.h"
+#include "BWJob.h"
+#include "ScanJob.h"
+
+#include "Device.h"
+#include "CPrinter.h"
+#include "BWPrinter.h"
+#include "Scanner.h"
+
 #include "InfoPrinter.h"
 #include "Scheduler.h"
 #include "DesignByContract.h"
+
 
 namespace System {
 
 
     class PrinterSystem {
+
+        //Todo: Remove friend classes
         friend class Device;
         friend class Scheduler;
         friend class InfoPrinter;
@@ -32,16 +44,16 @@ namespace System {
 
 
         /**
+         * \brief Destructor for the printer system. Will delete all new'ed pointers
+         */
+        ~PrinterSystem();
+
+        /**
          * \brief Reads an XML file and adds all devices/jobs inside to the printer system
          * @param filename XML file to read from
          * REQUIRE(properlyInitialized(), "System wasn't properly initialized when attempting to read an XML file")
          */
         bool readXML(const char *filename);
-
-
-
-
-
 
 
         /**
@@ -76,7 +88,7 @@ namespace System {
          * REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to print add job");
          * ENSURE(jobVect.back() == inJob, "Job was not correctly added");
          */
-        void addJob(Job &inJob);
+        void addJob(Job *inJob);
 
         /**
          * adder function for a single device
@@ -84,14 +96,9 @@ namespace System {
          * REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to add a device")
          * ENSURE(deviceVect.back == inDevice, "Device was not correctly added");
          */
-        void addDevice(Device inDevice);
+        void addDevice(Device *inDevice);
 
 
-        /**
-         * \brief Function to retrieve the most recently added job. Currently unused
-         * @return pointer to most recently added job
-         */
-        //const Job *getMRJob();
 
         /**
          * \brief Function that takes input from the parsing. Currently still using an outdated plan for parser, but still works.
@@ -102,25 +109,29 @@ namespace System {
          * ENSURE that the sum of those bools is true or something
          */
 
-        void takeParseInput(Device & inDev, std::vector<Job>& inJobs);
+        void takeParseInput(Device * inDev, std::vector<Job*>& inJobs);
 
 
-    protected:
 
+
+
+
+
+    private:
 
         float totalCO2_system = 0;
 
         std::set<unsigned int> jobNrSet;
-        std::vector<Job> jobVect;
-        std::vector<Device> deviceVect;
+        std::vector<Job*> jobVect;
+
+
+        std::vector<Device*> deviceVect;
 
 
         Scheduler system_scheduler;
-
-    private:
         bool properlyInitialized();
 
-        std::vector<Printer> printerList;
+
         PrinterSystem *_initcheck;
     };
 

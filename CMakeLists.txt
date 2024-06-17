@@ -99,6 +99,18 @@ set(RELEASE_SOURCE_FILES
         InfoPrinter.h
         Scheduler.cpp
         Scheduler.h
+        CPrinter.cpp
+        CPrinter.h
+        BWPrinter.cpp
+        BWPrinter.h
+        Scanner.cpp
+        Scanner.h
+        CJob.cpp
+        CJob.h
+        BWJob.cpp
+        BWJob.h
+        ScanJob.cpp
+        ScanJob.h
 
 )
 
@@ -123,6 +135,18 @@ set(DEBUG_SOURCE_FILES
         InfoPrinter.h
         Scheduler.cpp
         Scheduler.h
+        CPrinter.cpp
+        CPrinter.h
+        BWPrinter.cpp
+        BWPrinter.h
+        Scanner.cpp
+        Scanner.h
+        CJob.cpp
+        CJob.h
+        BWJob.cpp
+        BWJob.h
+        ScanJob.cpp
+        ScanJob.h
 )
 
         # Create RELEASE target
