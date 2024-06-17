@@ -35,15 +35,15 @@ namespace System {
 
         std::string jobType = jobIn->getType();
 
-        std::vector<Device>::iterator stopIt = ownSystem->deviceVect.end();
+        std::vector<Device*>::iterator stopIt = ownSystem->deviceVect.end();
 
         int pageQueue = INT_MAX;
 
 
-        for (std::vector<Device>::iterator devIt = ownSystem->deviceVect.begin(); devIt!=ownSystem->deviceVect.end(); devIt++){
+        for (std::vector<Device*>::iterator devIt = ownSystem->deviceVect.begin(); devIt!=ownSystem->deviceVect.end(); devIt++){
 
-            if (devIt->getTotalPages() < pageQueue && devIt->getType() == jobType){
-                pageQueue = devIt->getTotalPages();
+            if ((*devIt)->getTotalPages() < pageQueue && (*devIt)->getType() == jobType){
+                pageQueue = (*devIt)->getTotalPages();
                 stopIt = devIt;
             }
         }
@@ -51,8 +51,8 @@ namespace System {
             std::cerr << "No suitable device found for job " << jobIn->getJobNr() << std::endl;
             return;
         }else{
-            stopIt->addJob(jobIn);
-            jobIn->setOwnDevice(&(*stopIt));
+            (*stopIt)->addJob(jobIn);
+            jobIn->setOwnDevice((*stopIt));
 
             //Job is now scheduled and should be removed from jobnrset
             //ownSystem->jobNrSet.erase(jobIn->getJobNr());

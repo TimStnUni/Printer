@@ -38,6 +38,12 @@ namespace System {
          */
         PrinterSystem();
 
+
+        /**
+         * \brief Destructor for the printer system. Will delete all new'ed pointers
+         */
+        ~PrinterSystem();
+
         /**
          * \brief Reads an XML file and adds all devices/jobs inside to the printer system
          * @param filename XML file to read from
@@ -78,7 +84,7 @@ namespace System {
          * REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to print add job");
          * ENSURE(jobVect.back() == inJob, "Job was not correctly added");
          */
-        void addJob(Job &inJob);
+        void addJob(Job *inJob);
 
         /**
          * adder function for a single device
@@ -86,7 +92,7 @@ namespace System {
          * REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to add a device")
          * ENSURE(deviceVect.back == inDevice, "Device was not correctly added");
          */
-        void addDevice(Device &inDevice);
+        void addDevice(Device *inDevice);
 
 
 
@@ -99,7 +105,7 @@ namespace System {
          * ENSURE that the sum of those bools is true or something
          */
 
-        void takeParseInput(Device & inDev, std::vector<Job>& inJobs);
+        void takeParseInput(Device * inDev, std::vector<Job*>& inJobs);
 
 
 
@@ -112,10 +118,10 @@ namespace System {
         float totalCO2_system = 0;
 
         std::set<unsigned int> jobNrSet;
-        std::vector<Job> jobVect;
+        std::vector<Job*> jobVect;
 
 
-        std::vector<Device> deviceVect;
+        std::vector<Device*> deviceVect;
 
 
         Scheduler system_scheduler;

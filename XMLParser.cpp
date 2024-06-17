@@ -8,11 +8,7 @@
 namespace System {
 
 
-
-
-
-
-    XMLParser::XMLParser(const char *filename, PrinterSystem * system) {
+    XMLParser::XMLParser(const char *filename, PrinterSystem *system) {
 //        std::cout <<  InputDoc.LoadFile(filename) << std::endl;
         //Todo: check whether inputdoc isn't empty
         if (!InputDoc.LoadFile(filename)) {
@@ -47,8 +43,6 @@ namespace System {
 
 
         REQUIRE(System != nullptr, "There is no system in xml");
-
-
 
 
         for (TiXmlElement *Level1Elem = System->FirstChildElement(); Level1Elem != nullptr;
@@ -119,8 +113,8 @@ namespace System {
 
 
                             }
-                        //TODO: check if correct, do we need to add cost?
-                        }else if (elemname == "type") {
+                            //TODO: check if correct, do we need to add cost?
+                        } else if (elemname == "type") {
 
 
                             std::string type_d = elem->FirstChild()->ToText()->Value();
@@ -132,10 +126,10 @@ namespace System {
                                 return readingCorrect;
 
                             } else {
-                                if(type_d == "bw" || type_d == "scan" || type_d == "color"){
+                                if (type_d == "bw" || type_d == "scan" || type_d == "color") {
                                     type = type_d;
 
-                                }else{
+                                } else {
                                     errorstream << "Invalid type for device" << std::endl;
                                 }
                                 //std::cout << "type = " << type << std::endl;
@@ -160,25 +154,22 @@ namespace System {
                     }
                 }
                 if (readingCorrect) {
-                    Device tempPrinter = Device(name, emissions, speed, type, cost);
 
+                    Device *outPtr = nullptr;
 
-
-
-                    if (!deviceList.empty()){
-
-                        ownSystem->takeParseInput(deviceList.back(), jobList);
-
-
-                        //The clearing needs to be put on hold while the rest of the program still needs jobs
-
-                        deviceList.clear();
-                        jobList.clear();
-
+                    if (type == "color") {
+                        outPtr = new CPrinter(name, emissions, speed, cost);
+                    } else if (type == "bw") {
+                        outPtr = new BWPrinter(name, emissions, speed, cost);
+                    } else if (type == "scan") {
+                        outPtr = new Scanner(name, emissions, speed, cost);
                     }
 
 
-                    deviceList.push_back(tempPrinter);
+                    ownSystem->addDevice(outPtr);
+
+
+                    deviceList.push_back(*outPtr);
 
                 }
 
@@ -229,7 +220,7 @@ namespace System {
                         }
 
 
-                    }else if (elemname == "type") {
+                    } else if (elemname == "type") {
 
 
                         std::string type_j = elem->FirstChild()->ToText()->Value();
@@ -241,9 +232,9 @@ namespace System {
                             return readingCorrectly;
 
                         } else {
-                            if(type_j == "bw" || type_j == "scan" || type_j == "color"){
+                            if (type_j == "bw" || type_j == "scan" || type_j == "color") {
                                 type = type_j;
-                            }else{
+                            } else {
                                 errorstream << "Invalid type for job" << std::endl;
                             }
                             //std::cout << "type = " << type << std::endl;
@@ -263,12 +254,20 @@ namespace System {
 
 
 
+
                     //todo loops twice for some reason, investigate
 
                     //Implement better duplicate checking off the return value for insert?
                     if (jobNrSet.find(jobNr) == jobNrSet.end()) {
+
                         //Job is only added to joblist if its jobnr is unique
                         Job tempJob = Job(userName, pageCount, jobNr, type);
+
+
+                        Job * outJobPtr = nullptr;
+
+                        outJobPtr = new Job(userName, pageCount, jobNr, type);
+                        ownSystem->addJob(outJobPtr);
 
 
                         jobList.push_back(tempJob);
@@ -301,7 +300,7 @@ namespace System {
 
 
 
-        ownSystem->takeParseInput(deviceList.back(), jobList);
+        //ownSystem->takeParseInput(deviceList.back(), jobList);
 
         return true;
     }
