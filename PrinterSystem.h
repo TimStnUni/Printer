@@ -7,11 +7,17 @@
 
 #include "Printer.h"
 #include "XMLParser.h"
-#include "Device.h"
+
 #include "Job.h"
 #include "InfoPrinter.h"
 #include "Scheduler.h"
 #include "DesignByContract.h"
+
+#include "Device.h"
+#include "CPrinter.h"
+#include "BWPrinter.h"
+#include "Scanner.h"
+
 
 namespace System {
 
@@ -96,19 +102,23 @@ namespace System {
         void takeParseInput(Device & inDev, std::vector<Job>& inJobs);
 
 
-    protected:
 
+
+
+
+
+    private:
 
         float totalCO2_system = 0;
 
         std::set<unsigned int> jobNrSet;
         std::vector<Job> jobVect;
+
+
         std::vector<Device> deviceVect;
 
 
         Scheduler system_scheduler;
-
-    private:
         bool properlyInitialized();
 
         std::vector<Printer> printerList;

@@ -12,6 +12,7 @@
 int main() {
 
 
+
     System::PrinterSystem testSystem;
 
     //UseCase 1: Reads an XML file into the printersystem
@@ -21,6 +22,7 @@ int main() {
     //testSystem.getInfo("Usecase2Info.txt");
 
 
+    /*
     std::ofstream outFile; // Create an output file stream
     std::string f = "PrintOutputTestScheduled";
     std::string outputFileName = f + ".txt";
@@ -51,6 +53,8 @@ int main() {
         testSystem.printAll(std::cout);
 
     }
+
+     */
 
 //    outFile.close();
 //    outFile2.close();

@@ -33,10 +33,12 @@ namespace System {
         Device();
 
         /**
-         * \brief Usual constructor for a printer device
+         * \brief Usual constructor for a generic printer device
          * @param name : Name of the printer as a string
          * @param emissions : Emissions of the printer in g/page
          * @param speed : Speed of the printer in p/minute
+         * @param cost : cost per page in c/page
+         * @param type : Type of the printer: Deprecated since introduction of inheritance
          * REQUIRE(emissions_in > 0, "Emissions should be positive");
          *REQUIRE(speed_in > 0, "Speed should be positive");
          *REQUIRE(!type_in.empty(), "type should not be blank");
