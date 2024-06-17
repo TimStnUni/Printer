@@ -150,13 +150,14 @@ namespace System {
             return false;
         }
 
+        bool properlyInitialized() const;
     private:
         int jobNr, pageCount;
         std::string userName;
         Job *_initCheck;
         std::string type;
 
-        bool properlyInitialized() const;
+
         System::Device * ownerDevice = nullptr;
 
 

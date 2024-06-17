@@ -24,33 +24,14 @@ namespace System {
         if (!tempXML.isParseSuccessful()) {
             return false;
         }
-        Printer tempPrtr;
 
 
-        //Todo: remove this part of the code, it shouldn't be needed anymore
 
-        tempPrtr.addDevices(tempXML.getDeviceList());
-
-        std::map<unsigned int, unsigned int> jobnrs = tempXML.getJobNrMap();
-        std::vector<Job> tempJobList = tempXML.getJobList();
         std::set<unsigned int> tempJobSet = tempXML.getJobNrSet();
-        tempPrtr.addJobs(tempJobList, jobnrs, tempJobSet);
 
-
-        printerList.push_back(tempPrtr);
-
-        int printerIndex = printerList.size() - 1;
-
-
-        std::set<unsigned int>::iterator it;
-
-
-        for (it = tempJobSet.begin(); it != tempJobSet.end(); ++it) {
-
+        for (std::set<unsigned int>::iterator it = tempJobSet.begin(); it != tempJobSet.end(); ++it) {
 
             if (jobNrSet.find(*it) == jobNrSet.end()) {
-
-                //jobNrMap.insert({*it, printerIndex});
                 jobNrSet.insert(*it);
 
             } else {
@@ -61,13 +42,11 @@ namespace System {
         }
 
 
-
-
         return true;
 
     }
 
-    void PrinterSystem::getInfo(std::ostream & writeStream, std::string outputType) {
+    void PrinterSystem::getInfo(std::ostream &writeStream, std::string outputType) {
 
         REQUIRE(properlyInitialized(), "the printer system was not properly initialized");
 
@@ -75,7 +54,7 @@ namespace System {
         for (std::set<unsigned int>::reverse_iterator jobnrIt = jobNrSet.rbegin();
              jobnrIt != jobNrSet.rend(); jobnrIt++) {
 
-            for (std::vector<Job*>::iterator jobsIt = jobVect.begin(); jobsIt != jobVect.end(); jobsIt++) {
+            for (std::vector<Job *>::iterator jobsIt = jobVect.begin(); jobsIt != jobVect.end(); jobsIt++) {
 
                 if ((*jobsIt)->getJobNr() == *jobnrIt) {
                     system_scheduler.schedule((*jobsIt));
@@ -85,9 +64,6 @@ namespace System {
         }
 
 
-
-
-
         InfoPrinter printer;
         printer.setSystem(this);
 
@@ -95,14 +71,10 @@ namespace System {
         if (outputType == "ASCII") {
 
             printer.printAscii(writeStream);
-        }
-
-        else{
+        } else {
             std::cerr << "Unsupported output type, reverting to ASCII" << std::endl;
             printer.printAscii(writeStream);
         }
-
-
 
 
     }
@@ -111,17 +83,14 @@ namespace System {
         return (this == _initcheck);
     }
 
-    //TODO: create a check to see if the devicetype matches the jobtype and if not
-    // go to a different device in the devicelist and search until you find one that matches the type of jobtype
+
     void PrinterSystem::doPrintJob(unsigned int jobnr, std::ostream &writeStream, bool eraseBool) {
 
 
+        std::vector<Job *>::iterator jobPoint;
 
 
-        std::vector<Job*>::iterator jobPoint;
-
-
-        for (std::vector<Job*>::iterator jobIt = this->jobVect.begin(); jobIt != this->jobVect.end(); ++jobIt) {
+        for (std::vector<Job *>::iterator jobIt = this->jobVect.begin(); jobIt != this->jobVect.end(); ++jobIt) {
             if ((*jobIt)->getJobNr() == jobnr) {
                 jobPoint = jobIt;
                 break;
@@ -133,13 +102,10 @@ namespace System {
         }
 
 
-
-
-        if (this->jobNrSet.find(jobnr) != jobNrSet.end()){
+        if (this->jobNrSet.find(jobnr) != jobNrSet.end()) {
             //This means the job has not yet been scheduled
             system_scheduler.schedule((*jobPoint));
         }
-
 
 
         Device *printPoint = (*jobPoint)->getOwnDevice();
@@ -153,7 +119,7 @@ namespace System {
 
 
             std::cerr << "types don't match" << std::endl;
-            for (std::vector<Device*>::iterator devIt = this->deviceVect.begin();
+            for (std::vector<Device *>::iterator devIt = this->deviceVect.begin();
                  devIt != this->deviceVect.end(); devIt++) {
 
                 if ((*devIt)->getType() == (*jobPoint)->getType()) {
@@ -171,8 +137,6 @@ namespace System {
             }
 
         }
-
-
 
 
         int pages = (*jobPoint)->getPageCount();
@@ -199,9 +163,7 @@ namespace System {
         writeStream << "  " << (*jobPoint)->getPageCount() << " pages\n";
 
 
-
-
-        float newCO2 = ((*jobPoint)->getPageCount()) * (printPoint->getEmissions());
+        float newCO2 = (float)((*jobPoint)->getPageCount()) * (float)(printPoint->getEmissions());
 
         writeStream << "  Job CO2 emissions: " << newCO2 << " gram\n";
         writeStream << std::endl;
@@ -231,10 +193,8 @@ namespace System {
         REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to print all jobs");
 
 
-
-
-
-        for (std::set<unsigned int>::reverse_iterator jobNrIt = jobNrSet.rbegin(); jobNrIt != jobNrSet.rend(); jobNrIt++) {
+        for (std::set<unsigned int>::reverse_iterator jobNrIt = jobNrSet.rbegin();
+             jobNrIt != jobNrSet.rend(); jobNrIt++) {
 
 
             //Erasing jobnr's is having issues
@@ -253,9 +213,6 @@ namespace System {
 
         this->jobVect.emplace_back(inJob);
 
-
-        //This should be removable but isn't? Weird
-        //this->jobVect.back().setOwnDevice(&(*(deviceVect.end() - 1)));
 
         ENSURE(jobVect.back() == inJob, "Job was not correctly added");
 
@@ -276,62 +233,21 @@ namespace System {
     }
 
 
-    /*
-    const Job *PrinterSystem::getMRJob() {
-        return &*(jobVect.end() - 1);
-    }
-*/
-    void PrinterSystem::takeParseInput(Device *inDev, std::vector<Job*> &inJobs) {
-
-        REQUIRE(properlyInitialized(), "System wasn't properly initialized when attempting to add devices and jobs");
-
-        this->addDevice(inDev);
-
-
-        for (std::vector<Job*>::iterator jobIt = inJobs.begin(); jobIt != inJobs.end(); ++jobIt) {
-
-
-            this->addJob(*jobIt);
-
-            //this->deviceVect.back().addJob(this);
-
-        }
-
-
-    }
 
     PrinterSystem::~PrinterSystem() {
 
-        for (auto dev : this->deviceVect){
-
+        for (Device * dev: this->deviceVect) {
             delete dev;
         }
-        for (auto job : this->jobVect){
+        for (Job * job: this->jobVect) {
             delete job;
         }
 
 
     }
-//    void PrinterSystem::printAll(unsigned int jobnr, std::ostream &writeStream) {
-//        // Find the job with the given number
-//        Job job; // Initialize this with the job that has the given number
-//
-//        // Iterate over all printers
-//        for (std::vector<Printer>::iterator printerIt = printerList.begin(); printerIt != printerList.end(); ++printerIt) {
-//            // Iterate over all devices in the current printer
-//            for (int i = 0; i < printerIt->getDeviceList().size(); i++) {
-//                Device device = printerIt->getDevice(i);
-//
-//                // Check if the device's type matches the job's type
-//                if (device.getType() == job.getType()) {
-//                    this->doPrintJob(*printerIt, writeStream)
-//                }else{
-//
-//                }
-//            }
-//            }
-//        }
-} // PrinterSsytem
+
+
+}
 
 
 

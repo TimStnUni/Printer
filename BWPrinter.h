@@ -25,6 +25,9 @@ namespace System {
         */
         BWPrinter(std::string &name, int &emissions, int &speed, float &cost);
 
+
+    private:
+        Device * _initCheck;
     };
 
 } // System

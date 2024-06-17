@@ -204,9 +204,9 @@ namespace System {
 
         Device& operator=(Device const & inDevice);
 
+        bool properlyInitialized() const;
 
-
-    protected:
+    private:
         std::string name;
         int emissions, speed;
         std::string type;
@@ -219,7 +219,7 @@ namespace System {
 
         std::vector<System::Job *> jobPtrList;
 
-        bool properlyInitialized() const;
+
 
 
     };

@@ -105,6 +105,8 @@ set(RELEASE_SOURCE_FILES
         BWPrinter.h
         Scanner.cpp
         Scanner.h
+        CJob.cpp
+        CJob.h
 
 )
 
@@ -135,6 +137,8 @@ set(DEBUG_SOURCE_FILES
         BWPrinter.h
         Scanner.cpp
         Scanner.h
+        CJob.cpp
+        CJob.h
 )
 
         # Create RELEASE target

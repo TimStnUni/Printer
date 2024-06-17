@@ -188,7 +188,7 @@ namespace System {
 
 
                     if (elemname == "userName") {
-                        auto t = elem->FirstChild();
+                        TiXmlNode * t = elem->FirstChild();
                         if (t == nullptr) {
                             errorstream << "username should not be empty" << std::endl;
                             readingCorrectly = false;
@@ -271,7 +271,7 @@ namespace System {
 
 
                         jobList.push_back(tempJob);
-                        jobNrMap.insert({jobNr, jobList.size() - 1});
+
                         jobNrSet.insert(jobNr);
 
                     } else {

@@ -13,7 +13,7 @@ namespace System {
         REQUIRE(cost_in>0, "Cost should be positive");
         REQUIRE(!(name_in.empty()), "name shouldn't be empty");
 
-        _initCheck = this;
+        this->_initCheck = this;
 
 
 

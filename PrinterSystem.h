@@ -5,7 +5,7 @@
 #ifndef PROJSOFTENG_PRINTERSYSTEM_H
 #define PROJSOFTENG_PRINTERSYSTEM_H
 
-#include "Printer.h"
+//#include "Printer.h"
 #include "XMLParser.h"
 
 #include "Job.h"
@@ -127,7 +127,7 @@ namespace System {
         Scheduler system_scheduler;
         bool properlyInitialized();
 
-        std::vector<Printer> printerList;
+
         PrinterSystem *_initcheck;
     };
 
