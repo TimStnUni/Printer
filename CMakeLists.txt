@@ -107,6 +107,10 @@ set(RELEASE_SOURCE_FILES
         Scanner.h
         CJob.cpp
         CJob.h
+        BWJob.cpp
+        BWJob.h
+        ScanJob.cpp
+        ScanJob.h
 
 )
 
@@ -139,6 +143,10 @@ set(DEBUG_SOURCE_FILES
         Scanner.h
         CJob.cpp
         CJob.h
+        BWJob.cpp
+        BWJob.h
+        ScanJob.cpp
+        ScanJob.h
 )
 
         # Create RELEASE target

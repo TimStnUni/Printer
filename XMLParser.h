@@ -27,11 +27,6 @@ namespace System {
 
     public:
 
-
-
-
-
-
         XMLParser();
 
         //Todo: Look through all of these requires/ensures

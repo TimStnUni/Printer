@@ -9,14 +9,18 @@
 #include "XMLParser.h"
 
 #include "Job.h"
-#include "InfoPrinter.h"
-#include "Scheduler.h"
-#include "DesignByContract.h"
+#include "CJob.h"
+#include "BWJob.h"
+#include "ScanJob.h"
 
 #include "Device.h"
 #include "CPrinter.h"
 #include "BWPrinter.h"
 #include "Scanner.h"
+
+#include "InfoPrinter.h"
+#include "Scheduler.h"
+#include "DesignByContract.h"
 
 
 namespace System {

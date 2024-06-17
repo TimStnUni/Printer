@@ -237,7 +237,7 @@ namespace System {
                             } else {
                                 errorstream << "Invalid type for job" << std::endl;
                             }
-                            //std::cout << "type = " << type << std::endl;
+
                         }
 
                     } else {
@@ -264,9 +264,17 @@ namespace System {
                         Job tempJob = Job(userName, pageCount, jobNr, type);
 
 
+
                         Job * outJobPtr = nullptr;
 
-                        outJobPtr = new Job(userName, pageCount, jobNr, type);
+                        if (type == "bw"){
+                            outJobPtr = new BWJob(userName, pageCount, jobNr);
+                        }else if (type == "color"){
+                            outJobPtr = new CJob(userName, pageCount, jobNr);
+                        }else if (type == "scan"){
+                            outJobPtr = new ScanJob(userName, pageCount, jobNr);
+                        }
+
                         ownSystem->addJob(outJobPtr);
 
 
