@@ -57,7 +57,7 @@ namespace System {
             for (std::vector<Job *>::iterator jobsIt = jobVect.begin(); jobsIt != jobVect.end(); jobsIt++) {
 
                 if ((*jobsIt)->getJobNr() == *jobnrIt) {
-                    system_scheduler.schedule((*jobsIt));
+                    system_scheduler.schedule(*jobsIt, &deviceVect);
                 }
             }
 
@@ -84,15 +84,17 @@ namespace System {
     }
 
 
-    void PrinterSystem::doPrintJob(unsigned int jobnr, std::ostream &writeStream, bool eraseBool) {
+    void PrinterSystem::doPrintJob(unsigned int jobNr, std::ostream &writeStream, bool eraseBool) {
 
 
-        std::vector<Job *>::iterator jobPoint;
+
+
+        Job * jobptr = nullptr;
 
 
         for (std::vector<Job *>::iterator jobIt = this->jobVect.begin(); jobIt != this->jobVect.end(); ++jobIt) {
-            if ((*jobIt)->getJobNr() == jobnr) {
-                jobPoint = jobIt;
+            if ((*jobIt)->getJobNr() == jobNr) {
+                jobptr = *jobIt;
                 break;
             }
             if (jobIt == (this->jobVect.end())) {
@@ -102,20 +104,19 @@ namespace System {
         }
 
 
-        if (this->jobNrSet.find(jobnr) != jobNrSet.end()) {
+        if (this->jobNrSet.find(jobptr->getJobNr()) != jobNrSet.end()) {
+            //todo: change this implementation
             //This means the job has not yet been scheduled
-            system_scheduler.schedule((*jobPoint));
+            system_scheduler.schedule(jobptr, &deviceVect);
         }
 
 
-        Device *printPoint = (*jobPoint)->getOwnDevice();
+        Device *printPoint = jobptr->getOwnDevice();
 
 
         //This rerouting is already done in scheduler now.
-
-
-
-        if ((*jobPoint)->getType() != printPoint->getType()) {
+        /*
+        if (jobptr->getType() != printPoint->getType()) {
 
 
             std::cerr << "types don't match" << std::endl;
@@ -137,9 +138,10 @@ namespace System {
             }
 
         }
+         */
 
 
-        int pages = (*jobPoint)->getPageCount();
+        int pages = jobptr->getPageCount();
 
 
         while (pages > 0) {
@@ -149,21 +151,21 @@ namespace System {
 
         std::string printType;
 
-        if ((*jobPoint)->getType() == "bw") {
+        if (jobptr->getType() == "bw") {
             printType = "black-and-white-printing ";
-        } else if ((*jobPoint)->getType() == "color") {
+        } else if (jobptr->getType() == "color") {
             printType = "color-printing ";
-        } else if ((*jobPoint)->getType() == "scan") {
+        } else if (jobptr->getType() == "scan") {
             printType = "scanning ";
         }
 
         writeStream << "Printer \"" << printPoint->getNameDev() << "\" finished " << printType << "job:\n";
-        writeStream << "  Number: " << jobnr << "\n";
-        writeStream << "  Submitted by \"" << (*jobPoint)->getUserName() << "\"\n";
-        writeStream << "  " << (*jobPoint)->getPageCount() << " pages\n";
+        writeStream << "  Number: " << jobptr << "\n";
+        writeStream << "  Submitted by \"" << jobptr->getUserName() << "\"\n";
+        writeStream << "  " << jobptr->getPageCount() << " pages\n";
 
 
-        float newCO2 = (float)((*jobPoint)->getPageCount()) * (float)(printPoint->getEmissions());
+        float newCO2 = (float)(jobptr->getPageCount()) * (float)(printPoint->getEmissions());
 
         writeStream << "  Job CO2 emissions: " << newCO2 << " gram\n";
         writeStream << std::endl;
@@ -179,11 +181,12 @@ namespace System {
 
             // Remove the job number from the jobNrSet and jobNrMap
             //This is now already done in scheduler
-            jobNrSet.erase(jobnr);
+            //I think this should only be done here
+            jobNrSet.erase(jobptr->getJobNr());
 
             //TODO: Figure out why erasing seems to miss.
             //jobVect.erase(jobPoint);
-            (*jobPoint)->getOwnDevice()->removeJob(jobnr);
+            jobptr->getOwnDevice()->removeJob(jobptr);
         }
 
 
@@ -243,6 +246,20 @@ namespace System {
             delete job;
         }
 
+
+    }
+
+    std::vector<Device *> *PrinterSystem::getDeviceVector() {
+        return &(deviceVect);
+    }
+
+    std::vector<Job *> *PrinterSystem::getJobVector() {
+        return &(jobVect);
+    }
+
+    void PrinterSystem::testPrinting() {
+
+        this->jobVect.front()->printFull();
 
     }
 

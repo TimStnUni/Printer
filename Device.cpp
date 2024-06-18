@@ -200,13 +200,13 @@ namespace System {
     }
     */
 
-    void Device::removeJob(unsigned int jobNr) {
+    void Device::removeJob(Job * jobptr) {
 
         REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to remove a job from queu");
 
         for (std::vector<Job *>::iterator ptrIt = this->jobPtrList.begin(); ptrIt != this->jobPtrList.end(); ++ptrIt) {
 
-            if ((*ptrIt)->getJobNr() == jobNr) {
+            if ((*ptrIt) == jobptr) {
                 this->jobPtrList.erase(ptrIt);
                 break;
             }
@@ -248,6 +248,89 @@ namespace System {
 
     }
 
+    void Device::printAllJobs() {
+
+        for (std::vector<Job *>::iterator jobIt = jobPtrList.begin(); jobIt!= jobPtrList.end(); jobIt++){
+
+            (*jobIt)->printFull();
+
+            //todo: this should probably delete jobs from itself, the function calling it will delete them from system
+        }
+
+    }
+
+    void Device::printJob(Job *jobPtr) {
+
+
+        //todo: replace jobPtrVect with set to make this significantly simpler (simple check for insertion or contains)
+
+        for (std::vector<Job*>::iterator jobIt = jobPtrList.begin(); jobIt != jobPtrList.end(); jobIt++){
+
+            if (*jobIt == jobPtr){
+
+                jobPtr->printFull();
+                return;
+            }
+
+        }
+        //todo: replace with logger
+        std::cout << "this job was not assigned to this printer." << std::endl;
+    }
+
+    void Device::printJob(unsigned int jobNr) {
+
+        //todo: simplify function
+
+        for (std::vector<Job*>::iterator jobIt = jobPtrList.begin(); jobIt != jobPtrList.end(); jobIt++){
+
+            if ((*jobIt)->getJobNr() == jobNr){
+
+                (*jobIt)->printFull();
+                return;
+            }
+
+        }
+        //todo: replace with logger
+        std::cout << "this job was not assigned to this printer." << std::endl;
+
+    }
+
+    void Device::printJobPages(Job *jobPtr, unsigned int pages) {
+
+        //todo: replace jobPtrVect with set to make this significantly simpler (simple check for insertion or contains)
+
+        for (std::vector<Job*>::iterator jobIt = jobPtrList.begin(); jobIt != jobPtrList.end(); jobIt++){
+
+            if (*jobIt == jobPtr){
+
+                jobPtr->printPages(pages);
+                return;
+            }
+
+        }
+        //todo: replace with logger
+        std::cout << "this job was not assigned to this printer." << std::endl;
+
+
+    }
+
+    void Device::printJobPages(unsigned int jobNr, unsigned int pages) {
+
+        //todo: simplify function
+
+        for (std::vector<Job*>::iterator jobIt = jobPtrList.begin(); jobIt != jobPtrList.end(); jobIt++){
+
+            if ((*jobIt)->getJobNr() == jobNr){
+
+                (*jobIt)->printPages(pages);
+                return;
+            }
+
+        }
+        //todo: replace with logger
+        std::cout << "this job was not assigned to this printer." << std::endl;
+
+    }
 
 
 } // System

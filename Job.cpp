@@ -93,6 +93,7 @@ namespace System {
         REQUIRE(pageCount_in > 0, "Pagecount should be positive");
 
         this->pageCount = pageCount_in;
+        this->currentPageCount = pageCount;
 
         ENSURE(this->getPageCount() == pageCount_in, "Pagecount not correctly set");
     }
@@ -148,6 +149,51 @@ namespace System {
         REQUIRE(properlyInitialized(), "Job nor properly initialized when attempting to get owner device");
         //REQUIRE(this->ownerDevice != nullptr, "own device should definitely not be the nullptr");
         return this->ownerDevice;
+    }
+
+    bool Job::printPage() {
+
+        if (currentPageCount > 0) {
+
+            currentPageCount--;
+            return false;
+        }else{
+            //todo: replace with logger
+            std::cout << "job has been fully printed";
+            return true;
+        }
+
+
+    }
+
+    void Job::printFull() {
+
+
+        while(!printPage());
+
+        //todo: should probably remove itself from places?
+
+    }
+
+    unsigned int Job::getPrintedPages() const {
+        return pageCount - currentPageCount;
+    }
+
+    void Job::printPages(unsigned int amount) {
+
+        if (amount >= currentPageCount) {
+
+            for (int i = 0; i < amount; i++) {
+
+                this->printPage();
+
+            }
+        }else{
+            //todo: replace with logger
+            std::cout << "fewer pages remaining, will print all remaining pages" << std::endl;
+            while(!printPage());
+        }
+
     }
 
 

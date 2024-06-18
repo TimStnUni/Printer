@@ -29,7 +29,7 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
     outfile << "   --=== Printers: ===--\n" << std::endl;
 
 
-    for (std::vector<Device*>::iterator printIt = ownSystem->deviceVect.begin(); printIt != ownSystem->deviceVect.end(); ++printIt) {
+    for (std::vector<Device*>::iterator printIt = ownSystem->getDeviceVector()->begin(); printIt != ownSystem->getDeviceVector()->end(); ++printIt) {
 
         //TODO: layout aanpassen?
 
@@ -60,8 +60,8 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
 
     outfile << "      --=== Jobs ===--\n" << std::endl;
 
-    for (std::vector<Job*>::iterator jobIt = ownSystem->jobVect.begin();
-         jobIt != ownSystem->jobVect.end(); ++jobIt) {
+    for (std::vector<Job*>::iterator jobIt = ownSystem->getJobVector()->begin();
+         jobIt != ownSystem->getJobVector()->end(); ++jobIt) {
 
         std::string jobType;
 
@@ -75,25 +75,26 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
             jobType = "Scanning job";
         }
 
-        if (jobIt == ownSystem->jobVect.begin()) {
+        if (jobIt == ownSystem->getJobVector()->begin()) {
 
             outfile << "    * Current:\n";
         }
 
 
-        float totalcost = (*jobIt)->getPageCount() * (*jobIt)->getOwnDevice()->getCost();
-        float totalCO2 = (*jobIt)->getPageCount() * (*jobIt)->getOwnDevice()->getEmissions();
+        float totalcost = (float)(*jobIt)->getPageCount() * (*jobIt)->getOwnDevice()->getCost();
+        float totalCO2 = (float)(*jobIt)->getPageCount() * (float)(*jobIt)->getOwnDevice()->getEmissions();
 
         //Todo: Add device when device and job have been overhauled. Also add total co2 and cost when that's gettable
         outfile << "        [Job #" << (*jobIt)->getJobNr() << "]\n"
                 << "            * Owner: " << (*jobIt)->getUserName() << "\n"
                 << "            * Total Pages: " << (*jobIt)->getPageCount() << "\n"
+                << "            * Pages Printed: " << (*jobIt)->getPrintedPages() << "\n"
                 << "            * Type: " << jobType << "\n"
                 << "            * Device: " << (*jobIt)->getOwnDevice()->getNameDev() << "\n"
                 << "            * Total CO2: " << totalCO2 << "\n"
                 << "            * Total cost: " << totalcost << "\n";
 
-        if (jobIt == ownSystem->jobVect.begin()) {
+        if (jobIt == ownSystem->getJobVector()->begin()) {
 
             outfile << "    * Queue:\n";
         }

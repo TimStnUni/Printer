@@ -29,9 +29,9 @@ namespace System {
     class PrinterSystem {
 
         //Todo: Remove friend classes
-        friend class Device;
-        friend class Scheduler;
-        friend class InfoPrinter;
+        //friend class Device;
+        //friend class Scheduler;
+        //friend class InfoPrinter;
 
     public:
         //Should simply always be running, no input in constructor.
@@ -100,20 +100,14 @@ namespace System {
 
 
 
-        /**
-         * \brief Function that takes input from the parsing. Currently still using an outdated plan for parser, but still works.
-         * @param inDev Single inputdevice. Technically means we cannot read files with only jobs.
-         * @param inJobs Vector of inputjobs. Handles 0 jobs just fine.
-         * REQUIRE(properlyInitialized(), "System wasn't properly initialized when attempting to add devices and jobs")
-         * ENSURE is handles by its subdivisions addDevice and addJob. Could change those functions to return a bool and
-         * ENSURE that the sum of those bools is true or something
-         */
 
-        void takeParseInput(Device * inDev, std::vector<Job*>& inJobs);
+        void testPrinting();
 
 
 
+        std::vector<Device*> * getDeviceVector();
 
+        std::vector<Job*> * getJobVector();
 
 
 

@@ -16,9 +16,9 @@ namespace System {
 
     class Scheduler {
 
-        friend class PrinterSystem;
+        //friend class PrinterSystem;
 
-
+    public:
         /**
          * Default constructor for scheduler
          * ENSURE(properlyInitialized(), "Scheduler not properly initialized")
@@ -39,7 +39,7 @@ namespace System {
          * REQUIRE(properlyInitialized(), "Scheduler not properly initialized when attempting to schedule a job")
          * ENSURE should check that job was actually assigned
          */
-        void schedule(Job * jobIn);
+        void schedule(Job * jobIn, std::vector<Device *> * devVect);
 
 
         /**

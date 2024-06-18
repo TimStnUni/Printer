@@ -127,7 +127,14 @@ namespace System {
         std::string getType() const;
 
 
+        bool printPage();
 
+        void printPages(unsigned int amount);
+
+        void printFull();
+
+
+        unsigned int getPrintedPages() const;
 
         /**
          * Overload of the = constructor for jobs since it seems to be needed for something
@@ -152,7 +159,7 @@ namespace System {
 
         bool properlyInitialized() const;
     private:
-        int jobNr, pageCount;
+        int jobNr, pageCount, currentPageCount;
         std::string userName;
         Job *_initCheck;
         std::string type;

@@ -193,7 +193,19 @@ namespace System {
          * ENSURE should check that it was actually removed, this is currently not done
          */
 
-        void removeJob(unsigned int jobnr);
+        void removeJob(Job * jobptr);
+
+
+        void printAllJobs();
+
+
+        void printJob(Job * jobPtr);
+
+        void printJob(unsigned int jobNr);
+
+        void printJobPages(Job * jobPtr, unsigned int pages);
+
+        void printJobPages(unsigned int jobNr, unsigned int pages);
 
 
         /**

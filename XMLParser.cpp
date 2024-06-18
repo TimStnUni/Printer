@@ -278,8 +278,6 @@ namespace System {
                         ownSystem->addJob(outJobPtr);
 
 
-                        jobList.push_back(tempJob);
-
                         jobNrSet.insert(jobNr);
 
                     } else {
@@ -303,12 +301,6 @@ namespace System {
 
         }
 
-
-        //Realistically atm we only ever have 1 device, so this will work, but it won't be good
-
-
-
-        //ownSystem->takeParseInput(deviceList.back(), jobList);
 
         return true;
     }
