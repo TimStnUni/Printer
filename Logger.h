@@ -4,6 +4,7 @@
 
 #ifndef PROJSOFTENG_LOGGER_H
 #define PROJSOFTENG_LOGGER_H
+
 #include <iostream>
 #include <fstream>
 #include "DesignByContract.h"
@@ -21,16 +22,21 @@ namespace System {
 
         Logger();
 
-        void printError(std::ostream & outStream, std::string message);
+        void printError(std::ostream &outStream, std::string message);
 
-        void printerAssignmentError(std::ostream & outStream, unsigned int jobNr);
+        void printerAssignmentError(std::ostream &outStream, unsigned int jobNr);
+
+        void dispPrintJob(std::ostream &outStream, unsigned int jobNr, std::basic_string<char> deviceName, std::basic_string<char> username,
+                          std::basic_string<char> & type, unsigned int pages, float emissions);
+
+        void pageAmount(std::ostream & outStream);
 
 
     private:
 
         bool properlyInitialized();
 
-        Logger * _initCheck;
+        Logger *_initCheck;
 
 
     };

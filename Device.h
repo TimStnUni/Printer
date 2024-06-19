@@ -254,7 +254,7 @@ namespace System {
          * @return
          */
 
-        //Device& operator=(Device const & inDevice);
+        Device& operator=(Device const & inDevice);
 
         /**
          * \brief overloaded equality operator for getters

@@ -20,6 +20,8 @@
 
 #include "InfoPrinter.h"
 #include "Scheduler.h"
+#include "Logger.h"
+
 #include "DesignByContract.h"
 
 
@@ -137,6 +139,7 @@ namespace System {
         Scheduler system_scheduler;
         bool properlyInitialized();
 
+        Logger logger;
 
         PrinterSystem *_initcheck;
     };

@@ -34,5 +34,25 @@ namespace System {
 
     }
 
+    void
+    Logger::dispPrintJob(std::ostream &outStream, unsigned int jobNr, std::basic_string<char> deviceName, std::basic_string<char> username,
+                         std::basic_string<char> & type, unsigned int pages, float emissions) {
+
+
+
+        outStream << "Printer \"" << deviceName << "\" finished " << type << "job:\n";
+        outStream << "  Number: " << jobNr << "\n";
+        outStream << "  Submitted by \"" << username << "\"\n";
+        outStream << "  " << pages << " pages\n";
+        outStream << "  Job CO2 emissions: " << emissions << " gram\n";
+        outStream << std::endl;
+    }
+
+    void Logger::pageAmount(std::ostream &outStream) {
+
+        outStream << "fewer pages remaining, will print all remaining pages" << std::endl;
+
+    }
+
 
 } // System

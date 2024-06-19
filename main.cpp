@@ -19,9 +19,9 @@ int main() {
     bool consistent = testSystem.readXML("test.xml");
     //System::PrinterSystem testSystem2 = testSystem;
 
-    testSystem.getInfo(std::cout, "ASCII");
+    //testSystem.getInfo(std::cout, "ASCII");
 
-    testSystem.testPrinting();
+    //testSystem.testPrinting();
 
 
 

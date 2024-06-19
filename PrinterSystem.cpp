@@ -120,14 +120,7 @@ namespace System {
 
         Device *printPoint = jobptr->getOwnDevice();
 
-
-        int pages = jobptr->getPageCount();
-
-
-        while (pages > 0) {
-            pages--;
-        }
-
+        jobptr->printFull();
 
         std::string printType;
 
@@ -138,17 +131,9 @@ namespace System {
         } else if (jobptr->getType() == "scan") {
             printType = "scanning ";
         }
-
-        writeStream << "Printer \"" << printPoint->getNameDev() << "\" finished " << printType << "job:\n";
-        writeStream << "  Number: " << jobptr->getJobNr() << "\n";
-        writeStream << "  Submitted by \"" << jobptr->getUserName() << "\"\n";
-        writeStream << "  " << jobptr->getPageCount() << " pages\n";
-
-
         float newCO2 = (float)(jobptr->getPageCount()) * (float)(printPoint->getEmissions());
 
-        writeStream << "  Job CO2 emissions: " << newCO2 << " gram\n";
-        writeStream << std::endl;
+        logger.dispPrintJob(writeStream, jobptr->getJobNr(), printPoint->getNameDev(), jobptr->getUserName(), printType, jobptr->getPageCount(), newCO2);
 
         //Increment CO2 emissions
         totalCO2_system += newCO2;
@@ -164,7 +149,7 @@ namespace System {
 
             //TODO: Figure out why erasing seems to miss.
             //jobVect.erase(jobPoint);
-            jobptr->getOwnDevice()->removeJob(jobptr);
+
         }
     }
 

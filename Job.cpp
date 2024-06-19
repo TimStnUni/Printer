@@ -171,6 +171,8 @@ namespace System {
 
         while(!printPage());
 
+        ownerDevice->removeJob(this);
+
         //todo: should probably remove itself from places?
 
     }
@@ -189,9 +191,10 @@ namespace System {
 
             }
         }else{
-            //todo: replace with logger
-            std::cout << "fewer pages remaining, will print all remaining pages" << std::endl;
+
+            logger.pageAmount(std::cout);
             while(!printPage());
+            ownerDevice->removeJob(this);
         }
 
     }

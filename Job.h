@@ -6,7 +6,11 @@
 #define PROJSOFTENG_JOB_H
 #include <iostream>
 #include <string>
+
+#include "Logger.h"
+
 #include "DesignByContract.h"
+
 namespace System {
 
     class Device;
@@ -169,6 +173,7 @@ namespace System {
 
         System::Device * ownerDevice = nullptr;
 
+        Logger logger;
 
 
     };
