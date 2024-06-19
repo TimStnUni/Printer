@@ -19,6 +19,9 @@ int main() {
     bool consistent = testSystem.readXML("test.xml");
     //System::PrinterSystem testSystem2 = testSystem;
 
+    //testSystem.getInfo(std::cout, "ASCII");
+
+    //testSystem.testPrinting();
 
 
 
@@ -44,13 +47,13 @@ int main() {
 
     if(consistent){
         //Usecase 2: Basic info about the printer system
-        testSystem.getInfo(std::cout, "ASCII");
+        //testSystem.getInfo(std::cout, "ASCII");
 
         //Usecase 3.1: manual processing
         testSystem.doPrintJob(2189, outFile);
-        //testSystem.printAll(outFile2);
+        //testSystem.printFull(outFile2);
         //Usecase 3.2: automatic processing
-        //testSystem.printAll(std::cout);
+        //testSystem.printFull(std::cout);
 
     }
 

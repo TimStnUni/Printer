@@ -4,7 +4,8 @@
 
 #include "Device.h"
 #include "Job.h"
-#include "PrinterSystem.h"
+//#include "PrinterSystem.h"
+
 
 namespace System {
 
@@ -13,7 +14,7 @@ namespace System {
         REQUIRE(emissions_in > 0, "Emissions should be positive");
         REQUIRE(speed_in > 0, "Speed should be positive");
         REQUIRE(!type_in.empty(), "type should not be blank");
-        REQUIRE(cost_in>0, "Cost should be positive");
+        REQUIRE(cost_in > 0, "Cost should be positive");
         REQUIRE(!(name_in.empty()), "name shouldn't be empty");
         _initCheck = this;
 
@@ -85,13 +86,13 @@ namespace System {
         this->setSpeed(speed_in);
         this->setType(type_in);
         this->setCost(cost_in);
-        this->jobPtrList = inDevice.jobPtrList;
+        this->jobPtrSet = inDevice.jobPtrSet;
 
 
         /*
          * Pointer bullshittery that should no longer be needed
-        for (std::vector<Job *>::const_iterator ptrIt = inDevice.jobPtrList.begin();
-             ptrIt != inDevice.jobPtrList.end(); ++ptrIt) {
+        for (std::vector<Job *>::const_iterator ptrIt = inDevice.jobPtrSet.begin();
+             ptrIt != inDevice.jobPtrSet.end(); ++ptrIt) {
             (*ptrIt)->setOwnDevice(this);
         }
         */
@@ -149,7 +150,7 @@ namespace System {
     /*
     void Device::addJob(PrinterSystem *ownSystem) {
 
-        this->jobPtrList.push_back(&*(ownSystem->jobVect.end() - 1));
+        this->jobPtrSet.push_back(&*(ownSystem->jobVect.end() - 1));
 
 
     }
@@ -166,16 +167,16 @@ namespace System {
         outDevice.speed = inDevice.getSpeed();
         outDevice.cost = inDevice.getCost();
         outDevice.type = inDevice.getType();
-        outDevice.jobPtrList = inDevice.jobPtrList;
+        outDevice.jobPtrSet = inDevice.jobPtrSet;
         outDevice._initCheck = &outDevice;
 
         /*
 
 
-         if (inDevice.jobPtrList.size()>0) {
+         if (inDevice.jobPtrSet.size()>0) {
 
-            for (std::vector<Job *>::const_iterator ptrIt = inDevice.jobPtrList.begin();
-                 ptrIt != inDevice.jobPtrList.end(); ++ptrIt) {
+            for (std::vector<Job *>::const_iterator ptrIt = inDevice.jobPtrSet.begin();
+                 ptrIt != inDevice.jobPtrSet.end(); ++ptrIt) {
                 (*ptrIt)->setOwnDevice(this);
             }
         }
@@ -184,12 +185,10 @@ namespace System {
     }
 
 
-
-
 /*
     void Device::updatePointer(Job *inPointer, const Job *prevPointer) {
 
-        for (std::vector<Job *>::iterator ptrIt = this->jobPtrList.begin(); ptrIt != this->jobPtrList.end(); ++ptrIt) {
+        for (std::vector<Job *>::iterator ptrIt = this->jobPtrSet.begin(); ptrIt != this->jobPtrSet.end(); ++ptrIt) {
 
             if ((*ptrIt) == prevPointer) {
                 *ptrIt = inPointer;
@@ -200,22 +199,21 @@ namespace System {
     }
     */
 
-    void Device::removeJob(unsigned int jobNr) {
+    void Device::removeJob(Job *jobptr) {
 
         REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to remove a job from queu");
+        REQUIRE(jobptr != nullptr, "job should be a valid job");
 
-        for (std::vector<Job *>::iterator ptrIt = this->jobPtrList.begin(); ptrIt != this->jobPtrList.end(); ++ptrIt) {
+        if (jobPtrSet.count(jobptr)) {
+            jobPtrSet.erase(jobptr);
+        } else {
 
-            if ((*ptrIt)->getJobNr() == jobNr) {
-                this->jobPtrList.erase(ptrIt);
-                break;
-            }
-            if (ptrIt == (this->jobPtrList.end() - 1)) {
-                std::cerr << "jobNr not found, mysterious" << std::endl;
-                return;
-            }
-
+            logger.printerAssignmentError(std::cout, jobptr->getJobNr());
         }
+
+
+        ENSURE(jobPtrSet.count(jobptr) == 0, "job was not properly removed from device");
+
 
     }
 
@@ -225,8 +223,8 @@ namespace System {
 
         int pages = 0;
 
-        if (this->jobPtrList.size() > 0) {
-            for (std::vector<Job *>::iterator jobIt = jobPtrList.begin(); jobIt != jobPtrList.end(); jobIt++) {
+        if (this->jobPtrSet.size() > 0) {
+            for (std::set<Job *>::iterator jobIt = jobPtrSet.begin(); jobIt != jobPtrSet.end(); jobIt++) {
                 pages += (*jobIt)->getPageCount();
             }
             return pages;
@@ -240,14 +238,139 @@ namespace System {
     void Device::addJob(Job *jobIn) {
 
         REQUIRE(this->properlyInitialized(), "Device was not properly initialized when attempting to add a job");
+        REQUIRE(jobIn != nullptr, "job should be a valid job");
 
 
-        this->jobPtrList.push_back(jobIn);
+        this->jobPtrSet.insert(jobIn);
 
-        ENSURE(*jobPtrList.back() == *jobIn, "Job was not correctly added");
+        ENSURE(jobPtrSet.count(jobIn) == 1, "Job was not correctly added");
 
     }
 
+    void Device::printAllJobs() {
+
+
+        REQUIRE(properlyInitialized(), "device was not properly initialized when attepting to finish the queue");
+        //I think this automatically checks that there is at least 1 job in the queue?
+        std::set<Job *>::iterator jobIt = jobPtrSet.begin();
+
+        while (!jobPtrSet.empty()) {
+            printCurrentJob();
+        }
+
+        ENSURE(jobPtrSet.empty(), "Not all jobs were correctly printed");
+
+    }
+
+    bool Device::printJob(Job *jobPtr) {
+
+
+        REQUIRE(properlyInitialized(), "this printer was not properly initialized when calling printJob");
+        REQUIRE(jobPtr != nullptr, "job should be a valid job");
+
+
+        if (jobPtrSet.count(jobPtr) != 0) {
+            jobPtr->printFull();
+            jobPtrSet.erase(jobPtr);
+
+            ENSURE(jobPtrSet.count(jobPtr) == 0, "Job was not correctly removed");
+            return true;
+        }
+
+        logger.printerAssignmentError(std::cout, jobPtr->getJobNr());
+
+        return false;
+
+
+    }
+
+
+    void Device::printJob(unsigned int jobNr) {
+
+        //todo: simplify function. This function should be removed anyway, so i'm not changing it
+
+        for (std::set<Job *>::iterator jobIt = jobPtrSet.begin(); jobIt != jobPtrSet.end(); jobIt++) {
+
+            if ((*jobIt)->getJobNr() == jobNr) {
+
+                (*jobIt)->printFull();
+                return;
+            }
+
+        }
+
+        std::cout << "this job was not assigned to this printer." << std::endl;
+
+    }
+
+    bool Device::printJobPages(Job *jobPtr, unsigned int pages) {
+
+        REQUIRE(properlyInitialized(), "this printer was not properly initialized when calling printJob");
+        REQUIRE(jobPtr != nullptr, "job should be a valid job");
+        REQUIRE(pages > 0, "Pages to be printed should be positive");
+
+
+        if (jobPtrSet.count(jobPtr) != 0) {
+
+            if (pages < jobPtr->getRemainingPages()) {
+
+                jobPtr->printPages(pages);
+                return true;
+            } else {
+                return printJob(jobPtr);
+            }
+        }
+
+
+
+        logger.printerAssignmentError(std::cout, jobPtr->getJobNr());
+        return false;
+
+    }
+
+    void Device::printJobPages(unsigned int jobNr, unsigned int pages) {
+
+        //todo: simplify function. This function should be removed anyways so i'm not changing it
+
+        for (std::set<Job *>::iterator jobIt = jobPtrSet.begin(); jobIt != jobPtrSet.end(); jobIt++) {
+
+            if ((*jobIt)->getJobNr() == jobNr) {
+
+                (*jobIt)->printPages(pages);
+                return;
+            }
+
+        }
+
+        logger.printerAssignmentError(std::cout, jobNr);
+
+    }
+
+    bool Device::printCurrentJob() {
+
+        REQUIRE(properlyInitialized(), "printer not properly initialized when calling printcurrentjob");
+        REQUIRE(!jobPtrSet.empty(), "There should be at least 1 job in the queue");
+
+
+        bool printed = this->printJob(*jobPtrSet.begin());
+        ENSURE(printed, "Job was not correctly printed");
+        return printed;
+
+    }
+
+    bool Device::printCurrentJobPages(unsigned int pages) {
+
+        REQUIRE(properlyInitialized(), "printer not properly initialized when calling printcurrentjob");
+        REQUIRE(!jobPtrSet.empty(), "There should be at least 1 job in the queue");
+
+        bool printed = this->printJobPages(*jobPtrSet.begin(), pages);
+
+        ENSURE(printed, "job was not correctly printed");
+        return printed;
+
+
+
+    }
 
 
 } // System

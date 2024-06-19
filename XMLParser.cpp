@@ -69,7 +69,8 @@ namespace System {
                         readingCorrect = false;
 
                         errorstream << elemname << " should not be empty" << std::endl;
-                        return readingCorrect;
+                        break;
+                        //return readingCorrect;
                     } else {
 
                         if (elemname == "name") {
@@ -81,7 +82,8 @@ namespace System {
                             if (name_t.empty()) {
                                 errorstream << "Name should not be empty" << std::endl;
                                 readingCorrect = false;
-                                return readingCorrect;
+                                break;
+                                //return readingCorrect;
 
                             } else {
                                 name = name_t;
@@ -97,7 +99,9 @@ namespace System {
                             } else {
                                 errorstream << "Emissions should be positive" << std::endl;
                                 readingCorrect = false;
-                                return readingCorrect;
+                                break;
+
+                                //return readingCorrect;
 
 
                             }
@@ -109,11 +113,12 @@ namespace System {
                             } else {
                                 errorstream << "Cost should be positive" << std::endl;
                                 readingCorrect = false;
-                                return readingCorrect;
+                                break;
+                                //return readingCorrect;
 
 
                             }
-                            //TODO: check if correct, do we need to add cost?
+
                         } else if (elemname == "type") {
 
 
@@ -123,7 +128,8 @@ namespace System {
                             if (type_d.empty()) {
                                 errorstream << "Type should not be empty" << std::endl;
                                 readingCorrect = false;
-                                return readingCorrect;
+                                break;
+                                //return readingCorrect;
 
                             } else {
                                 if (type_d == "bw" || type_d == "scan" || type_d == "color") {
@@ -131,6 +137,8 @@ namespace System {
 
                                 } else {
                                     errorstream << "Invalid type for device" << std::endl;
+                                    readingCorrect = false;
+                                    break;
                                 }
                                 //std::cout << "type = " << type << std::endl;
                             }
@@ -141,14 +149,15 @@ namespace System {
                             } else {
                                 errorstream << "speed should be positive" << std::endl;
                                 readingCorrect = false;
-                                return readingCorrect;
+                                break;
+                                //return readingCorrect;
                             }
 
                         } else {
                             std::cout << "Element name " << elemname << " is either empty or an unexpected element name"
                                       << std::endl;
                             readingCorrect = false;
-                            continue;
+                            break;
                         }
 
                     }
@@ -158,19 +167,35 @@ namespace System {
                     Device *outPtr = nullptr;
 
                     if (type == "color") {
-                        outPtr = new CPrinter(name, emissions, speed, cost);
+                        if (emissions <= 23) {
+                            outPtr = new CPrinter(name, emissions, speed, cost);
+                        }else{
+                            errorstream << "Emissions for printer " << name << " are beyond acceptable levels" << std::endl;
+                        }
                     } else if (type == "bw") {
-                        outPtr = new BWPrinter(name, emissions, speed, cost);
+                        if (emissions <= 8) {
+                            outPtr = new BWPrinter(name, emissions, speed, cost);
+                        }else{
+                            errorstream << "Emissions for printer " << name << " are beyond acceptable levels" << std::endl;
+                        }
                     } else if (type == "scan") {
-                        outPtr = new Scanner(name, emissions, speed, cost);
+                        if (emissions <= 12) {
+                            outPtr = new Scanner(name, emissions, speed, cost);
+                        }else{
+                            errorstream << "Emissions for printer " << name << " are beyond acceptable levels" << std::endl;
+                        }
                     }
 
 
-                    ownSystem->addDevice(outPtr);
+                    if (outPtr != nullptr) {
+                        ownSystem->addDevice(outPtr);
 
-
-                    deviceList.push_back(*outPtr);
-
+                        //todo: check whether deviceList is ever used;
+                        deviceList.push_back(*outPtr);
+                    }
+                }
+                else{
+                    errorstream << "there was an error in a device in the inputfile" << std::endl;
                 }
 
 
@@ -278,8 +303,6 @@ namespace System {
                         ownSystem->addJob(outJobPtr);
 
 
-                        jobList.push_back(tempJob);
-
                         jobNrSet.insert(jobNr);
 
                     } else {
@@ -303,12 +326,6 @@ namespace System {
 
         }
 
-
-        //Realistically atm we only ever have 1 device, so this will work, but it won't be good
-
-
-
-        //ownSystem->takeParseInput(deviceList.back(), jobList);
 
         return true;
     }

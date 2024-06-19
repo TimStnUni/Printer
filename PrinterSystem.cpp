@@ -4,6 +4,8 @@
 
 #include "PrinterSystem.h"
 
+//todo: add ways to delete jobs and devices
+
 namespace System {
 
     PrinterSystem::PrinterSystem() {
@@ -54,10 +56,10 @@ namespace System {
         for (std::set<unsigned int>::reverse_iterator jobnrIt = jobNrSet.rbegin();
              jobnrIt != jobNrSet.rend(); jobnrIt++) {
 
-            for (std::vector<Job *>::iterator jobsIt = jobVect.begin(); jobsIt != jobVect.end(); jobsIt++) {
+            for (std::set<Job *>::iterator jobsIt = jobVect.begin(); jobsIt != jobVect.end(); jobsIt++) {
 
                 if ((*jobsIt)->getJobNr() == *jobnrIt) {
-                    system_scheduler.schedule((*jobsIt));
+                    system_scheduler.schedule(*jobsIt, &deviceVect);
                 }
             }
 
@@ -84,15 +86,14 @@ namespace System {
     }
 
 
-    void PrinterSystem::doPrintJob(unsigned int jobnr, std::ostream &writeStream, bool eraseBool) {
+    void PrinterSystem::doPrintJob(unsigned int jobNr, std::ostream &writeStream, bool eraseBool) {
+
+        Job * jobptr = nullptr;
 
 
-        std::vector<Job *>::iterator jobPoint;
-
-
-        for (std::vector<Job *>::iterator jobIt = this->jobVect.begin(); jobIt != this->jobVect.end(); ++jobIt) {
-            if ((*jobIt)->getJobNr() == jobnr) {
-                jobPoint = jobIt;
+        for (std::set<Job *>::iterator jobIt = this->jobVect.begin(); jobIt != this->jobVect.end(); ++jobIt) {
+            if ((*jobIt)->getJobNr() == jobNr) {
+                jobptr = *jobIt;
                 break;
             }
             if (jobIt == (this->jobVect.end())) {
@@ -102,92 +103,56 @@ namespace System {
         }
 
 
-        if (this->jobNrSet.find(jobnr) != jobNrSet.end()) {
+        this->doPrintJob(jobptr, writeStream, eraseBool);
+
+
+    }
+
+    void PrinterSystem::doPrintJob(Job *jobptr, std::ostream &writeStream, bool eraseBool) {
+
+
+        if (this->jobNrSet.find(jobptr->getJobNr()) != jobNrSet.end()) {
+            //todo: change this implementation
             //This means the job has not yet been scheduled
-            system_scheduler.schedule((*jobPoint));
+            system_scheduler.schedule(jobptr, &deviceVect);
         }
 
 
-        Device *printPoint = (*jobPoint)->getOwnDevice();
+        Device *printPoint = jobptr->getOwnDevice();
 
-
-        //This rerouting is already done in scheduler now.
-
-
-
-        if ((*jobPoint)->getType() != printPoint->getType()) {
-
-
-            std::cerr << "types don't match" << std::endl;
-            for (std::vector<Device *>::iterator devIt = this->deviceVect.begin();
-                 devIt != this->deviceVect.end(); devIt++) {
-
-                if ((*devIt)->getType() == (*jobPoint)->getType()) {
-                    (*jobPoint)->setOwnDevice((*devIt));
-                    printPoint = (*jobPoint)->getOwnDevice();
-                    std::cerr << "Rerouting to device \"" << printPoint->getNameDev() << "\"" << std::endl;
-                    break;
-                }
-                if (devIt == (this->deviceVect.end() - 1)) {
-                    std::cerr << "No viable replacement device found, aborting print job " << (*jobPoint)->getJobNr()
-                              << " from user " << (*jobPoint)->getUserName() << std::endl;
-                    return;
-                }
-
-            }
-
-        }
-
-
-        int pages = (*jobPoint)->getPageCount();
-
-
-        while (pages > 0) {
-            pages--;
-        }
-
+        jobptr->printFull();
 
         std::string printType;
 
-        if ((*jobPoint)->getType() == "bw") {
+        if (jobptr->getType() == "bw") {
             printType = "black-and-white-printing ";
-        } else if ((*jobPoint)->getType() == "color") {
+        } else if (jobptr->getType() == "color") {
             printType = "color-printing ";
-        } else if ((*jobPoint)->getType() == "scan") {
+        } else if (jobptr->getType() == "scan") {
             printType = "scanning ";
         }
+        float newCO2 = (float)(jobptr->getPageCount()) * (float)(printPoint->getEmissions());
 
-        writeStream << "Printer \"" << printPoint->getNameDev() << "\" finished " << printType << "job:\n";
-        writeStream << "  Number: " << jobnr << "\n";
-        writeStream << "  Submitted by \"" << (*jobPoint)->getUserName() << "\"\n";
-        writeStream << "  " << (*jobPoint)->getPageCount() << " pages\n";
-
-
-        float newCO2 = (float)((*jobPoint)->getPageCount()) * (float)(printPoint->getEmissions());
-
-        writeStream << "  Job CO2 emissions: " << newCO2 << " gram\n";
-        writeStream << std::endl;
+        logger.dispPrintJob(writeStream, jobptr->getJobNr(), printPoint->getNameDev(), jobptr->getUserName(), printType, jobptr->getPageCount(), newCO2);
 
         //Increment CO2 emissions
         totalCO2_system += newCO2;
 
         //std::cout << "total CO2 emissions for now " << totalCO2_system << std::endl;
 
-
-
         if (eraseBool) {
 
             // Remove the job number from the jobNrSet and jobNrMap
             //This is now already done in scheduler
-            jobNrSet.erase(jobnr);
+            //I think this should only be done here
+            jobNrSet.erase(jobptr->getJobNr());
 
             //TODO: Figure out why erasing seems to miss.
             //jobVect.erase(jobPoint);
-            (*jobPoint)->getOwnDevice()->removeJob(jobnr);
+
         }
-
-
     }
+
 
     void PrinterSystem::printAll(std::ostream &writeStream) {
         REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to print all jobs");
@@ -211,10 +176,10 @@ namespace System {
 
         REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to add a job");
 
-        this->jobVect.emplace_back(inJob);
+        this->jobVect.insert(inJob);
 
 
-        ENSURE(jobVect.back() == inJob, "Job was not correctly added");
+        ENSURE(jobVect.count(inJob) !=0, "Job was not correctly added");
 
 
     }
@@ -224,10 +189,10 @@ namespace System {
         REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to add a device");
         //REQUIRE(inDevice != nullptr, "input device should not be a nullptr");
 
-        this->deviceVect.emplace_back(inDevice);
+        this->deviceVect.insert(inDevice);
 
 
-        ENSURE(deviceVect.back() == inDevice, "Device was not correctly added");
+        ENSURE(deviceVect.count(inDevice) != 0, "Device was not correctly added");
 
 
     }
@@ -245,6 +210,25 @@ namespace System {
 
 
     }
+
+    std::set<Device *> *PrinterSystem::getDeviceVector() {
+        return &(deviceVect);
+    }
+
+    std::set<Job *> *PrinterSystem::getJobVector() {
+        return &(jobVect);
+    }
+
+    void PrinterSystem::testPrinting() {
+
+
+        std::cout << (*this->deviceVect.begin())->jobPtrSet.size() << std::endl;
+
+        (*this->deviceVect.begin())->printAllJobs();
+
+    }
+
+
 
 
 }

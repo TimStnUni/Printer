@@ -20,6 +20,8 @@
 
 #include "InfoPrinter.h"
 #include "Scheduler.h"
+#include "Logger.h"
+
 #include "DesignByContract.h"
 
 
@@ -29,9 +31,9 @@ namespace System {
     class PrinterSystem {
 
         //Todo: Remove friend classes
-        friend class Device;
-        friend class Scheduler;
-        friend class InfoPrinter;
+        //friend class Device;
+        //friend class Scheduler;
+        //friend class InfoPrinter;
 
     public:
         //Should simply always be running, no input in constructor.
@@ -66,12 +68,22 @@ namespace System {
 
 
         /**
-         * \brief Function that executes a print job.
+         * \brief Function that executes a print job via jobnr for testing.
          * @param jobnr JobNr of the job to be executed
          * @param writeStream Stream where the output is stored
          * REQUIRE(properlyInitialized()
          */
         void doPrintJob(unsigned int jobnr, std::ostream &writeStream, bool erasebool = true);
+
+        /**
+         * \brief Function that executes a print job via jobnr for testing.
+         * @param jobnr JobNr of the job to be executed
+         * @param writeStream Stream where the output is stored
+         * REQUIRE(properlyInitialized()
+         * ENSURE(job is removed)
+         */
+
+        void doPrintJob(Job * inJob, std::ostream &writeStream, bool erasebool = true);
 
         /**
          * \brief Loops over all jobs and prints that they are finished.
@@ -100,20 +112,14 @@ namespace System {
 
 
 
-        /**
-         * \brief Function that takes input from the parsing. Currently still using an outdated plan for parser, but still works.
-         * @param inDev Single inputdevice. Technically means we cannot read files with only jobs.
-         * @param inJobs Vector of inputjobs. Handles 0 jobs just fine.
-         * REQUIRE(properlyInitialized(), "System wasn't properly initialized when attempting to add devices and jobs")
-         * ENSURE is handles by its subdivisions addDevice and addJob. Could change those functions to return a bool and
-         * ENSURE that the sum of those bools is true or something
-         */
 
-        void takeParseInput(Device * inDev, std::vector<Job*>& inJobs);
+        void testPrinting();
 
 
 
+        std::set<Device*> * getDeviceVector();
 
+        std::set<Job*> * getJobVector();
 
 
 
@@ -122,15 +128,18 @@ namespace System {
         float totalCO2_system = 0;
 
         std::set<unsigned int> jobNrSet;
-        std::vector<Job*> jobVect;
+        std::set<unsigned int> jobNrUnscheduled;
+
+        std::set<Job*> jobVect;
 
 
-        std::vector<Device*> deviceVect;
+        std::set<Device*> deviceVect;
 
 
         Scheduler system_scheduler;
         bool properlyInitialized();
 
+        Logger logger;
 
         PrinterSystem *_initcheck;
     };

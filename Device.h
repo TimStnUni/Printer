@@ -9,6 +9,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <set>
+
+#include "Logger.h"
 
 
 
@@ -109,7 +112,7 @@ namespace System {
          */
         int getSpeed() const;
 
-        //TODO:: filled it in, has to get checked
+
         /**
          * \brief A setter function for the printer speed
          * @param type_in
@@ -160,7 +163,8 @@ namespace System {
          * \brief function to add a job to the queue for this device
          * @param jobIn
          * REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to add job")
-         * ENSURE(*jobPtrList.back() == *jobIn, "Job was not correctly added")
+         * REQUIRE(jobIn != nullptr, "job should be a valid job")
+         * ENSURE(*jobPtrSet.back() == *jobIn, "Job was not correctly added")
          */
         void addJob(Job * jobIn);
 
@@ -169,31 +173,79 @@ namespace System {
 
 
 
-        //void addJob(PrinterSystem * ownSystem);
-
-
-        /**
-         * \brief overloaded equality operator for getters
-         * @param d device to be compared
-         * @return boolean true or false
-         */
-
-        bool operator == (const Device &d){
-            if (name == d.name && emissions == d.emissions && speed == d.speed){
-                return true;
-            }
-            return false;
-        }
-
 
         /**
          * \brief Function to remove a job from the queue
          * @param jobnr
-         * REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to remove a job from queu")
+         * REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to remove a job from queue")
+         * REQUIRE(jobptr != nullptr, "job should be a valid job")
          * ENSURE should check that it was actually removed, this is currently not done
          */
 
-        void removeJob(unsigned int jobnr);
+        void removeJob(Job * jobptr);
+
+
+        /**
+         * \brief Function to finish the queue of jobs for this printer
+         * REQUIRE(properlyInitialized(), "device was not properly initialized when attepting to finish the queue");
+         * ENSURE(jobPtrSet.empty(), "Not all jobs were correctly printed");
+         */
+
+        void printAllJobs();
+
+
+
+        /**
+         * \brief Function to print a specific job assigned to this printer
+         * @param jobPtr : ptr to job to be printed
+         * REQUIRE(properlyInitialized(), "this printer was not properly initialized when calling printJob");
+         * REQUIRE(jobPtr != nullptr, "job should be a valid job");
+         * ENSURE(jobPtrSet.count(jobPtr) == 0, "Job was not correctly removed")
+         */
+        bool printJob(Job * jobPtr);
+
+
+        /**
+         * Function that prints the job currently first in queue
+         * REQUIRE(properlyInitialized(), "printer not properly initialized when calling printcurrentjob");
+         * REQUIRE(!jobPtrSet.empty(), "There should be at least 1 job in the queue");
+         * ENSURE(printed, "Job was not correctly printed");
+         * @return
+         */
+
+        bool printCurrentJob();
+
+
+        /**
+         * Function that prints a certain amount of pages for a job
+         * @param jobPtr : ptr to the job to be printed
+         * @param pages : amount of pages to be printed
+         * REQUIRE(properlyInitialized(), "this printer was not properly initialized when calling printJob");
+         * REQUIRE(jobPtr != nullptr, "job should be a valid job");
+         * REQUIRE(pages > 0, "Pages to be printed should be positive");
+         * @return
+         */
+
+        bool printJobPages(Job * jobPtr, unsigned int pages);
+
+
+        /**
+         * Function that prints a certain amount of pages for the job currently first in queue
+         * @param pages : amount of pages to be printed
+         * REQUIRE(properlyInitialized(), "printer not properly initialized when calling printcurrentjob");
+         * REQUIRE(!jobPtrSet.empty(), "There should be at least 1 job in the queue");
+         * ENSURE(printed, "job was not correctly printed");
+         * @return
+         */
+
+        bool printCurrentJobPages(unsigned int pages);
+
+
+        void printJob(unsigned int jobNr);
+
+
+
+        void printJobPages(unsigned int jobNr, unsigned int pages);
 
 
         /**
@@ -203,6 +255,19 @@ namespace System {
          */
 
         Device& operator=(Device const & inDevice);
+
+        /**
+         * \brief overloaded equality operator for getters
+         * @param d device to be compared
+         * @return boolean true or false
+         */
+        bool operator == (const Device &d){
+            if (name == d.name && emissions == d.emissions && speed == d.speed && type == d.type){
+                return true;
+            }
+            return false;
+        }
+
 
         bool properlyInitialized() const;
 
@@ -217,10 +282,10 @@ namespace System {
 
 
 
-        std::vector<System::Job *> jobPtrList;
+        std::set<System::Job *> jobPtrSet;
 
 
-
+        System::Logger logger;
 
     };
 

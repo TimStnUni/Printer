@@ -14,6 +14,7 @@ Office_Printer8
         [Job #89751]
             * Owner: SergeDemeyer
             * Total Pages: 2
+            * Pages Printed: 0
             * Type: Black-and-white job
             * Device: Office_Printer8
             * Total CO2: 10
@@ -22,6 +23,7 @@ Office_Printer8
         [Job #2189]
             * Owner: anonymous_user
             * Total Pages: 3
+            * Pages Printed: 0
             * Type: Black-and-white job
             * Device: Office_Printer8
             * Total CO2: 15

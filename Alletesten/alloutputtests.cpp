@@ -61,7 +61,7 @@ TEST_F(OutputTests, SingleJobTest){
 }
 
 /**
- * Tests if the function printAll works correctly and has the right output
+ * Tests if the function printFull works correctly and has the right output
  */
 
 TEST_F(OutputTests, AllJobTest){

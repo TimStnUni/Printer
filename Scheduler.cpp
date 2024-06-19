@@ -11,6 +11,8 @@ namespace System {
 
         _initcheck = this;
 
+
+        //Test whether this is still required
         this->ownSystem = PrintSystem;
 
 
@@ -24,7 +26,7 @@ namespace System {
         return (this == _initcheck);
     }
 
-    void Scheduler::schedule(Job * jobIn) {
+    void Scheduler::schedule(Job * jobIn, std::set<Device *> * devVect) {
 
 
 
@@ -33,21 +35,25 @@ namespace System {
         //This should be reworked to jobnr's;
 
 
+
+
         std::string jobType = jobIn->getType();
 
-        std::vector<Device*>::iterator stopIt = ownSystem->deviceVect.end();
+
+
+        std::set<Device*>::iterator stopIt = devVect->end();
 
         int pageQueue = INT_MAX;
 
 
-        for (std::vector<Device*>::iterator devIt = ownSystem->deviceVect.begin(); devIt!=ownSystem->deviceVect.end(); devIt++){
+        for (std::set<Device*>::iterator devIt = devVect->begin(); devIt!=devVect->end(); devIt++){
 
             if ((*devIt)->getTotalPages() < pageQueue && (*devIt)->getType() == jobType){
                 pageQueue = (*devIt)->getTotalPages();
                 stopIt = devIt;
             }
         }
-        if (stopIt == ownSystem->deviceVect.end()){
+        if (stopIt == devVect->end()){
             std::cerr << "No suitable device found for job " << jobIn->getJobNr() << std::endl;
             return;
         }else{
@@ -55,13 +61,14 @@ namespace System {
             jobIn->setOwnDevice((*stopIt));
 
             //Job is now scheduled and should be removed from jobnrset
+            //Todo: split between jobnrset (which is deleted when print happens) and unscheduled jobset (which gets removed from here)
             //ownSystem->jobNrSet.erase(jobIn->getJobNr());
 
 
         }
 
 
-
+        ENSURE(jobIn->getOwnDevice() != nullptr, "Job was not assigned to a device, even though the error path was not triggered");
 
 
     }
