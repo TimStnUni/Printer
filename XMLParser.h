@@ -39,7 +39,7 @@ namespace System {
          * ENSURE(properlyInitialized(), "Parser not properly initialized");
 
          */
-        XMLParser(const char *filename, PrinterSystem * system);
+        XMLParser(const char *filename);
 
         /**
          * \brief Additional way to read an XML File through the parser, never used
@@ -57,7 +57,7 @@ namespace System {
          * @return
          * REQUIRE(this->properlyInitialized, "XMLParser wasn't properly initialized)
          */
-        std::vector<Device> getDeviceList();
+        std::set<Device*>* getDeviceList();
 
 
         /**
@@ -67,16 +67,9 @@ namespace System {
          */
 
 
-        std::vector<Job> getJobList();
+        std::set<Job*>* getJobList();
 
 
-        /**
-         * \brief Getter function for the map of jobNr's to jobs, shouldn't be used any longer
-         * @return
-         * //REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getJobNrList()")
-         */
-
-        std::map<unsigned int, unsigned int> getJobNrMap();
 
         /**
          * \brief Getter function for the set of jobnr's. Might still be usable?
@@ -101,7 +94,7 @@ namespace System {
          * @return
          */
 
-        bool isParseSuccessful() const;
+        bool isConsistent() const;
 
 
 
@@ -124,12 +117,12 @@ namespace System {
         TiXmlDocument InputDoc;
 
 
-        PrinterSystem * ownSystem;
+
 
         //new datamembers
-        std::vector<Device> deviceList;
-        std::vector<Job> jobList;
-        std::map<unsigned int, unsigned int> jobNrMap;
+        std::set<Device*> deviceList;
+        std::set<Job*> jobList;
+
         std::set<unsigned int> jobNrSet;
 
 

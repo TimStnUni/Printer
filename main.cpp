@@ -47,7 +47,7 @@ int main() {
 
     if(consistent){
         //Usecase 2: Basic info about the printer system
-        //testSystem.getInfo(std::cout, "ASCII");
+        testSystem.getInfo(std::cout, "ASCII");
 
         //Usecase 3.1: manual processing
         testSystem.doPrintJob(2189, outFile);
