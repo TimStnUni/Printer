@@ -4,6 +4,8 @@
 
 #include "PrinterSystem.h"
 
+//todo: add ways to delete jobs and devices
+
 namespace System {
 
     PrinterSystem::PrinterSystem() {
@@ -54,7 +56,7 @@ namespace System {
         for (std::set<unsigned int>::reverse_iterator jobnrIt = jobNrSet.rbegin();
              jobnrIt != jobNrSet.rend(); jobnrIt++) {
 
-            for (std::vector<Job *>::iterator jobsIt = jobVect.begin(); jobsIt != jobVect.end(); jobsIt++) {
+            for (std::set<Job *>::iterator jobsIt = jobVect.begin(); jobsIt != jobVect.end(); jobsIt++) {
 
                 if ((*jobsIt)->getJobNr() == *jobnrIt) {
                     system_scheduler.schedule(*jobsIt, &deviceVect);
@@ -92,7 +94,7 @@ namespace System {
         Job * jobptr = nullptr;
 
 
-        for (std::vector<Job *>::iterator jobIt = this->jobVect.begin(); jobIt != this->jobVect.end(); ++jobIt) {
+        for (std::set<Job *>::iterator jobIt = this->jobVect.begin(); jobIt != this->jobVect.end(); ++jobIt) {
             if ((*jobIt)->getJobNr() == jobNr) {
                 jobptr = *jobIt;
                 break;
@@ -160,7 +162,7 @@ namespace System {
         }
 
         writeStream << "Printer \"" << printPoint->getNameDev() << "\" finished " << printType << "job:\n";
-        writeStream << "  Number: " << jobptr << "\n";
+        writeStream << "  Number: " << jobptr->getJobNr() << "\n";
         writeStream << "  Submitted by \"" << jobptr->getUserName() << "\"\n";
         writeStream << "  " << jobptr->getPageCount() << " pages\n";
 
@@ -214,10 +216,10 @@ namespace System {
 
         REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to add a job");
 
-        this->jobVect.emplace_back(inJob);
+        this->jobVect.insert(inJob);
 
 
-        ENSURE(jobVect.back() == inJob, "Job was not correctly added");
+        ENSURE(jobVect.count(inJob) !=0, "Job was not correctly added");
 
 
     }
@@ -227,10 +229,10 @@ namespace System {
         REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to add a device");
         //REQUIRE(inDevice != nullptr, "input device should not be a nullptr");
 
-        this->deviceVect.emplace_back(inDevice);
+        this->deviceVect.insert(inDevice);
 
 
-        ENSURE(deviceVect.back() == inDevice, "Device was not correctly added");
+        ENSURE(deviceVect.count(inDevice) != 0, "Device was not correctly added");
 
 
     }
@@ -249,17 +251,19 @@ namespace System {
 
     }
 
-    std::vector<Device *> *PrinterSystem::getDeviceVector() {
+    std::set<Device *> *PrinterSystem::getDeviceVector() {
         return &(deviceVect);
     }
 
-    std::vector<Job *> *PrinterSystem::getJobVector() {
+    std::set<Job *> *PrinterSystem::getJobVector() {
         return &(jobVect);
     }
 
     void PrinterSystem::testPrinting() {
 
-        this->jobVect.front()->printFull();
+
+
+        (*this->deviceVect.begin())->printAllJobs();
 
     }
 

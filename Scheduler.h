@@ -35,11 +35,14 @@ namespace System {
 
         /**
          * \brief Function that assigns a job for the ownerSystem to a printer
-         * @param jobIn
+         * @param jobIn: pointer to job that needs to be scheduled
+         * @param devVect: pointer to container of all devices
          * REQUIRE(properlyInitialized(), "Scheduler not properly initialized when attempting to schedule a job")
-         * ENSURE should check that job was actually assigned
+         * ENSURE(jobIn->getOwnDevice() != nullptr, "Job was not assigned to a device, even though the error path was not triggered");
          */
-        void schedule(Job * jobIn, std::vector<Device *> * devVect);
+
+        //todo: maybe split devVect into a setter function?
+        void schedule(Job * jobIn, std::set<Device *> * devVect);
 
 
         /**

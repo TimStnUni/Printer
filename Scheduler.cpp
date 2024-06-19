@@ -26,7 +26,7 @@ namespace System {
         return (this == _initcheck);
     }
 
-    void Scheduler::schedule(Job * jobIn, std::vector<Device *> * devVect) {
+    void Scheduler::schedule(Job * jobIn, std::set<Device *> * devVect) {
 
 
 
@@ -41,12 +41,12 @@ namespace System {
 
 
 
-        std::vector<Device*>::iterator stopIt = devVect->end();
+        std::set<Device*>::iterator stopIt = devVect->end();
 
         int pageQueue = INT_MAX;
 
 
-        for (std::vector<Device*>::iterator devIt = devVect->begin(); devIt!=devVect->end(); devIt++){
+        for (std::set<Device*>::iterator devIt = devVect->begin(); devIt!=devVect->end(); devIt++){
 
             if ((*devIt)->getTotalPages() < pageQueue && (*devIt)->getType() == jobType){
                 pageQueue = (*devIt)->getTotalPages();
@@ -68,7 +68,7 @@ namespace System {
         }
 
 
-
+        ENSURE(jobIn->getOwnDevice() != nullptr, "Job was not assigned to a device, even though the error path was not triggered");
 
 
     }

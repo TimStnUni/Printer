@@ -159,7 +159,7 @@ namespace System {
             return false;
         }else{
             //todo: replace with logger
-            std::cout << "job has been fully printed";
+            std::cout << "job has been fully printed" << std::endl;
             return true;
         }
 

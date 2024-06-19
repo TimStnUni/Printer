@@ -29,7 +29,7 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
     outfile << "   --=== Printers: ===--\n" << std::endl;
 
 
-    for (std::vector<Device*>::iterator printIt = ownSystem->getDeviceVector()->begin(); printIt != ownSystem->getDeviceVector()->end(); ++printIt) {
+    for (std::set<Device*>::iterator printIt = ownSystem->getDeviceVector()->begin(); printIt != ownSystem->getDeviceVector()->end(); ++printIt) {
 
         //TODO: layout aanpassen?
 
@@ -60,7 +60,7 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
 
     outfile << "      --=== Jobs ===--\n" << std::endl;
 
-    for (std::vector<Job*>::iterator jobIt = ownSystem->getJobVector()->begin();
+    for (std::set<Job*>::iterator jobIt = ownSystem->getJobVector()->begin();
          jobIt != ownSystem->getJobVector()->end(); ++jobIt) {
 
         std::string jobType;

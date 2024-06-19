@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <set>
 
 
 
@@ -160,7 +161,7 @@ namespace System {
          * \brief function to add a job to the queue for this device
          * @param jobIn
          * REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to add job")
-         * ENSURE(*jobPtrList.back() == *jobIn, "Job was not correctly added")
+         * ENSURE(*jobPtrSet.back() == *jobIn, "Job was not correctly added")
          */
         void addJob(Job * jobIn);
 
@@ -229,7 +230,7 @@ namespace System {
 
 
 
-        std::vector<System::Job *> jobPtrList;
+        std::set<System::Job *> jobPtrSet;
 
 
 

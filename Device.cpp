@@ -85,13 +85,13 @@ namespace System {
         this->setSpeed(speed_in);
         this->setType(type_in);
         this->setCost(cost_in);
-        this->jobPtrList = inDevice.jobPtrList;
+        this->jobPtrSet = inDevice.jobPtrSet;
 
 
         /*
          * Pointer bullshittery that should no longer be needed
-        for (std::vector<Job *>::const_iterator ptrIt = inDevice.jobPtrList.begin();
-             ptrIt != inDevice.jobPtrList.end(); ++ptrIt) {
+        for (std::vector<Job *>::const_iterator ptrIt = inDevice.jobPtrSet.begin();
+             ptrIt != inDevice.jobPtrSet.end(); ++ptrIt) {
             (*ptrIt)->setOwnDevice(this);
         }
         */
@@ -149,7 +149,7 @@ namespace System {
     /*
     void Device::addJob(PrinterSystem *ownSystem) {
 
-        this->jobPtrList.push_back(&*(ownSystem->jobVect.end() - 1));
+        this->jobPtrSet.push_back(&*(ownSystem->jobVect.end() - 1));
 
 
     }
@@ -166,16 +166,16 @@ namespace System {
         outDevice.speed = inDevice.getSpeed();
         outDevice.cost = inDevice.getCost();
         outDevice.type = inDevice.getType();
-        outDevice.jobPtrList = inDevice.jobPtrList;
+        outDevice.jobPtrSet = inDevice.jobPtrSet;
         outDevice._initCheck = &outDevice;
 
         /*
 
 
-         if (inDevice.jobPtrList.size()>0) {
+         if (inDevice.jobPtrSet.size()>0) {
 
-            for (std::vector<Job *>::const_iterator ptrIt = inDevice.jobPtrList.begin();
-                 ptrIt != inDevice.jobPtrList.end(); ++ptrIt) {
+            for (std::vector<Job *>::const_iterator ptrIt = inDevice.jobPtrSet.begin();
+                 ptrIt != inDevice.jobPtrSet.end(); ++ptrIt) {
                 (*ptrIt)->setOwnDevice(this);
             }
         }
@@ -189,7 +189,7 @@ namespace System {
 /*
     void Device::updatePointer(Job *inPointer, const Job *prevPointer) {
 
-        for (std::vector<Job *>::iterator ptrIt = this->jobPtrList.begin(); ptrIt != this->jobPtrList.end(); ++ptrIt) {
+        for (std::vector<Job *>::iterator ptrIt = this->jobPtrSet.begin(); ptrIt != this->jobPtrSet.end(); ++ptrIt) {
 
             if ((*ptrIt) == prevPointer) {
                 *ptrIt = inPointer;
@@ -204,18 +204,19 @@ namespace System {
 
         REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to remove a job from queu");
 
-        for (std::vector<Job *>::iterator ptrIt = this->jobPtrList.begin(); ptrIt != this->jobPtrList.end(); ++ptrIt) {
 
-            if ((*ptrIt) == jobptr) {
-                this->jobPtrList.erase(ptrIt);
-                break;
-            }
-            if (ptrIt == (this->jobPtrList.end() - 1)) {
-                std::cerr << "jobNr not found, mysterious" << std::endl;
-                return;
-            }
+        if (jobPtrSet.count(jobptr)) {
+            jobPtrSet.erase(jobptr);
+        }else{
+            //todo: replace with logger
+
+            std::cout << "this job was not attached to this printer" << std::endl;
 
         }
+
+
+        ENSURE(jobPtrSet.count(jobptr) == 0, "job was not properly removed from device");
+
 
     }
 
@@ -225,8 +226,8 @@ namespace System {
 
         int pages = 0;
 
-        if (this->jobPtrList.size() > 0) {
-            for (std::vector<Job *>::iterator jobIt = jobPtrList.begin(); jobIt != jobPtrList.end(); jobIt++) {
+        if (this->jobPtrSet.size() > 0) {
+            for (std::set<Job *>::iterator jobIt = jobPtrSet.begin(); jobIt != jobPtrSet.end(); jobIt++) {
                 pages += (*jobIt)->getPageCount();
             }
             return pages;
@@ -242,17 +243,27 @@ namespace System {
         REQUIRE(this->properlyInitialized(), "Device was not properly initialized when attempting to add a job");
 
 
-        this->jobPtrList.push_back(jobIn);
+        if ((this->jobPtrSet.insert(jobIn)).second){
 
-        ENSURE(*jobPtrList.back() == *jobIn, "Job was not correctly added");
+        };
+
+        ENSURE(jobPtrSet.count(jobIn) == 1, "Job was not correctly added");
 
     }
 
     void Device::printAllJobs() {
 
-        for (std::vector<Job *>::iterator jobIt = jobPtrList.begin(); jobIt!= jobPtrList.end(); jobIt++){
+
+        std::set<Job *>::iterator jobIt = jobPtrSet.begin();
+
+
+
+        while (jobIt != jobPtrSet.end()){
 
             (*jobIt)->printFull();
+
+            jobPtrSet.erase(jobIt++);
+
 
             //todo: this should probably delete jobs from itself, the function calling it will delete them from system
         }
@@ -264,7 +275,7 @@ namespace System {
 
         //todo: replace jobPtrVect with set to make this significantly simpler (simple check for insertion or contains)
 
-        for (std::vector<Job*>::iterator jobIt = jobPtrList.begin(); jobIt != jobPtrList.end(); jobIt++){
+        for (std::set<Job*>::iterator jobIt = jobPtrSet.begin(); jobIt != jobPtrSet.end(); jobIt++){
 
             if (*jobIt == jobPtr){
 
@@ -281,7 +292,7 @@ namespace System {
 
         //todo: simplify function
 
-        for (std::vector<Job*>::iterator jobIt = jobPtrList.begin(); jobIt != jobPtrList.end(); jobIt++){
+        for (std::set<Job*>::iterator jobIt = jobPtrSet.begin(); jobIt != jobPtrSet.end(); jobIt++){
 
             if ((*jobIt)->getJobNr() == jobNr){
 
@@ -299,7 +310,7 @@ namespace System {
 
         //todo: replace jobPtrVect with set to make this significantly simpler (simple check for insertion or contains)
 
-        for (std::vector<Job*>::iterator jobIt = jobPtrList.begin(); jobIt != jobPtrList.end(); jobIt++){
+        for (std::set<Job*>::iterator jobIt = jobPtrSet.begin(); jobIt != jobPtrSet.end(); jobIt++){
 
             if (*jobIt == jobPtr){
 
@@ -318,7 +329,7 @@ namespace System {
 
         //todo: simplify function
 
-        for (std::vector<Job*>::iterator jobIt = jobPtrList.begin(); jobIt != jobPtrList.end(); jobIt++){
+        for (std::set<Job*>::iterator jobIt = jobPtrSet.begin(); jobIt != jobPtrSet.end(); jobIt++){
 
             if ((*jobIt)->getJobNr() == jobNr){
 

@@ -105,9 +105,9 @@ namespace System {
 
 
 
-        std::vector<Device*> * getDeviceVector();
+        std::set<Device*> * getDeviceVector();
 
-        std::vector<Job*> * getJobVector();
+        std::set<Job*> * getJobVector();
 
 
 
@@ -116,10 +116,11 @@ namespace System {
         float totalCO2_system = 0;
 
         std::set<unsigned int> jobNrSet;
-        std::vector<Job*> jobVect;
+
+        std::set<Job*> jobVect;
 
 
-        std::vector<Device*> deviceVect;
+        std::set<Device*> deviceVect;
 
 
         Scheduler system_scheduler;
