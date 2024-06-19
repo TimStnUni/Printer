@@ -66,12 +66,22 @@ namespace System {
 
 
         /**
-         * \brief Function that executes a print job.
+         * \brief Function that executes a print job via jobnr for testing.
          * @param jobnr JobNr of the job to be executed
          * @param writeStream Stream where the output is stored
          * REQUIRE(properlyInitialized()
          */
         void doPrintJob(unsigned int jobnr, std::ostream &writeStream, bool erasebool = true);
+
+        /**
+         * \brief Function that executes a print job via jobnr for testing.
+         * @param jobnr JobNr of the job to be executed
+         * @param writeStream Stream where the output is stored
+         * REQUIRE(properlyInitialized()
+         * ENSURE(job is removed)
+         */
+
+        void doPrintJob(Job * inJob, std::ostream &writeStream, bool erasebool = true);
 
         /**
          * \brief Loops over all jobs and prints that they are finished.
@@ -116,6 +126,7 @@ namespace System {
         float totalCO2_system = 0;
 
         std::set<unsigned int> jobNrSet;
+        std::set<unsigned int> jobNrUnscheduled;
 
         std::set<Job*> jobVect;
 

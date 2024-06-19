@@ -196,5 +196,9 @@ namespace System {
 
     }
 
+    unsigned int Job::getRemainingPages() const {
+        return currentPageCount;
+    }
+
 
 } // System

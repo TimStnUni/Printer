@@ -4,7 +4,8 @@
 
 #include "Device.h"
 #include "Job.h"
-#include "PrinterSystem.h"
+//#include "PrinterSystem.h"
+
 
 namespace System {
 
@@ -13,7 +14,7 @@ namespace System {
         REQUIRE(emissions_in > 0, "Emissions should be positive");
         REQUIRE(speed_in > 0, "Speed should be positive");
         REQUIRE(!type_in.empty(), "type should not be blank");
-        REQUIRE(cost_in>0, "Cost should be positive");
+        REQUIRE(cost_in > 0, "Cost should be positive");
         REQUIRE(!(name_in.empty()), "name shouldn't be empty");
         _initCheck = this;
 
@@ -184,8 +185,6 @@ namespace System {
     }
 
 
-
-
 /*
     void Device::updatePointer(Job *inPointer, const Job *prevPointer) {
 
@@ -200,18 +199,16 @@ namespace System {
     }
     */
 
-    void Device::removeJob(Job * jobptr) {
+    void Device::removeJob(Job *jobptr) {
 
         REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to remove a job from queu");
-
+        REQUIRE(jobptr != nullptr, "job should be a valid job");
 
         if (jobPtrSet.count(jobptr)) {
             jobPtrSet.erase(jobptr);
-        }else{
-            //todo: replace with logger
+        } else {
 
-            std::cout << "this job was not attached to this printer" << std::endl;
-
+            logger.printerAssignmentError(std::cout, jobptr->getJobNr());
         }
 
 
@@ -243,7 +240,7 @@ namespace System {
         REQUIRE(this->properlyInitialized(), "Device was not properly initialized when attempting to add a job");
 
 
-        if ((this->jobPtrSet.insert(jobIn)).second){
+        if ((this->jobPtrSet.insert(jobIn)).second) {
 
         };
 
@@ -254,92 +251,125 @@ namespace System {
     void Device::printAllJobs() {
 
 
+        REQUIRE(properlyInitialized(), "device was not properly initialized when attepting to finish the queue");
+        //I think this automatically checks that there is at least 1 job in the queue?
         std::set<Job *>::iterator jobIt = jobPtrSet.begin();
 
-
-
-        while (jobIt != jobPtrSet.end()){
-
-            (*jobIt)->printFull();
-
-            jobPtrSet.erase(jobIt++);
-
-
-            //todo: this should probably delete jobs from itself, the function calling it will delete them from system
+        while (!jobPtrSet.empty()) {
+            printCurrentJob();
         }
+
+        ENSURE(jobPtrSet.empty(), "Not all jobs were correctly printed");
 
     }
 
-    void Device::printJob(Job *jobPtr) {
+    bool Device::printJob(Job *jobPtr) {
 
 
-        //todo: replace jobPtrVect with set to make this significantly simpler (simple check for insertion or contains)
+        REQUIRE(properlyInitialized(), "this printer was not properly initialized when calling printJob");
+        REQUIRE(jobPtr != nullptr, "job should be a valid job");
 
-        for (std::set<Job*>::iterator jobIt = jobPtrSet.begin(); jobIt != jobPtrSet.end(); jobIt++){
 
-            if (*jobIt == jobPtr){
+        if (jobPtrSet.count(jobPtr) != 0) {
+            jobPtr->printFull();
+            jobPtrSet.erase(jobPtr);
 
-                jobPtr->printFull();
-                return;
-            }
-
+            ENSURE(jobPtrSet.count(jobPtr) == 0, "Job was not correctly removed");
+            return true;
         }
-        //todo: replace with logger
-        std::cout << "this job was not assigned to this printer." << std::endl;
+
+        logger.printerAssignmentError(std::cout, jobPtr->getJobNr());
+
+        return false;
+
+
     }
+
 
     void Device::printJob(unsigned int jobNr) {
 
-        //todo: simplify function
+        //todo: simplify function. This function should be removed anyway, so i'm not changing it
 
-        for (std::set<Job*>::iterator jobIt = jobPtrSet.begin(); jobIt != jobPtrSet.end(); jobIt++){
+        for (std::set<Job *>::iterator jobIt = jobPtrSet.begin(); jobIt != jobPtrSet.end(); jobIt++) {
 
-            if ((*jobIt)->getJobNr() == jobNr){
+            if ((*jobIt)->getJobNr() == jobNr) {
 
                 (*jobIt)->printFull();
                 return;
             }
 
         }
-        //todo: replace with logger
+
         std::cout << "this job was not assigned to this printer." << std::endl;
 
     }
 
-    void Device::printJobPages(Job *jobPtr, unsigned int pages) {
+    bool Device::printJobPages(Job *jobPtr, unsigned int pages) {
 
-        //todo: replace jobPtrVect with set to make this significantly simpler (simple check for insertion or contains)
+        REQUIRE(properlyInitialized(), "this printer was not properly initialized when calling printJob");
+        REQUIRE(jobPtr != nullptr, "job should be a valid job");
+        REQUIRE(pages > 0, "Pages to be printed should be positive");
 
-        for (std::set<Job*>::iterator jobIt = jobPtrSet.begin(); jobIt != jobPtrSet.end(); jobIt++){
 
-            if (*jobIt == jobPtr){
+        if (jobPtrSet.count(jobPtr) != 0) {
+
+            if (pages < jobPtr->getRemainingPages()) {
 
                 jobPtr->printPages(pages);
-                return;
+                return true;
+            } else {
+                return printJob(jobPtr);
             }
-
         }
-        //todo: replace with logger
-        std::cout << "this job was not assigned to this printer." << std::endl;
 
+
+
+        logger.printerAssignmentError(std::cout, jobPtr->getJobNr());
+        return false;
 
     }
 
     void Device::printJobPages(unsigned int jobNr, unsigned int pages) {
 
-        //todo: simplify function
+        //todo: simplify function. This function should be removed anyways so i'm not changing it
 
-        for (std::set<Job*>::iterator jobIt = jobPtrSet.begin(); jobIt != jobPtrSet.end(); jobIt++){
+        for (std::set<Job *>::iterator jobIt = jobPtrSet.begin(); jobIt != jobPtrSet.end(); jobIt++) {
 
-            if ((*jobIt)->getJobNr() == jobNr){
+            if ((*jobIt)->getJobNr() == jobNr) {
 
                 (*jobIt)->printPages(pages);
                 return;
             }
 
         }
-        //todo: replace with logger
-        std::cout << "this job was not assigned to this printer." << std::endl;
+
+        logger.printerAssignmentError(std::cout, jobNr);
+
+    }
+
+    bool Device::printCurrentJob() {
+
+        REQUIRE(properlyInitialized(), "printer not properly initialized when calling printcurrentjob");
+        REQUIRE(!jobPtrSet.empty(), "There should be at least 1 job in the queue");
+
+
+        bool printed = this->printJob(*jobPtrSet.begin());
+        ENSURE(printed, "Job was not correctly printed");
+        return printed;
+
+    }
+
+    bool Device::printCurrentJobPages(unsigned int pages) {
+
+        REQUIRE(properlyInitialized(), "printer not properly initialized when calling printcurrentjob");
+        REQUIRE(!jobPtrSet.empty(), "There should be at least 1 job in the queue");
+
+        bool printed = this->printJobPages(*jobPtrSet.begin(), pages);
+
+        ENSURE(printed, "job was not correctly printed");
+        return printed;
+
+
 
     }
 

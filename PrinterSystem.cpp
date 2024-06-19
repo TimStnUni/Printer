@@ -88,9 +88,6 @@ namespace System {
 
     void PrinterSystem::doPrintJob(unsigned int jobNr, std::ostream &writeStream, bool eraseBool) {
 
-
-
-
         Job * jobptr = nullptr;
 
 
@@ -106,6 +103,14 @@ namespace System {
         }
 
 
+        this->doPrintJob(jobptr, writeStream, eraseBool);
+
+
+    }
+
+    void PrinterSystem::doPrintJob(Job *jobptr, std::ostream &writeStream, bool eraseBool) {
+
+
         if (this->jobNrSet.find(jobptr->getJobNr()) != jobNrSet.end()) {
             //todo: change this implementation
             //This means the job has not yet been scheduled
@@ -114,33 +119,6 @@ namespace System {
 
 
         Device *printPoint = jobptr->getOwnDevice();
-
-
-        //This rerouting is already done in scheduler now.
-        /*
-        if (jobptr->getType() != printPoint->getType()) {
-
-
-            std::cerr << "types don't match" << std::endl;
-            for (std::vector<Device *>::iterator devIt = this->deviceVect.begin();
-                 devIt != this->deviceVect.end(); devIt++) {
-
-                if ((*devIt)->getType() == (*jobPoint)->getType()) {
-                    (*jobPoint)->setOwnDevice((*devIt));
-                    printPoint = (*jobPoint)->getOwnDevice();
-                    std::cerr << "Rerouting to device \"" << printPoint->getNameDev() << "\"" << std::endl;
-                    break;
-                }
-                if (devIt == (this->deviceVect.end() - 1)) {
-                    std::cerr << "No viable replacement device found, aborting print job " << (*jobPoint)->getJobNr()
-                              << " from user " << (*jobPoint)->getUserName() << std::endl;
-                    return;
-                }
-
-            }
-
-        }
-         */
 
 
         int pages = jobptr->getPageCount();
@@ -177,8 +155,6 @@ namespace System {
 
         //std::cout << "total CO2 emissions for now " << totalCO2_system << std::endl;
 
-
-
         if (eraseBool) {
 
             // Remove the job number from the jobNrSet and jobNrMap
@@ -190,9 +166,8 @@ namespace System {
             //jobVect.erase(jobPoint);
             jobptr->getOwnDevice()->removeJob(jobptr);
         }
-
-
     }
+
 
     void PrinterSystem::printAll(std::ostream &writeStream) {
         REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to print all jobs");
@@ -262,10 +237,13 @@ namespace System {
     void PrinterSystem::testPrinting() {
 
 
+        std::cout << (*this->deviceVect.begin())->jobPtrSet.size() << std::endl;
 
         (*this->deviceVect.begin())->printAllJobs();
 
     }
+
+
 
 
 }

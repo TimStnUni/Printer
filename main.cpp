@@ -50,7 +50,7 @@ int main() {
         //testSystem.getInfo(std::cout, "ASCII");
 
         //Usecase 3.1: manual processing
-        //testSystem.doPrintJob(2189, outFile);
+        testSystem.doPrintJob(2189, outFile);
         //testSystem.printFull(outFile2);
         //Usecase 3.2: automatic processing
         //testSystem.printFull(std::cout);

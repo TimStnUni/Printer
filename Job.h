@@ -136,6 +136,8 @@ namespace System {
 
         unsigned int getPrintedPages() const;
 
+        unsigned int getRemainingPages() const;
+
         /**
          * Overload of the = constructor for jobs since it seems to be needed for something
          * @param inJob
