@@ -4,6 +4,8 @@
 
 #include "PrinterSystem.h"
 
+#include <algorithm>
+
 //todo: add ways to delete jobs and devices
 
 namespace System {
@@ -20,10 +22,11 @@ namespace System {
 
         REQUIRE(properlyInitialized(), "System wasn't properly initialized when attempting to read an XML file");
 
-        XMLParser tempXML(filename, this);
+        XMLParser tempXML(filename);
 
         //if parse is not successful return false
-        if (!tempXML.isParseSuccessful()) {
+        if (!tempXML.isConsistent()) {
+            std::cerr << "xmlFile was not consistent" << std::endl;
             return false;
         }
 
@@ -31,20 +34,31 @@ namespace System {
 
         std::set<unsigned int> tempJobSet = tempXML.getJobNrSet();
 
-        for (std::set<unsigned int>::iterator it = tempJobSet.begin(); it != tempJobSet.end(); ++it) {
 
-            if (jobNrSet.find(*it) == jobNrSet.end()) {
-                jobNrSet.insert(*it);
+        std::vector<unsigned int> testVector;
 
-            } else {
-                //todo : Expand on this error
-                std::cout << "JobNr is not unique" << std::endl;
+        std::set_intersection(jobNrSet.begin(), jobNrSet.end(), tempJobSet.begin(), tempJobSet.end(), std::back_inserter(testVector));
+
+        if (testVector.empty()) {
+
+            for (std::set<unsigned int>::iterator it = tempJobSet.begin(); it != tempJobSet.end(); ++it) {
+
+                    jobNrSet.insert(*it);
+
+
             }
 
+            std::set<Device * > * tempDevs = tempXML.getDeviceList();
+            std::set<Job * > * tempJobs = tempXML.getJobList();
+
+            deviceVect.insert(tempDevs->begin(), tempDevs->end());
+            jobVect.insert(tempJobs->begin(), tempJobs->end());
+
+            return true;
         }
 
-
-        return true;
+        std::cerr << testVector.size() << " Jobnrs was/were not unique, rejecting xml" << std::endl;
+        return false;
 
     }
 

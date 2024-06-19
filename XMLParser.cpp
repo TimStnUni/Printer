@@ -8,14 +8,14 @@
 namespace System {
 
 
-    XMLParser::XMLParser(const char *filename, PrinterSystem *system) {
+    XMLParser::XMLParser(const char *filename) {
 //        std::cout <<  InputDoc.LoadFile(filename) << std::endl;
         //Todo: check whether inputdoc isn't empty
         if (!InputDoc.LoadFile(filename)) {
             std::cerr << InputDoc.ErrorDesc() << std::endl;
         }
 
-        this->ownSystem = system;
+
         _initCheck = this;
 
         std::ofstream outFile; // Create an output file stream
@@ -40,6 +40,8 @@ namespace System {
 
 
         TiXmlElement *System = InputDoc.FirstChildElement();
+
+        bool consistent = true;
 
 
         REQUIRE(System != nullptr, "There is no system in xml");
@@ -99,6 +101,7 @@ namespace System {
                             } else {
                                 errorstream << "Emissions should be positive" << std::endl;
                                 readingCorrect = false;
+                                consistent = false;
                                 break;
 
                                 //return readingCorrect;
@@ -113,6 +116,7 @@ namespace System {
                             } else {
                                 errorstream << "Cost should be positive" << std::endl;
                                 readingCorrect = false;
+                                consistent = false;
                                 break;
                                 //return readingCorrect;
 
@@ -149,6 +153,7 @@ namespace System {
                             } else {
                                 errorstream << "speed should be positive" << std::endl;
                                 readingCorrect = false;
+                                consistent = false;
                                 break;
                                 //return readingCorrect;
                             }
@@ -188,10 +193,8 @@ namespace System {
 
 
                     if (outPtr != nullptr) {
-                        ownSystem->addDevice(outPtr);
 
-                        //todo: check whether deviceList is ever used;
-                        deviceList.push_back(*outPtr);
+                        deviceList.insert(outPtr);
                     }
                 }
                 else{
@@ -217,7 +220,8 @@ namespace System {
                         if (t == nullptr) {
                             errorstream << "username should not be empty" << std::endl;
                             readingCorrectly = false;
-                            return readingCorrectly;
+                            break;
+                            //return readingCorrectly;
                         } else {
                             std::string userName_t = elem->FirstChild()->ToText()->Value();
                             userName = userName_t;
@@ -229,8 +233,10 @@ namespace System {
                             pageCount = std::stoi(elem->FirstChild()->ToText()->Value());
                         } else {
                             errorstream << "pagecount should be a positive integer" << std::endl;
+                            consistent = false;
                             readingCorrectly = false;
-                            return readingCorrectly;
+                            break;
+                            //return readingCorrectly;
                         }
 
 
@@ -238,10 +244,11 @@ namespace System {
                         if (std::stoi(elem->FirstChild()->ToText()->Value()) > 0) {
                             jobNr = std::stoi(elem->FirstChild()->ToText()->Value());
                         } else {
-                            //Not actually sure this needs to be a positive integer
                             errorstream << "jobnumber should be a positive integer" << std::endl;
+                            consistent = false;
                             readingCorrectly = false;
-                            return readingCorrectly;
+                            break;
+                            //return readingCorrectly;
                         }
 
 
@@ -254,13 +261,16 @@ namespace System {
                         if (type_j.empty()) {
                             errorstream << "Type should not be empty" << std::endl;
                             readingCorrectly = false;
-                            return readingCorrectly;
+                            break;
+                            //return readingCorrectly;
 
                         } else {
                             if (type_j == "bw" || type_j == "scan" || type_j == "color") {
                                 type = type_j;
                             } else {
                                 errorstream << "Invalid type for job" << std::endl;
+                                readingCorrectly = false;
+                                break;
                             }
 
                         }
@@ -269,21 +279,14 @@ namespace System {
                         std::cout << "Element name " << elemname << "is either empty or an unexpected element name"
                                   << std::endl;
                         readingCorrectly = false;
-                        continue;
+                        break;
                     }
                 }
 
                 if (readingCorrectly) {
 
 
-
-
-
-
-                    //todo loops twice for some reason, investigate
-
-                    //Implement better duplicate checking off the return value for insert?
-                    if (jobNrSet.find(jobNr) == jobNrSet.end()) {
+                    if (jobNrSet.count(jobNr) == 0) {
 
                         //Job is only added to joblist if its jobnr is unique
                         Job tempJob = Job(userName, pageCount, jobNr, type);
@@ -300,17 +303,22 @@ namespace System {
                             outJobPtr = new ScanJob(userName, pageCount, jobNr);
                         }
 
-                        ownSystem->addJob(outJobPtr);
+                        //ownSystem->addJob(outJobPtr);
 
-
+                        jobList.insert(outJobPtr);
                         jobNrSet.insert(jobNr);
 
                     } else {
 
                         errorstream << "Jobnumber should be unique" << std::endl;
-                        return false;
+                        consistent = false;
+                        //return false;
                     }
 
+                }
+                else {
+
+                    errorstream << "there was an error in a device in the inputfile" << std::endl;
                 }
 
 
@@ -327,7 +335,7 @@ namespace System {
         }
 
 
-        return true;
+        return consistent;
     }
 
 
@@ -335,20 +343,17 @@ namespace System {
         return (this == _initCheck);
     }
 
-    std::vector<Device> XMLParser::getDeviceList() {
+    std::set<Device *> *XMLParser::getDeviceList() {
         REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getDeviceList()");
-        return deviceList;
+        return &deviceList;
     }
 
-    std::vector<Job> XMLParser::getJobList() {
+    std::set<Job *>* XMLParser::getJobList() {
         REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getJobList()");
-        return jobList;
+        return &jobList;
     }
 
-    std::map<unsigned int, unsigned int> XMLParser::getJobNrMap() {
-        REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getJobNrMap()");
-        return jobNrMap;
-    }
+
 
     XMLParser::~XMLParser() {
         InputDoc.Clear();
@@ -390,7 +395,7 @@ namespace System {
 
     }
 
-    bool XMLParser::isParseSuccessful() const {
+    bool XMLParser::isConsistent() const {
         return parseSuccessful;
     }
 
