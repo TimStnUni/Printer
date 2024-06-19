@@ -238,11 +238,10 @@ namespace System {
     void Device::addJob(Job *jobIn) {
 
         REQUIRE(this->properlyInitialized(), "Device was not properly initialized when attempting to add a job");
+        REQUIRE(jobIn != nullptr, "job should be a valid job");
 
 
-        if ((this->jobPtrSet.insert(jobIn)).second) {
-
-        };
+        this->jobPtrSet.insert(jobIn);
 
         ENSURE(jobPtrSet.count(jobIn) == 1, "Job was not correctly added");
 

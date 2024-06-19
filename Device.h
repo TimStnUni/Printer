@@ -163,6 +163,7 @@ namespace System {
          * \brief function to add a job to the queue for this device
          * @param jobIn
          * REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to add job")
+         * REQUIRE(jobIn != nullptr, "job should be a valid job")
          * ENSURE(*jobPtrSet.back() == *jobIn, "Job was not correctly added")
          */
         void addJob(Job * jobIn);
@@ -171,22 +172,6 @@ namespace System {
 
 
 
-
-        //void addJob(PrinterSystem * ownSystem);
-
-
-        /**
-         * \brief overloaded equality operator for getters
-         * @param d device to be compared
-         * @return boolean true or false
-         */
-
-        bool operator == (const Device &d){
-            if (name == d.name && emissions == d.emissions && speed == d.speed){
-                return true;
-            }
-            return false;
-        }
 
 
         /**
@@ -269,7 +254,20 @@ namespace System {
          * @return
          */
 
-        Device& operator=(Device const & inDevice);
+        //Device& operator=(Device const & inDevice);
+
+        /**
+         * \brief overloaded equality operator for getters
+         * @param d device to be compared
+         * @return boolean true or false
+         */
+        bool operator == (const Device &d){
+            if (name == d.name && emissions == d.emissions && speed == d.speed && type == d.type){
+                return true;
+            }
+            return false;
+        }
+
 
         bool properlyInitialized() const;
 
