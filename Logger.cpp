@@ -59,5 +59,11 @@ namespace System {
 
     }
 
+    void Logger::printNoDevice(std::ostream &outStream, unsigned int jobNr) {
+
+        outStream << "No suitable device found for job " << jobNr << std::endl;
+
+    }
+
 
 } // System

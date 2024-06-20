@@ -6,9 +6,28 @@
         <speed>40</speed>
         <cost>20</cost>
     </DEVICE>
+    <DEVICE>
+        <name>Office_Printer6</name>
+        <emissions>3</emissions>
+        <type>bw</type>
+        <speed>40</speed>
+        <cost>20</cost>
+    </DEVICE>
     <JOB>
         <jobNumber>89751</jobNumber>
+        <pageCount>1</pageCount>
+        <type>bw</type>
+        <userName>SergeDemeyer</userName>
+    </JOB>
+    <JOB>
+        <jobNumber>89752</jobNumber>
         <pageCount>2</pageCount>
+        <type>bw</type>
+        <userName>SergeDemeyer</userName>
+    </JOB>
+    <JOB>
+        <jobNumber>89753</jobNumber>
+        <pageCount>3</pageCount>
         <type>bw</type>
         <userName>SergeDemeyer</userName>
     </JOB>
@@ -31,4 +50,5 @@
         <type>scan</type>
         <userName>Peter Selie</userName>
     </JOB>
+
 </SYSTEM>

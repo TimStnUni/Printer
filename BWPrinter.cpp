@@ -28,4 +28,13 @@ namespace System {
 
 
     }
+
+    bool BWPrinter::belowLimit() {
+
+        if (this->getEmissions() <= limit){
+            return true;
+        }
+        return false;
+
+    }
 } // System

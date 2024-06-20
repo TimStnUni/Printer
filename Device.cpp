@@ -86,13 +86,13 @@ namespace System {
         this->setSpeed(speed_in);
         this->setType(type_in);
         this->setCost(cost_in);
-        this->jobPtrSet = inDevice.jobPtrSet;
+        this->jobPtrQueue = inDevice.jobPtrQueue;
 
 
         /*
          * Pointer bullshittery that should no longer be needed
-        for (std::vector<Job *>::const_iterator ptrIt = inDevice.jobPtrSet.begin();
-             ptrIt != inDevice.jobPtrSet.end(); ++ptrIt) {
+        for (std::vector<Job *>::const_iterator ptrIt = inDevice.jobPtrQueue.begin();
+             ptrIt != inDevice.jobPtrQueue.end(); ++ptrIt) {
             (*ptrIt)->setOwnDevice(this);
         }
         */
@@ -150,7 +150,7 @@ namespace System {
     /*
     void Device::addJob(PrinterSystem *ownSystem) {
 
-        this->jobPtrSet.push_back(&*(ownSystem->jobVect.end() - 1));
+        this->jobPtrQueue.push_back(&*(ownSystem->jobVect.end() - 1));
 
 
     }
@@ -167,16 +167,16 @@ namespace System {
         outDevice.speed = inDevice.getSpeed();
         outDevice.cost = inDevice.getCost();
         outDevice.type = inDevice.getType();
-        outDevice.jobPtrSet = inDevice.jobPtrSet;
+        outDevice.jobPtrQueue = inDevice.jobPtrQueue;
         outDevice._initCheck = &outDevice;
 
         /*
 
 
-         if (inDevice.jobPtrSet.size()>0) {
+         if (inDevice.jobPtrQueue.size()>0) {
 
-            for (std::vector<Job *>::const_iterator ptrIt = inDevice.jobPtrSet.begin();
-                 ptrIt != inDevice.jobPtrSet.end(); ++ptrIt) {
+            for (std::vector<Job *>::const_iterator ptrIt = inDevice.jobPtrQueue.begin();
+                 ptrIt != inDevice.jobPtrQueue.end(); ++ptrIt) {
                 (*ptrIt)->setOwnDevice(this);
             }
         }
@@ -188,7 +188,7 @@ namespace System {
 /*
     void Device::updatePointer(Job *inPointer, const Job *prevPointer) {
 
-        for (std::vector<Job *>::iterator ptrIt = this->jobPtrSet.begin(); ptrIt != this->jobPtrSet.end(); ++ptrIt) {
+        for (std::vector<Job *>::iterator ptrIt = this->jobPtrQueue.begin(); ptrIt != this->jobPtrQueue.end(); ++ptrIt) {
 
             if ((*ptrIt) == prevPointer) {
                 *ptrIt = inPointer;
@@ -199,33 +199,39 @@ namespace System {
     }
     */
 
-    void Device::removeJob(Job *jobptr) {
+    void Device::removeJob() {
 
-        REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to remove a job from queu");
-        REQUIRE(jobptr != nullptr, "job should be a valid job");
+        REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to remove a job from queue");
 
-        if (jobPtrSet.count(jobptr)) {
-            jobPtrSet.erase(jobptr);
-        } else {
 
-            logger.printerAssignmentError(std::cout, jobptr->getJobNr());
+        if (jobPtrQueue.empty()) {
+
+            logger.printError(std::cout, "no jobs in queue");
+            return;
+
+
         }
 
+        int queuesize = jobPtrQueue.size();
 
-        ENSURE(jobPtrSet.count(jobptr) == 0, "job was not properly removed from device");
+        jobPtrQueue.pop_front();
+
+
+        ENSURE(jobPtrQueue.size() + 1 == queuesize, "job was not properly removed from device");
 
 
     }
 
     int Device::getTotalPages() {
 
+
         REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to get total pages");
 
         int pages = 0;
 
-        if (this->jobPtrSet.size() > 0) {
-            for (std::set<Job *>::iterator jobIt = jobPtrSet.begin(); jobIt != jobPtrSet.end(); jobIt++) {
-                pages += (*jobIt)->getPageCount();
+        if (this->jobPtrQueue.size() > 0) {
+            for (std::deque<Job *>::iterator jobIt = jobPtrQueue.begin(); jobIt != jobPtrQueue.end(); jobIt++) {
+                pages += (*jobIt)->getRemainingPages();
             }
             return pages;
         } else {
@@ -241,9 +247,9 @@ namespace System {
         REQUIRE(jobIn != nullptr, "job should be a valid job");
 
 
-        this->jobPtrSet.insert(jobIn);
+        this->jobPtrQueue.push_back(jobIn);
 
-        ENSURE(jobPtrSet.count(jobIn) == 1, "Job was not correctly added");
+        ENSURE(jobPtrQueue.back() == jobIn, "Job was not correctly added");
 
     }
 
@@ -252,16 +258,17 @@ namespace System {
 
         REQUIRE(properlyInitialized(), "device was not properly initialized when attepting to finish the queue");
         //I think this automatically checks that there is at least 1 job in the queue?
-        std::set<Job *>::iterator jobIt = jobPtrSet.begin();
 
-        while (!jobPtrSet.empty()) {
+        while (!jobPtrQueue.empty()) {
             printCurrentJob();
         }
 
-        ENSURE(jobPtrSet.empty(), "Not all jobs were correctly printed");
+        ENSURE(jobPtrQueue.empty(), "Not all jobs were correctly printed");
 
     }
 
+    /*
+     * //Should be deprecated
     bool Device::printJob(Job *jobPtr) {
 
 
@@ -269,11 +276,11 @@ namespace System {
         REQUIRE(jobPtr != nullptr, "job should be a valid job");
 
 
-        if (jobPtrSet.count(jobPtr) != 0) {
+        if (jobPtrQueue.size() != 0) {
             jobPtr->printFull();
-            jobPtrSet.erase(jobPtr);
+            jobPtrQueue.erase(jobPtr);
 
-            ENSURE(jobPtrSet.count(jobPtr) == 0, "Job was not correctly removed");
+            ENSURE(jobPtrQueue.count(jobPtr) == 0, "Job was not correctly removed");
             return true;
         }
 
@@ -283,13 +290,15 @@ namespace System {
 
 
     }
+*/
 
-
+    /*
+     * should be deprecated
     void Device::printJob(unsigned int jobNr) {
 
         //todo: simplify function. This function should be removed anyway, so i'm not changing it
 
-        for (std::set<Job *>::iterator jobIt = jobPtrSet.begin(); jobIt != jobPtrSet.end(); jobIt++) {
+        for (std::unordered_set<Job *>::iterator jobIt = jobPtrQueue.begin(); jobIt != jobPtrQueue.end(); jobIt++) {
 
             if ((*jobIt)->getJobNr() == jobNr) {
 
@@ -302,15 +311,18 @@ namespace System {
         std::cout << "this job was not assigned to this printer." << std::endl;
 
     }
+     */
 
+
+    /*
+     * should be deprecated
     bool Device::printJobPages(Job *jobPtr, unsigned int pages) {
 
         REQUIRE(properlyInitialized(), "this printer was not properly initialized when calling printJob");
         REQUIRE(jobPtr != nullptr, "job should be a valid job");
         REQUIRE(pages > 0, "Pages to be printed should be positive");
 
-
-        if (jobPtrSet.count(jobPtr) != 0) {
+        if (jobPtrQueue.count(jobPtr) != 0) {
 
             if (pages < jobPtr->getRemainingPages()) {
 
@@ -327,12 +339,15 @@ namespace System {
         return false;
 
     }
+     */
 
+    /*
+     * should be deprecated
     void Device::printJobPages(unsigned int jobNr, unsigned int pages) {
 
         //todo: simplify function. This function should be removed anyways so i'm not changing it
 
-        for (std::set<Job *>::iterator jobIt = jobPtrSet.begin(); jobIt != jobPtrSet.end(); jobIt++) {
+        for (std::unordered_set<Job *>::iterator jobIt = jobPtrQueue.begin(); jobIt != jobPtrQueue.end(); jobIt++) {
 
             if ((*jobIt)->getJobNr() == jobNr) {
 
@@ -346,30 +361,61 @@ namespace System {
 
     }
 
-    bool Device::printCurrentJob() {
+     */
+
+
+    int Device::printCurrentJob() {
 
         REQUIRE(properlyInitialized(), "printer not properly initialized when calling printcurrentjob");
-        REQUIRE(!jobPtrSet.empty(), "There should be at least 1 job in the queue");
+        //Not sure if this should be a require?
+        REQUIRE(!jobPtrQueue.empty(), "There should be at least 1 job in the queue");
 
 
-        bool printed = this->printJob(*jobPtrSet.begin());
-        ENSURE(printed, "Job was not correctly printed");
-        return printed;
+        int co2 = jobPtrQueue.front()->printFull();
+
+        int queuesize = jobPtrQueue.size();
+        jobPtrQueue.pop_front();
+
+        ENSURE(jobPtrQueue.size() + 1 == queuesize, "Job was not correctly removed");
+
+        return co2;
+
 
     }
 
-    bool Device::printCurrentJobPages(unsigned int pages) {
+    int Device::printCurrentJobPages(unsigned int pages) {
 
         REQUIRE(properlyInitialized(), "printer not properly initialized when calling printcurrentjob");
-        REQUIRE(!jobPtrSet.empty(), "There should be at least 1 job in the queue");
+        REQUIRE(!jobPtrQueue.empty(), "There should be at least 1 job in the queue");
 
-        bool printed = this->printJobPages(*jobPtrSet.begin(), pages);
+        if (pages < jobPtrQueue.front()->getRemainingPages() ) {
 
-        ENSURE(printed, "job was not correctly printed");
-        return printed;
+            return jobPtrQueue.front()->printPages(pages);
+        }
+
+        logger.pageAmount(std::cout);
+        int co2 = jobPtrQueue.front()->printFull();
+        int queuesize = jobPtrQueue.size();
+
+        jobPtrQueue.pop_front();
+
+        ENSURE(jobPtrQueue.size() +1 == queuesize, "job was not correctly removed");
+
+        return co2;
 
 
+    }
 
+    bool Device::belowLimit() {
+        return false;
+    }
+
+    std::deque<Job *> *Device::getJobs() {
+        return &jobPtrQueue;
+    }
+
+    Job *Device::getCurrentJob() {
+        return jobPtrQueue.front();
     }
 
 

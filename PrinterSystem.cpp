@@ -55,6 +55,8 @@ namespace System {
 
             jobUnscheduled.insert(tempJobs->begin(), tempJobs->end());
 
+            this->scheduleAll();
+
             return true;
         }
 
@@ -63,39 +65,61 @@ namespace System {
 
     }
 
-    void PrinterSystem::getInfo(std::ostream &writeStream, std::string outputType) {
+    void PrinterSystem::getInfo(std::ostream &writeStream, std::string outputType, bool advanced) {
 
         REQUIRE(properlyInitialized(), "the printer system was not properly initialized");
 
 
+        //todo: replace with scheduleall
         for (std::set<Job *>::iterator jobsIt = jobUnscheduled.begin(); jobsIt != jobUnscheduled.end(); jobsIt++) {
 
+            if (!system_scheduler.schedule(*jobsIt, &deviceVect)){
+                jobNrSet.erase((*jobsIt)->getJobNr());
+                jobVect.erase(*jobsIt);
+                delete *jobsIt;
+            }
 
-            system_scheduler.schedule(*jobsIt, &deviceVect);
             jobUnscheduled.erase(*jobsIt);
 
         }
 
 
         InfoPrinter printer;
+        printer.setSystem(this);
 
+        if (!advanced) {
+            if (outputType == "ASCII") {
 
-        if (outputType == "ASCII") {
+                printer.printAscii(writeStream);
+            } else {
+                std::cerr << "Unsupported output type, reverting to ASCII" << std::endl;
+                printer.printAscii(writeStream);
+            }
+        }else{
+            if (outputType == "ASCII") {
 
-            printer.printAscii(writeStream);
-        } else {
-            std::cerr << "Unsupported output type, reverting to ASCII" << std::endl;
-            printer.printAscii(writeStream);
+                printer.printAdvancedAscii(writeStream);
+            } else {
+                std::cerr << "Unsupported output type, reverting to ASCII" << std::endl;
+                printer.printAdvancedAscii(writeStream);
+            }
+
         }
 
 
     }
+
+
+
+
+
 
     bool PrinterSystem::properlyInitialized() {
         return (this == _initcheck);
     }
 
 
+    /*
     void PrinterSystem::doPrintJob(unsigned int jobNr, std::ostream &writeStream, bool eraseBool) {
 
         Job *jobptr = nullptr;
@@ -117,20 +141,56 @@ namespace System {
 
 
     }
+     */
 
-    void PrinterSystem::doPrintJob(Job *jobptr, std::ostream &writeStream, bool eraseBool) {
 
 
-        if (this->jobUnscheduled.count(jobptr) != 0) {
-            //This means the job has not yet been scheduled
-            system_scheduler.schedule(jobptr, &deviceVect);
-            jobUnscheduled.erase(jobptr);
+
+    void PrinterSystem::doPrintJob(std::string deviceName, std::ostream &writestream, bool erasebool) {
+
+        REQUIRE(properlyInitialized(), "system not properly initialized");
+        REQUIRE(!deviceName.empty(), "device name should not be empty");
+
+        for (std::unordered_set<Device *>::iterator devIt = deviceVect.begin(); devIt != deviceVect.end(); devIt++){
+
+            if ((*devIt)->getNameDev() == deviceName){
+
+                doPrintJob(*devIt, writestream, erasebool);
+
+                //todo: add ensures and stuff
+                return;
+
+            }
+
+
         }
 
+        logger.printError(writestream, "no device with that name found");
 
-        Device *printPoint = jobptr->getOwnDevice();
+    }
 
-        int newCO2 = jobptr->printFull();
+
+    void PrinterSystem::doPrintJob(Device * indevice, std::ostream &writeStream, bool eraseBool) {
+
+
+        /*
+        if (this->jobUnscheduled.count(jobptr) != 0) {
+            //This means the job has not yet been scheduled
+            if (!system_scheduler.schedule(jobptr, &deviceVect)){
+                jobNrSet.erase(jobptr->getJobNr());
+                jobVect.erase(jobptr);
+                delete jobptr;
+
+            }
+            jobUnscheduled.erase(jobptr);
+        }
+         */
+        this->scheduleAll();
+
+
+        Job *jobptr = indevice->getCurrentJob();
+
+        int newCO2 = indevice->printCurrentJob();
 
         std::string printType;
 
@@ -143,7 +203,7 @@ namespace System {
         }
 
 
-        logger.dispPrintJob(writeStream, jobptr->getJobNr(), printPoint->getNameDev(), jobptr->getUserName(), printType,
+        logger.dispPrintJob(writeStream, jobptr->getJobNr(), indevice->getNameDev(), jobptr->getUserName(), printType,
                             jobptr->getPageCount(), newCO2);
 
         //Increment CO2 emissions
@@ -164,6 +224,23 @@ namespace System {
     }
 
 
+    void PrinterSystem::doPrintJobFull(Device *indevice, std::ostream &writestream, bool reasebool) {
+
+
+        REQUIRE(properlyInitialized(), "system wasn't properly initialized");
+
+        this->scheduleAll();
+
+        while(!indevice->getJobs()->empty()) {
+
+            doPrintJob(indevice, writestream, reasebool);
+        }
+
+        ENSURE((*indevice->getJobs()).empty(), "jobs were not all executed");
+
+    }
+
+
     void PrinterSystem::printAll(std::ostream &writeStream) {
         REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to print all jobs");
 
@@ -172,12 +249,12 @@ namespace System {
 
         bool eraseBool = true;
 
-        for (std::unordered_set<Job *>::iterator jobNrIt = jobVect.begin();
-             jobNrIt != jobVect.end();) {
+        for (std::unordered_set<Device *>::iterator devIt = deviceVect.begin();
+             devIt != deviceVect.end();) {
 
 
-            //Erasing jobnr's is having issues
-            this->doPrintJob(*jobNrIt++, writeStream, eraseBool);
+
+            this->doPrintJobFull(*devIt++, writeStream, eraseBool);
 
         }
 
@@ -196,9 +273,8 @@ namespace System {
         REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to add a job");
 
         this->jobVect.insert(inJob);
-
-
         ENSURE(jobVect.count(inJob) != 0, "Job was not correctly added");
+
 
 
     }
@@ -240,7 +316,7 @@ namespace System {
     void PrinterSystem::testPrinting() {
 
 
-        std::cout << (*this->deviceVect.begin())->jobPtrSet.size() << std::endl;
+        std::cout << (*this->deviceVect.begin())->jobPtrQueue.size() << std::endl;
 
         (*this->deviceVect.begin())->printAllJobs();
 
@@ -255,7 +331,11 @@ namespace System {
 
             for (std::set<Job *>::iterator unsIt = jobUnscheduled.begin(); unsIt != jobUnscheduled.end(); unsIt++) {
 
-                system_scheduler.schedule(*unsIt, &deviceVect);
+                if (!system_scheduler.schedule(*unsIt, &deviceVect)) {
+                    jobNrSet.erase((*unsIt)->getJobNr());
+                    jobVect.erase(*unsIt);
+                    delete *unsIt;
+                }
                 jobUnscheduled.erase(unsIt);
 
             }
@@ -263,6 +343,8 @@ namespace System {
         ENSURE(jobUnscheduled.empty(), "Not all jobs were correctly scheduled");
 
     }
+
+
 
 
 }

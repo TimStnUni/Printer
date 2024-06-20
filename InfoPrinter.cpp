@@ -5,6 +5,7 @@
 #include "InfoPrinter.h"
 #include "PrinterSystem.h"
 
+
 System::InfoPrinter::InfoPrinter() {
 
 
@@ -18,6 +19,17 @@ bool System::InfoPrinter::properlyInitialized() {
     return (_initcheck == this);
 }
 
+void System::InfoPrinter::setSystem(System::PrinterSystem *inSystem) {
+
+    REQUIRE(properlyInitialized(), "InfoPrinter not properly initialized when attempting to set system");
+
+    this->ownSystem = inSystem;
+
+    ENSURE(ownSystem == inSystem, "System was not correclty assigned");
+
+}
+
+
 void System::InfoPrinter::printAscii(std::ostream &outfile) {
 
     REQUIRE(properlyInitialized(), "InfoPrinter was not properly initialized when attempting to print ASCII");
@@ -29,7 +41,8 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
     outfile << "   --=== Printers: ===--\n" << std::endl;
 
 
-    for (std::unordered_set<Device*>::iterator printIt = ownSystem->getDeviceVector()->begin(); printIt != ownSystem->getDeviceVector()->end(); ++printIt) {
+    for (std::unordered_set<Device *>::iterator printIt = ownSystem->getDeviceVector()->begin();
+         printIt != ownSystem->getDeviceVector()->end(); ++printIt) {
 
         //TODO: layout aanpassen?
 
@@ -52,19 +65,15 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
                 << "    * " << (*printIt)->getCost() << " cents/page\n";
 
 
-
-
-
     }
 
 
     outfile << "      --=== Jobs ===--\n" << std::endl;
 
-    for (std::unordered_set<Job*>::iterator jobIt = ownSystem->getJobVector()->begin();
+    for (std::unordered_set<Job *>::iterator jobIt = ownSystem->getJobVector()->begin();
          jobIt != ownSystem->getJobVector()->end(); ++jobIt) {
 
         std::string jobType;
-
 
 
         if ((*jobIt)->getType() == "bw") {
@@ -81,8 +90,8 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
         }
 
 
-        float totalcost = (float)(*jobIt)->getPageCount() * (*jobIt)->getOwnDevice()->getCost();
-        float totalCO2 = (float)(*jobIt)->getPageCount() * (float)(*jobIt)->getOwnDevice()->getEmissions();
+        float totalcost = (float) (*jobIt)->getPageCount() * (*jobIt)->getOwnDevice()->getCost();
+        float totalCO2 = (float) (*jobIt)->getPageCount() * (float) (*jobIt)->getOwnDevice()->getEmissions();
 
         outfile << "        [Job #" << (*jobIt)->getJobNr() << "]\n"
                 << "            * Owner: " << (*jobIt)->getUserName() << "\n"
@@ -103,12 +112,36 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
     outfile << std::endl;
 
 }
-    void System::InfoPrinter::setSystem(System::PrinterSystem *inSystem) {
 
-        REQUIRE(properlyInitialized(), "InfoPrinter not properly initialized when attempting to set system");
 
-        this->ownSystem = inSystem;
+void System::InfoPrinter::printAdvancedAscii(std::ostream &outfile) {
+    REQUIRE(properlyInitialized(), "infoprinter wasn't properly initialized");
 
-        ENSURE(ownSystem == inSystem, "System was not correclty assigned");
+
+    for (std::unordered_set<Device *>::iterator devsIt = ownSystem->getDeviceVector()->begin();
+         devsIt != ownSystem->getDeviceVector()->end(); devsIt++) {
+
+        outfile << (*devsIt)->getNameDev() << std::endl;
+
+        std::deque<Job *> * jobs = (*devsIt)->getJobs();
+
+        outfile << "    ";
+        for (std::deque<Job*>::iterator jobsIt = jobs->begin(); jobsIt != jobs->end(); jobsIt++){
+
+            if (jobsIt == jobs->begin()){
+
+                outfile << "[" << (*jobsIt)->getRemainingPages() << "/" << (*jobsIt)->getPageCount() << "] | ";
+            }else{
+
+                outfile << "[" << (*jobsIt)->getPageCount() << "]";
+            }
+
+
+        }
+
+        outfile << std::endl;
 
     }
+
+
+}

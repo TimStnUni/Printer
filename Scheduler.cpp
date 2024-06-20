@@ -5,6 +5,8 @@
 #include "Scheduler.h"
 #include "PrinterSystem.h"
 #include <climits>
+#include <algorithm>
+#include <map>
 
 namespace System {
     Scheduler::Scheduler(PrinterSystem *PrintSystem) {
@@ -26,9 +28,14 @@ namespace System {
         return (this == _initcheck);
     }
 
-    void Scheduler::schedule(Job * jobIn, std::unordered_set<Device *> * devVect) {
+    bool Scheduler::schedule(Job *jobIn, std::unordered_set<Device *> *devVect) {
 
 
+        //Todo: CO2 limits mogen exceeded zijn in inlezen, het is pas hier dat we daar rekening mee moeten houden en for some
+        // reason houden we dan wel die printers in het systeem maar smijten we jobs weg die we niet kunnen printen?
+
+
+        //todo: check opsplitsen in type en limit, want die moeten blijkbaar aparte errors geven
 
         REQUIRE(properlyInitialized(), "Scheduler not properly initialized when attempting to schedule a job");
 
@@ -37,31 +44,49 @@ namespace System {
 
 
 
-        std::unordered_set<Device*>::iterator stopIt = devVect->end();
-
-        int pageQueue = INT_MAX;
 
 
-        for (std::unordered_set<Device*>::iterator devIt = devVect->begin(); devIt!=devVect->end(); devIt++){
 
-            if ((*devIt)->getTotalPages() < pageQueue && (*devIt)->getType() == jobType){
-                pageQueue = (*devIt)->getTotalPages();
-                stopIt = devIt;
+
+        std::vector<Device *> posDevs;
+
+        for (std::unordered_set<Device *>::iterator devIt = devVect->begin(); devIt != devVect->end(); devIt++) {
+
+            if ((*devIt)->getType() == jobType && (*devIt)->belowLimit()) {
+                posDevs.push_back(*devIt);
+
+
             }
         }
-        if (stopIt == devVect->end()){
-            std::cerr << "No suitable device found for job " << jobIn->getJobNr() << std::endl;
-            return;
-        }else{
-            (*stopIt)->addJob(jobIn);
-            jobIn->setOwnDevice((*stopIt));
+        if (posDevs.empty()) {
+
+            logger.printNoDevice(std::cerr, jobIn->getJobNr());
+
+            return false;
         }
 
 
-        ENSURE(jobIn->getOwnDevice() != nullptr, "Job was not assigned to a device, even though the error path was not triggered");
+        std::map<int, Device *> devVals;
+        for (std::vector<Device *>::iterator posIt = posDevs.begin(); posIt != posDevs.end(); posIt++){
+
+            int val = (*posIt)->getTotalPages();
+            val *= (*posIt)->getEmissions();
+
+            devVals.insert({val, *posIt});
+        }
 
 
 
+        (devVals.begin()->second)->addJob(jobIn);
+        jobIn->setOwnDevice(*posDevs.begin());
+
+
+
+
+        ENSURE(jobIn->getOwnDevice() != nullptr,
+               "Job was not assigned to a device, even though the error path was not triggered");
+
+        return true;
     }
 
     Scheduler::Scheduler() {

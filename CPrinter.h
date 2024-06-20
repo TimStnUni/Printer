@@ -27,9 +27,12 @@ namespace System {
         */
         CPrinter(std::string &name, int &emissions, int &speed, float &cost);
 
+        bool belowLimit();
+
     private:
         Device * _initCheck;
 
+        int limit = 23;
     };
 
 } // System

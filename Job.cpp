@@ -172,9 +172,6 @@ namespace System {
         int remPages = this->getRemainingPages();
 
         while(!printPage());
-
-        ownerDevice->removeJob(this);
-
         return (this->getOwnDevice()->getEmissions() * remPages);
 
     }
@@ -198,8 +195,6 @@ namespace System {
             int remPages = this->getRemainingPages();
             logger.pageAmount(std::cout);
             while(!printPage());
-            ownerDevice->removeJob(this);
-
             return remPages * this->getOwnDevice()->getEmissions();
         }
 

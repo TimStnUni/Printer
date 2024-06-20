@@ -60,16 +60,21 @@ namespace System {
          * @param outputType type of the output
          *REQUIRE(properlyInitialized(), "the printer system was not properly initialized")
          */
-        void getInfo(std::ostream &writestream, std::string outputType);
+        void getInfo(std::ostream &writestream, std::string outputType, bool advanced);
+
+
+
+
 
 
         /**
-         * \brief Function that executes a print job via jobnr for testing.
+         * \brief Function that executes a print job via jobnr for testing, should be deprecated.
          * @param jobnr JobNr of the job to be executed
          * @param writeStream Stream where the output is stored
          * REQUIRE(properlyInitialized()
          */
-        void doPrintJob(unsigned int jobnr, std::ostream &writeStream, bool erasebool = true);
+        //void doPrintJob(unsigned int jobnr, std::ostream &writeStream, bool erasebool = true);
+
 
         /**
          * \brief Function that executes a print job via jobPtr.
@@ -79,7 +84,22 @@ namespace System {
          * ENSURE(job is removed)
          */
 
-        void doPrintJob(Job * inJob, std::ostream &writeStream, bool erasebool = true);
+        void doPrintJob(Device * inDevice, std::ostream &writeStream, bool erasebool = true);
+
+
+        void doPrintJobFull(Device * inDevice, std::ostream &writesteram, bool reasebool = true);
+
+
+
+        /**
+         * \brief Function that takes a devicename instead of a pointer for testing purposes
+         *
+         * @param deviceName
+         * @param writestream
+         * @param erasebool
+         */
+
+        void doPrintJob(std::string deviceName, std::ostream &writestream, bool erasebool = true);
 
         /**
          * \brief Loops over all jobs and prints that they are finished.

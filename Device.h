@@ -10,6 +10,8 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <unordered_set>
+#include <queue>
 
 #include "Logger.h"
 
@@ -164,7 +166,7 @@ namespace System {
          * @param jobIn
          * REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to add job")
          * REQUIRE(jobIn != nullptr, "job should be a valid job")
-         * ENSURE(*jobPtrSet.back() == *jobIn, "Job was not correctly added")
+         * ENSURE(*jobPtrQueue.back() == *jobIn, "Job was not correctly added")
          */
         void addJob(Job * jobIn);
 
@@ -175,77 +177,58 @@ namespace System {
 
 
         /**
-         * \brief Function to remove a job from the queue
+         * \brief Function to remove the front job from the queue
          * @param jobnr
          * REQUIRE(properlyInitialized(), "Device not properly initialized when attempting to remove a job from queue")
          * REQUIRE(jobptr != nullptr, "job should be a valid job")
          * ENSURE should check that it was actually removed, this is currently not done
          */
 
-        void removeJob(Job * jobptr);
+        void removeJob();
 
 
         /**
          * \brief Function to finish the queue of jobs for this printer
          * REQUIRE(properlyInitialized(), "device was not properly initialized when attepting to finish the queue");
-         * ENSURE(jobPtrSet.empty(), "Not all jobs were correctly printed");
+         * ENSURE(jobPtrQueue.empty(), "Not all jobs were correctly printed");
          */
 
         void printAllJobs();
 
 
+        std::deque<Job *> * getJobs();
 
-        /**
-         * \brief Function to print a specific job assigned to this printer
-         * @param jobPtr : ptr to job to be printed
-         * REQUIRE(properlyInitialized(), "this printer was not properly initialized when calling printJob");
-         * REQUIRE(jobPtr != nullptr, "job should be a valid job");
-         * ENSURE(jobPtrSet.count(jobPtr) == 0, "Job was not correctly removed")
-         */
-        bool printJob(Job * jobPtr);
 
 
         /**
          * Function that prints the job currently first in queue
          * REQUIRE(properlyInitialized(), "printer not properly initialized when calling printcurrentjob");
-         * REQUIRE(!jobPtrSet.empty(), "There should be at least 1 job in the queue");
+         * REQUIRE(!jobPtrQueue.empty(), "There should be at least 1 job in the queue");
          * ENSURE(printed, "Job was not correctly printed");
-         * @return
+         * @return the co2 emissions of the job
          */
 
-        bool printCurrentJob();
+        int printCurrentJob();
 
 
-        /**
-         * Function that prints a certain amount of pages for a job
-         * @param jobPtr : ptr to the job to be printed
-         * @param pages : amount of pages to be printed
-         * REQUIRE(properlyInitialized(), "this printer was not properly initialized when calling printJob");
-         * REQUIRE(jobPtr != nullptr, "job should be a valid job");
-         * REQUIRE(pages > 0, "Pages to be printed should be positive");
-         * @return
-         */
-
-        bool printJobPages(Job * jobPtr, unsigned int pages);
 
 
         /**
          * Function that prints a certain amount of pages for the job currently first in queue
          * @param pages : amount of pages to be printed
          * REQUIRE(properlyInitialized(), "printer not properly initialized when calling printcurrentjob");
-         * REQUIRE(!jobPtrSet.empty(), "There should be at least 1 job in the queue");
+         * REQUIRE(!jobPtrQueue.empty(), "There should be at least 1 job in the queue");
          * ENSURE(printed, "job was not correctly printed");
          * @return
          */
 
-        bool printCurrentJobPages(unsigned int pages);
+        int printCurrentJobPages(unsigned int pages);
 
 
-        void printJob(unsigned int jobNr);
+        Job * getCurrentJob();
 
 
-
-        void printJobPages(unsigned int jobNr, unsigned int pages);
+        virtual bool belowLimit();
 
 
         /**
@@ -278,11 +261,13 @@ namespace System {
         float cost;
         Device *_initCheck;
 
+
+
         //void updatePointer(Job * inPointer, const Job * prevPointer);
 
 
 
-        std::set<System::Job *> jobPtrSet;
+        std::deque<System::Job *> jobPtrQueue;
 
 
         System::Logger logger;
