@@ -19,9 +19,6 @@ bool System::InfoPrinter::properlyInitialized() {
 }
 
 
-//TODO: create if loop so that we have an ASCII representation of the infoprinter and a text output for printer
-//TODO: pseudo: while properly init, if ... output ASCII elif text output Text
-
 void System::InfoPrinter::printAscii(std::ostream &outfile) {
 
     REQUIRE(properlyInitialized(), "InfoPrinter was not properly initialized when attempting to print ASCII");
@@ -53,9 +50,6 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
                 << "    * " << printType << "\n"
                 << "    * " << printIt->getSpeed() << " pages/minute\n"
                 << "    * " << printIt->getCost() << " cents/page\n";
-
-
-
 
 
     }
@@ -107,21 +101,32 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
 
 }
 
-void System::InfoPrinter::printText(std::ostream &outfile) {
+
+
+
+void System::InfoPrinter::printText(std::ostream &outputfile) {
     REQUIRE(properlyInitialized(), "InfoPrinter was not properly initialized when attempting to print Text");
 
     for (std::vector<Device>::iterator printIt = ownSystem->deviceVect.begin(); printIt != ownSystem->deviceVect.end(); ++printIt) {
-        outfile << printIt->getNameDev() << std::endl;
-    }
+        outputfile << printIt->getNameDev() << std::endl;
 
-    outfile << std::endl;
+        // Print the current job
+        if (!printIt->getJobs().empty()) {
+            Job* currentJob = printIt->getJobs().front();
+            outputfile << "[" << currentJob->getPrintedPages() << "/" << currentJob->getPageCount() << "] | ";
+        }
 
-    for (std::vector<Job>::iterator jobIt = ownSystem->jobVect.begin(); jobIt != ownSystem->jobVect.end(); ++jobIt) {
-        outfile << "[" << jobIt->getPageCount() << "/" << jobIt->getPageCount() << "] | [" << jobIt->getJobNr() << "][" << jobIt->getOwnDevice()->getEmissions() << "][" << jobIt->getOwnDevice()->getCost() << "]" << std::endl;
+        // Print the jobs in the queue
+        for (std::vector<Job>::iterator jobIt = printIt->getJobs().begin() + 1; jobIt != printIt->getJobs().end(); ++jobIt) {
+            outputfile << "[" << jobIt->getPageCount() << "][" << jobIt->getOwnDevice()->getEmissions() << "][" << jobIt->getOwnDevice()->getCost() << "]";
+            if (jobIt + 1 != printIt->getJobs().end()) {
+                outputfile << ", ";
+            }
+        }
+
+        outputfile << std::endl;
     }
 }
-
-
 
     void System::InfoPrinter::setSystem(System::PrinterSystem *inSystem) {
 

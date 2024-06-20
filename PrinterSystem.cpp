@@ -85,9 +85,6 @@ namespace System {
         }
 
 
-
-
-
         InfoPrinter printer;
         printer.setSystem(this);
 
@@ -95,12 +92,43 @@ namespace System {
         if (outputType == "ASCII") {
 
             printer.printAscii(writeStream);
+        } else {
+            std::cerr << "Unsupported output type, reverting to ASCII" << std::endl;
+            printer.printAscii(writeStream);
+        }
+    }
+    void PrinterSystem::getSystemGraph(std::ostream & writeStream, std::string outputSys) {
+
+        REQUIRE(properlyInitialized(), "the printer system was not properly initialized");
+
+
+        for (std::set<unsigned int>::reverse_iterator jobnrIt = jobNrSet.rbegin();
+             jobnrIt != jobNrSet.rend(); jobnrIt++) {
+
+            for (std::vector<Job>::iterator jobsIt = jobVect.begin(); jobsIt != jobVect.end(); jobsIt++) {
+
+                if (jobsIt->getJobNr() == *jobnrIt) {
+                    system_scheduler.schedule(&(*jobsIt));
+                }
+            }
+
+        }
+
+
+        InfoPrinter printer;
+        printer.setSystem(this);
+
+
+        if (outputSys == "ASCII") {
+
+            printer.printText(writeStream);
         }
 
         else{
             std::cerr << "Unsupported output type, reverting to ASCII" << std::endl;
-            printer.printAscii(writeStream);
+            printer.printText(writeStream);
         }
+
 
 
         /*

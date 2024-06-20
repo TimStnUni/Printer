@@ -52,6 +52,8 @@ namespace System {
          */
         void getInfo(std::ostream &writestream, std::string outputType);
 
+        void getSystemGraph(std::ostream &writestream, std::string outputSys);
+
 
         /**
          * \brief Function that executes a print job.
