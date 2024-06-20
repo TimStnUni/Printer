@@ -112,3 +112,59 @@ TEST_F(OutputTests, ScheduledJobTest){
 
 
 }
+
+
+
+TEST_F(OutputTests, InfoSysText){
+
+    ASSERT_TRUE(DirectoryExists("Alletesten/testoutput"));
+    ASSERT_TRUE(FileExists("Alletesten/testoutput/outputtest.xml"));
+
+    System::PrinterSystem testSystem;
+
+    EXPECT_EQ(testSystem.readXML("Alletesten/testoutput/outputtest.xml"), true);
+
+    std::ofstream outFile; // Create an output file stream
+    std::string f = "Alletesten/testoutput/AsciiSysText.xml";
+    std::string outputFileName = f + ".txt";
+    const char *outputFileNameChar = outputFileName.c_str();
+    outFile.open(outputFileNameChar); // Open the file
+
+    testSystem.getInfo(outFile, "ASCII");
+    outFile.close();
+
+
+    ASSERT_TRUE(FileExists("Alletesten/testoutput/AsciiSysText.xml.txt"));
+    ASSERT_TRUE(FileExists("Alletesten/testoutput/AsciiSysText.txt"));
+
+    EXPECT_TRUE(FileCompare("Alletesten/testoutput/AsciiSysText.xml.txt",
+                            "Alletesten/testoutput/AsciiSysText.txt"));
+
+}
+
+TEST_F(OutputTests, InfoSystemgraph){
+
+    ASSERT_TRUE(DirectoryExists("Alletesten/testoutput"));
+    ASSERT_TRUE(FileExists("Alletesten/testoutput/outputtest.xml"));
+
+    System::PrinterSystem testSystem;
+
+    EXPECT_EQ(testSystem.readXML("Alletesten/testoutput/outputtest.xml"), true);
+
+    std::ofstream outFile; // Create an output file stream
+    std::string f = "Alletesten/testoutput/ASCIISysGraph.xml";
+    std::string outputFileName = f + ".txt";
+    const char *outputFileNameChar = outputFileName.c_str();
+    outFile.open(outputFileNameChar); // Open the file
+
+    testSystem.getSystemGraph(outFile, "ASCII");
+    outFile.close();
+
+
+//    ASSERT_TRUE(FileExists("Alletesten/testoutput/ASCIISysGraph.xml.txt"));
+//    ASSERT_TRUE(FileExists("Alletesten/testoutput/ASCIISysGraph.txt"));
+//
+//    EXPECT_TRUE(FileCompare("Alletesten/testoutput/ASCIISysGraph.xml.txt",
+//                            "Alletesten/testoutput/ASCIISysGraph.txt"));
+
+}

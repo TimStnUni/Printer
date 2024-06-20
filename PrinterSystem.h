@@ -66,6 +66,8 @@ namespace System {
 
 
 
+        void getSystemGraph(std::ostream &writestream, std::string outputSys);
+
 
         /**
          * \brief Function that executes a print job via jobnr for testing, should be deprecated.
