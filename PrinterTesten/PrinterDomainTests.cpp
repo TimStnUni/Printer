@@ -9,7 +9,7 @@
 
 using namespace std;
 
-#include "../Printer.h"
+#include "../old/Printer.h"
 using namespace System;
 
 class PrinterDomainTest: public ::testing::Test {

@@ -136,7 +136,7 @@ namespace System {
     void Job::setOwnDevice(System::Device *ownDevice) {
 
         REQUIRE(properlyInitialized(), "Job not properly initialized when attempting to set owner device");
-        //REQUIRE(ownDevice != nullptr, "Input pointer should definitely not be a nullptr");
+        REQUIRE(ownDevice != nullptr, "Input pointer should definitely not be a nullptr");
 
         this->ownerDevice = ownDevice;
 
@@ -147,7 +147,7 @@ namespace System {
     System::Device *Job::getOwnDevice() const{
 
         REQUIRE(properlyInitialized(), "Job nor properly initialized when attempting to get owner device");
-        //REQUIRE(this->ownerDevice != nullptr, "own device should definitely not be the nullptr");
+        REQUIRE(this->ownerDevice != nullptr, "own device should definitely not be the nullptr");
         return this->ownerDevice;
     }
 
@@ -158,22 +158,24 @@ namespace System {
             currentPageCount--;
             return false;
         }else{
-            //todo: replace with logger
-            std::cout << "job has been fully printed" << std::endl;
+
+            //std::cout << "job has been fully printed" << std::endl;
             return true;
         }
 
 
     }
 
-    void Job::printFull() {
+    int Job::printFull() {
 
+
+        int remPages = this->getRemainingPages();
 
         while(!printPage());
 
         ownerDevice->removeJob(this);
 
-        //todo: should probably remove itself from places?
+        return (this->getOwnDevice()->getEmissions() * remPages);
 
     }
 
@@ -181,7 +183,7 @@ namespace System {
         return pageCount - currentPageCount;
     }
 
-    void Job::printPages(unsigned int amount) {
+    int Job::printPages(unsigned int amount) {
 
         if (amount >= currentPageCount) {
 
@@ -190,11 +192,15 @@ namespace System {
                 this->printPage();
 
             }
+            return amount * this->getOwnDevice()->getEmissions();
         }else{
 
+            int remPages = this->getRemainingPages();
             logger.pageAmount(std::cout);
             while(!printPage());
             ownerDevice->removeJob(this);
+
+            return remPages * this->getOwnDevice()->getEmissions();
         }
 
     }

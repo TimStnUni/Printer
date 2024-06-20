@@ -343,12 +343,12 @@ namespace System {
         return (this == _initCheck);
     }
 
-    std::set<Device *> *XMLParser::getDeviceList() {
+    std::unordered_set<Device *> *XMLParser::getDeviceList() {
         REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getDeviceList()");
         return &deviceList;
     }
 
-    std::set<Job *>* XMLParser::getJobList() {
+    std::unordered_set<Job *>* XMLParser::getJobList() {
         REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getJobList()");
         return &jobList;
     }

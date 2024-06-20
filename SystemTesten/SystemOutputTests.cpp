@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include "gtest/gtest.h"
-#include "../Printer.h"
+#include "../old/Printer.h"
 #include "../TicTacToeUtils.h"
 
 

@@ -31,6 +31,8 @@ namespace System {
 
         void pageAmount(std::ostream & outStream);
 
+        void printConsistency(std::ostream & outStream);
+
 
     private:
 

@@ -14,6 +14,7 @@
 #include "Job.h"
 #include <map>
 #include <set>
+#include <unordered_set>
 #include <vector>
 #include <vector>
 #include <fstream>
@@ -57,7 +58,7 @@ namespace System {
          * @return
          * REQUIRE(this->properlyInitialized, "XMLParser wasn't properly initialized)
          */
-        std::set<Device*>* getDeviceList();
+        std::unordered_set<Device*>* getDeviceList();
 
 
         /**
@@ -67,7 +68,7 @@ namespace System {
          */
 
 
-        std::set<Job*>* getJobList();
+        std::unordered_set<Job*>* getJobList();
 
 
 
@@ -120,8 +121,8 @@ namespace System {
 
 
         //new datamembers
-        std::set<Device*> deviceList;
-        std::set<Job*> jobList;
+        std::unordered_set<Device*> deviceList;
+        std::unordered_set<Job*> jobList;
 
         std::set<unsigned int> jobNrSet;
 

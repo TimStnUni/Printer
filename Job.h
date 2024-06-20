@@ -113,7 +113,7 @@ namespace System {
          */
         void setUserName(const std::string &userName);
 
-        //TODO:: filled it in, has to get checked
+
         /**
          * \brief A setter function for the printer speed
          * @param type_in
@@ -133,9 +133,9 @@ namespace System {
 
         bool printPage();
 
-        void printPages(unsigned int amount);
+        int printPages(unsigned int amount);
 
-        void printFull();
+        int printFull();
 
 
         unsigned int getPrintedPages() const;
