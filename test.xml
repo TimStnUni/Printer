@@ -7,6 +7,13 @@
         <cost>20</cost>
     </DEVICE>
     <DEVICE>
+        <name>Color_Printer</name>
+        <emissions>3</emissions>
+        <type>color</type>
+        <speed>40</speed>
+        <cost>30</cost>
+    </DEVICE>
+    <DEVICE>
         <name>Office_Printer6</name>
         <emissions>3</emissions>
         <type>bw</type>
@@ -34,7 +41,7 @@
     <JOB>
         <jobNumber>2189</jobNumber>
         <pageCount>3</pageCount>
-        <type>bw</type>
+        <type>color</type>
         <userName>anonymous_user</userName>
     </JOB>
     <DEVICE>
@@ -49,6 +56,18 @@
         <pageCount>10</pageCount>
         <type>scan</type>
         <userName>Peter Selie</userName>
+    </JOB>
+    <JOB>
+        <jobNumber>98633</jobNumber>
+        <pageCount>6</pageCount>
+        <type>scan</type>
+        <userName>Peter Pan</userName>
+    </JOB>
+    <JOB>
+        <jobNumber>98634</jobNumber>
+        <pageCount>13</pageCount>
+        <type>scan</type>
+        <userName>Jane Doe</userName>
     </JOB>
 
 </SYSTEM>

@@ -130,10 +130,10 @@ void System::InfoPrinter::printAdvancedAscii(std::ostream &outfile) {
 
             if (jobsIt == jobs->begin()){
 
-                outfile << "[" << (*jobsIt)->getRemainingPages() << "/" << (*jobsIt)->getPageCount() << "] | ";
+                outfile << (*jobsIt)->getUserName() << ":" << "[" << (*jobsIt)->getRemainingPages() << "/" << (*jobsIt)->getPageCount() << "] | ";
             }else{
 
-                outfile << "[" << (*jobsIt)->getPageCount() << "]";
+                outfile << (*jobsIt)->getUserName() << ":"  << "[" << (*jobsIt)->getPageCount() << "] || ";
             }
 
 
