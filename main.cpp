@@ -35,6 +35,10 @@ int main() {
     outFile2.open(outputFileNameChar2); // Open the file
 
 
+//Tes
+
+    testSystem.doPrintJob(89751);
+
 
 
 
