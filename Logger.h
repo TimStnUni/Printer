@@ -31,6 +31,10 @@ namespace System {
 
         void pageAmount(std::ostream & outStream);
 
+        void printConsistency(std::ostream & outStream);
+
+        void printNoDevice(std::ostream & outStream, unsigned int jobNr);
+
 
     private:
 

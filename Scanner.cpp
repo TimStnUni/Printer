@@ -28,4 +28,13 @@ namespace System {
         ENSURE(this->properlyInitialized(), "Scanner is not properly initialized");
 
     }
+
+    bool Scanner::belowLimit() {
+
+        if (this->getEmissions() <= limit){
+            return true;
+        }
+        return false;
+
+    }
 } // System

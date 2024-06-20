@@ -9,7 +9,7 @@
 #include <gtest/gtest.h>
 
 using namespace std;
-#include "Printer.h"
+#include "old/Printer.h"
 #include "./PrinterTesten/PrinterDomainTests.cpp"
 #include "./PrinterTesten/PrinterOutputTests.cpp"
 //#include "./PrinterTesten/PrinterInputTests.cpp"

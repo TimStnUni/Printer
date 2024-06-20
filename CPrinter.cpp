@@ -27,4 +27,12 @@ namespace System {
 
 
     }
+
+    bool CPrinter::belowLimit() {
+
+        if(this->getEmissions() <= limit) {
+            return true;
+        }
+        return false;
+    }
 } // System

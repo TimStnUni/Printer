@@ -43,6 +43,8 @@ namespace System {
 
         void printAscii(std::ostream &writestream);
 
+        void printAdvancedAscii(std::ostream &writestream);
+
 
 
     protected:

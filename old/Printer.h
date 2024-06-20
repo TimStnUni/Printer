@@ -20,12 +20,12 @@
 #include <algorithm>
 
 
-#include "DesignByContract.h"
+#include "../DesignByContract.h"
 #include "tinystr.h"
 #include "tinyxml.h"
-#include "Device.h"
-#include "Job.h"
-#include "XMLParser.h"
+#include "../Device.h"
+#include "../Job.h"
+#include "../XMLParser.h"
 using namespace std;
 
 

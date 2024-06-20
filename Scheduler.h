@@ -7,7 +7,8 @@
 
 #include "Job.h"
 #include "Device.h"
-#
+#include <unordered_set>
+#include "Logger.h"
 
 
 namespace System {
@@ -42,7 +43,7 @@ namespace System {
          */
 
         //todo: maybe split devVect into a setter function?
-        void schedule(Job * jobIn, std::set<Device *> * devVect);
+        bool schedule(Job * jobIn, std::unordered_set<Device *> * devVect);
 
 
         /**
@@ -59,10 +60,11 @@ namespace System {
 
     private:
 
-        PrinterSystem * ownSystem = nullptr;
+        //PrinterSystem * ownSystem = nullptr;
         Scheduler * _initcheck;
         bool properlyInitialized();
 
+        Logger logger;
 
     };
 

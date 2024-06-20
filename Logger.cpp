@@ -5,7 +5,7 @@
 #include "Logger.h"
 
 namespace System {
-    Logger::Logger(){
+    Logger::Logger() {
 
         _initCheck = this;
 
@@ -13,7 +13,6 @@ namespace System {
 
 
     }
-
 
 
     bool Logger::properlyInitialized() {
@@ -35,9 +34,9 @@ namespace System {
     }
 
     void
-    Logger::dispPrintJob(std::ostream &outStream, unsigned int jobNr, std::basic_string<char> deviceName, std::basic_string<char> username,
-                         std::basic_string<char> & type, unsigned int pages, float emissions) {
-
+    Logger::dispPrintJob(std::ostream &outStream, unsigned int jobNr, std::basic_string<char> deviceName,
+                         std::basic_string<char> username,
+                         std::basic_string<char> &type, unsigned int pages, float emissions) {
 
 
         outStream << "Printer \"" << deviceName << "\" finished " << type << "job:\n";
@@ -51,6 +50,18 @@ namespace System {
     void Logger::pageAmount(std::ostream &outStream) {
 
         outStream << "fewer pages remaining, will print all remaining pages" << std::endl;
+
+    }
+
+    void Logger::printConsistency(std::ostream &outStream) {
+
+        outStream << "xmlFile was not consistent" << std::endl;
+
+    }
+
+    void Logger::printNoDevice(std::ostream &outStream, unsigned int jobNr) {
+
+        outStream << "No suitable device found for job " << jobNr << std::endl;
 
     }
 
