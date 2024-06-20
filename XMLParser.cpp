@@ -34,11 +34,6 @@ namespace System {
 
     bool XMLParser::parse(std::ostream &errorstream) {
 
-        //Todo: According to usecase 1.1, we shouldn't simply return when something is incorrect. We should continue reading
-        // I think this means we'll have to set whatever is missing to some dummy variable. Since later on if type is missing
-        // the require's will fail.
-
-
         TiXmlElement *System = InputDoc.FirstChildElement();
 
         bool consistent = true;
@@ -343,12 +338,12 @@ namespace System {
         return (this == _initCheck);
     }
 
-    std::set<Device *> *XMLParser::getDeviceList() {
+    std::unordered_set<Device *> *XMLParser::getDeviceList() {
         REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getDeviceList()");
         return &deviceList;
     }
 
-    std::set<Job *>* XMLParser::getJobList() {
+    std::unordered_set<Job *>* XMLParser::getJobList() {
         REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getJobList()");
         return &jobList;
     }

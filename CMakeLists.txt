@@ -85,8 +85,8 @@ set(RELEASE_SOURCE_FILES
         ./Libs/tinyxml.cpp
         ./Libs/tinyxmlparser.cpp
         ./Libs/tinyxmlerror.cpp
-        Printer.cpp
-        Printer.h
+        old/Printer.cpp
+        old/Printer.h
         Device.cpp
         Device.h
         Job.cpp
@@ -124,7 +124,7 @@ set(DEBUG_SOURCE_FILES
         ./Libs/tinyxml.cpp
         ./Libs/tinyxmlparser.cpp
         ./Libs/tinyxmlerror.cpp
-        Printer.cpp
+        old/Printer.cpp
         TicTacToeUtils.cpp
         Device.cpp
         Job.cpp

@@ -29,7 +29,7 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
     outfile << "   --=== Printers: ===--\n" << std::endl;
 
 
-    for (std::set<Device*>::iterator printIt = ownSystem->getDeviceVector()->begin(); printIt != ownSystem->getDeviceVector()->end(); ++printIt) {
+    for (std::unordered_set<Device*>::iterator printIt = ownSystem->getDeviceVector()->begin(); printIt != ownSystem->getDeviceVector()->end(); ++printIt) {
 
         //TODO: layout aanpassen?
 
@@ -60,7 +60,7 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
 
     outfile << "      --=== Jobs ===--\n" << std::endl;
 
-    for (std::set<Job*>::iterator jobIt = ownSystem->getJobVector()->begin();
+    for (std::unordered_set<Job*>::iterator jobIt = ownSystem->getJobVector()->begin();
          jobIt != ownSystem->getJobVector()->end(); ++jobIt) {
 
         std::string jobType;
@@ -84,7 +84,6 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
         float totalcost = (float)(*jobIt)->getPageCount() * (*jobIt)->getOwnDevice()->getCost();
         float totalCO2 = (float)(*jobIt)->getPageCount() * (float)(*jobIt)->getOwnDevice()->getEmissions();
 
-        //Todo: Add device when device and job have been overhauled. Also add total co2 and cost when that's gettable
         outfile << "        [Job #" << (*jobIt)->getJobNr() << "]\n"
                 << "            * Owner: " << (*jobIt)->getUserName() << "\n"
                 << "            * Total Pages: " << (*jobIt)->getPageCount() << "\n"

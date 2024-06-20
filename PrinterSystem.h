@@ -24,16 +24,12 @@
 
 #include "DesignByContract.h"
 
+#include <unordered_set>
 
 namespace System {
 
 
     class PrinterSystem {
-
-        //Todo: Remove friend classes
-        //friend class Device;
-        //friend class Scheduler;
-        //friend class InfoPrinter;
 
     public:
         //Should simply always be running, no input in constructor.
@@ -76,7 +72,7 @@ namespace System {
         void doPrintJob(unsigned int jobnr, std::ostream &writeStream, bool erasebool = true);
 
         /**
-         * \brief Function that executes a print job via jobnr for testing.
+         * \brief Function that executes a print job via jobPtr.
          * @param jobnr JobNr of the job to be executed
          * @param writeStream Stream where the output is stored
          * REQUIRE(properlyInitialized()
@@ -89,6 +85,8 @@ namespace System {
          * \brief Loops over all jobs and prints that they are finished.
          * @param writeStream Stream where the output will be stored
          * REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to print all jobs");
+         * ENSURE(jobVect.empty(), "Jobs were not all correctly removed");
+         * ENSURE(jobNrSet.empty(), "Jobnrs were not correctly cleared");
          */
 
         void printAll(std::ostream &writeStream);
@@ -111,15 +109,21 @@ namespace System {
         void addDevice(Device *inDevice);
 
 
+        /**
+         * Function to schedule all jobs
+         * REQUIRE(properlyInitialized(), "system not properly initialized when trying to schedule all jobs");
+         * ENSURE(jobUnscheduled.empty(), "Not all jobs were correctly scheduled");
+         */
 
+        void scheduleAll();
 
         void testPrinting();
 
 
 
-        std::set<Device*> * getDeviceVector();
+        std::unordered_set<Device*> * getDeviceVector();
 
-        std::set<Job*> * getJobVector();
+        std::unordered_set<Job*> * getJobVector();
 
 
 
@@ -128,12 +132,12 @@ namespace System {
         float totalCO2_system = 0;
 
         std::set<unsigned int> jobNrSet;
-        std::set<unsigned int> jobNrUnscheduled;
+        std::set<Job*> jobUnscheduled;
 
-        std::set<Job*> jobVect;
+        std::unordered_set<Job*> jobVect;
 
 
-        std::set<Device*> deviceVect;
+        std::unordered_set<Device*> deviceVect;
 
 
         Scheduler system_scheduler;
