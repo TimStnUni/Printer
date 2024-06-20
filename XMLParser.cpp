@@ -94,7 +94,8 @@ namespace System {
                                 emissions = std::stoi(elem->FirstChild()->ToText()->Value());
 
                             } else {
-                                errorstream << "Emissions should be positive" << std::endl;
+                                xlogger.parseNameEmpty( std::cerr, "Emissions");
+//                                errorstream << "Emissions should be positive" << std::endl;
                                 readingCorrect = false;
                                 consistent = false;
                                 break;
@@ -109,6 +110,7 @@ namespace System {
                                 cost = std::stof(elem->FirstChild()->ToText()->Value());
 
                             } else {
+//                                logger.parseNameEmpty( std::cerr, "Cost");
                                 errorstream << "Cost should be positive" << std::endl;
                                 readingCorrect = false;
                                 consistent = false;

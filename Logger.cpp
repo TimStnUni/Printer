@@ -65,5 +65,18 @@ namespace System {
 
     }
 
+    void parseNameEmpty(std::ostream & outStream, std::string type){
+
+        outStream << type << "should not be empty" << std::endl;
+
+    }
+
+    void parseNegative(std::ostream & outStream, std::string type){
+
+        outStream << type << "should be positive" << std::endl;
+
+    }
+
+
 
 } // System

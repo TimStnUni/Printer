@@ -5,6 +5,7 @@
 #ifndef PROJSOFTENG_XMLPARSER_H
 #define PROJSOFTENG_XMLPARSER_H
 
+#include "Logger.h"
 #include "DesignByContract.h"
 #include "tinystr.h"
 #include "tinyxml.h"
@@ -125,6 +126,7 @@ namespace System {
         std::unordered_set<Job*> jobList;
 
         std::set<unsigned int> jobNrSet;
+        Logger xlogger;
 
 
     };
