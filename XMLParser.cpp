@@ -94,7 +94,9 @@ namespace System {
                                 emissions = std::stoi(elem->FirstChild()->ToText()->Value());
 
                             } else {
-                                xlogger.parseNameEmpty( std::cerr, "Emissions");
+                                type = "Emissions";
+                                //TODO: werkt niet
+                                logger.parseNegative( std::cerr, type);
 //                                errorstream << "Emissions should be positive" << std::endl;
                                 readingCorrect = false;
                                 consistent = false;

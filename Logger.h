@@ -37,7 +37,7 @@ namespace System {
 
         void parseNameEmpty(std::ostream & outStream, std::string type);
 
-        void parseNegative(std::ostream & outStream, std::string type);
+        void parseNegative(std::ostream & outStream, std::basic_string<char> type);
 
 
 
