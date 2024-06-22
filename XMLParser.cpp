@@ -96,7 +96,8 @@ namespace System {
                             } else {
                                 type = "Emissions";
                                 //TODO: werkt niet
-                                logger.parseNegative( std::cerr, type);
+                                std::string type = "Emissions";
+                                System::Logger::parseNegative(std::cerr, type);
 //                                errorstream << "Emissions should be positive" << std::endl;
                                 readingCorrect = false;
                                 consistent = false;

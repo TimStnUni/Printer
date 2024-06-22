@@ -35,9 +35,9 @@ namespace System {
 
         void printNoDevice(std::ostream & outStream, unsigned int jobNr);
 
-        void parseNameEmpty(std::ostream & outStream, std::string type);
+        static void parseNameEmpty(std::ostream & outStream, const std::string& type);
 
-        void parseNegative(std::ostream & outStream, std::basic_string<char> type);
+        static void parseNegative(std::ostream & outStream, const std::string& type);
 
 
 

@@ -126,7 +126,6 @@ namespace System {
         std::unordered_set<Job*> jobList;
 
         std::set<unsigned int> jobNrSet;
-        Logger logger;
 
 
     };
