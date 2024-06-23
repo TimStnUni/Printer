@@ -77,7 +77,9 @@ namespace System {
 
 
                             if (name_t.empty()) {
-                                errorstream << "Name should not be empty" << std::endl;
+                                std::string type_err = "Name";
+                                System::Logger::parseNameEmpty(std::cerr, type_err);
+//                                errorstream << "Name should not be empty" << std::endl;
                                 readingCorrect = false;
                                 break;
                                 //return readingCorrect;
@@ -96,8 +98,8 @@ namespace System {
                             } else {
                                 type = "Emissions";
                                 //TODO: werkt niet
-                                std::string type = "Emissions";
-                                System::Logger::parseNegative(std::cerr, type);
+                                std::string type_err = "Emissions";
+                                System::Logger::parseNegative(std::cerr, type_err);
 //                                errorstream << "Emissions should be positive" << std::endl;
                                 readingCorrect = false;
                                 consistent = false;
@@ -113,8 +115,9 @@ namespace System {
                                 cost = std::stof(elem->FirstChild()->ToText()->Value());
 
                             } else {
-//                                logger.parseNameEmpty( std::cerr, "Cost");
-                                errorstream << "Cost should be positive" << std::endl;
+                                std::string type_err = "Cost";
+                                System::Logger::parseNegative(std::cerr, type_err);
+//                                errorstream << "Cost should be positive" << std::endl;
                                 readingCorrect = false;
                                 consistent = false;
                                 break;
@@ -130,7 +133,9 @@ namespace System {
 
 
                             if (type_d.empty()) {
-                                errorstream << "Type should not be empty" << std::endl;
+                                std::string type_err = "Type";
+                                System::Logger::parseNameEmpty(std::cerr, type_err);
+//                                errorstream << "Type should not be empty" << std::endl;
                                 readingCorrect = false;
                                 break;
                                 //return readingCorrect;
@@ -151,7 +156,9 @@ namespace System {
                             if (std::stoi(elem->FirstChild()->ToText()->Value()) > 0) {
                                 speed = std::stoi(elem->FirstChild()->ToText()->Value());
                             } else {
-                                errorstream << "speed should be positive" << std::endl;
+                                std::string type_err = "Speed";
+                                System::Logger::parseNegative(std::cerr, type_err);
+//                                errorstream << "speed should be positive" << std::endl;
                                 readingCorrect = false;
                                 consistent = false;
                                 break;
@@ -218,7 +225,9 @@ namespace System {
                     if (elemname == "userName") {
                         TiXmlNode * t = elem->FirstChild();
                         if (t == nullptr) {
-                            errorstream << "username should not be empty" << std::endl;
+                            std::string type_err = "Username";
+                            System::Logger::parseNameEmpty(std::cerr, type_err);
+//                            errorstream << "username should not be empty" << std::endl;
                             readingCorrectly = false;
                             break;
                             //return readingCorrectly;
@@ -232,7 +241,9 @@ namespace System {
                         if (std::stoi(elem->FirstChild()->ToText()->Value()) > 0) {
                             pageCount = std::stoi(elem->FirstChild()->ToText()->Value());
                         } else {
-                            errorstream << "pagecount should be a positive integer" << std::endl;
+                            std::string type_err = "Pagecount";
+                            System::Logger::parseNegative(std::cerr, type_err);
+//                            errorstream << "pagecount should be a positive integer" << std::endl;
                             consistent = false;
                             readingCorrectly = false;
                             break;
@@ -244,7 +255,9 @@ namespace System {
                         if (std::stoi(elem->FirstChild()->ToText()->Value()) > 0) {
                             jobNr = std::stoi(elem->FirstChild()->ToText()->Value());
                         } else {
-                            errorstream << "jobnumber should be a positive integer" << std::endl;
+                            std::string type_err = "Jobnumber";
+                            System::Logger::parseNegative(std::cerr, type_err);
+//                            errorstream << "jobnumber should be a positive integer" << std::endl;
                             consistent = false;
                             readingCorrectly = false;
                             break;
@@ -259,7 +272,9 @@ namespace System {
 
 
                         if (type_j.empty()) {
-                            errorstream << "Type should not be empty" << std::endl;
+                            std::string type_err = "Type";
+                            System::Logger::parseNameEmpty(std::cerr, type_err);
+//                            errorstream << "Type should not be empty" << std::endl;
                             readingCorrectly = false;
                             break;
                             //return readingCorrectly;
