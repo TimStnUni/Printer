@@ -1,1 +1,2 @@
-jobnumber should be a positive integer
+Jobnumber should be positive
+there was an error in a device in the inputfile

@@ -1,31 +1,8 @@
-# === [System Status] === #
-
-
-   --=== Printers: ===--
-
-Office_Printer8
-    * CO2: 5 g/page
-    * Black-and-white printer
-    * 45 pages/minute
-    * 8 cents/page
-      --=== Jobs ===--
-
-    * Current:
-        [Job #89751]
-            * Owner: SergeDemeyer
-            * Total Pages: 2
-            * Pages Printed: 0
-            * Type: Black-and-white job
-            * Device: Office_Printer8
-            * Total CO2: 10
-            * Total cost: 16
-    * Queue:
-        [Job #2189]
-            * Owner: anonymous_user
-            * Total Pages: 3
-            * Pages Printed: 0
-            * Type: Black-and-white job
-            * Device: Office_Printer8
-            * Total CO2: 15
-            * Total cost: 24
-
+Office_Printer5
+    SergeDemeyer:[1/1] | SergeDemeyer:[2] ||
+Color_Printer
+    anonymous_user:[3/3] |
+Office_Printer6
+    SergeDemeyer:[3/3] |
+Default Scanner
+    Jane Doe:[13/13] | Peter Selie:[10] || Peter Pan:[6] ||

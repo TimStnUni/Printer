@@ -1,9 +1,3 @@
-Printer "Default Scanner" finished scanning job:
-  Number: 98632
-  Submitted by "Peter Selie"
-  10 pages
-  Job CO2 emissions: 80 gram
-
 Printer "Office_Printer5" finished black-and-white-printing job:
   Number: 89751
   Submitted by "SergeDemeyer"
@@ -15,5 +9,11 @@ Printer "Color_Printer" finished color-printing job:
   Submitted by "anonymous_user"
   3 pages
   Job CO2 emissions: 9 gram
+
+Printer "Default Scanner" finished scanning job:
+  Number: 98632
+  Submitted by "Peter Selie"
+  10 pages
+  Job CO2 emissions: 80 gram
 
 Total CO2 emitted by jobs until now is 95 gram

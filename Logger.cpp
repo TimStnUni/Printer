@@ -67,13 +67,13 @@ namespace System {
 
     void Logger::parseNameEmpty(std::ostream & outStream, const std::string& type){
 
-        outStream << type << "should not be empty" << std::endl;
+        outStream << type << " should not be empty" << std::endl;
 
     }
 
     void Logger::parseNegative(std::ostream & outStream, const std::string& type){
 
-        outStream << type << "should be positive" << std::endl;
+        outStream << type << " should be positive" << std::endl;
 
     }
 

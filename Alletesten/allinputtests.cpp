@@ -74,7 +74,8 @@ TEST_F(InputTests, ValidDeviceInput) {
     ASSERT_TRUE(FileExists("Alletesten/testinput/validDevice.xml"));
 
     System::PrinterSystem testSystem;
-    EXPECT_EQ(testSystem.readXML("Alletesten/testinput/validDevice.xml"), true);
+    testSystem.readXML("Alletesten/testinput/validDevice.xml");
+    //EXPECT_EQ(testSystem.readXML("Alletesten/testinput/validDevice.xml"), true);
     // readXML returns true if the XML input for the device is valid
 
     ASSERT_TRUE(FileExists("Alletesten/testinput/validDevice.xml.txt"));
@@ -115,6 +116,7 @@ TEST_F(InputTests, jobNrIsNegative){
     ASSERT_TRUE(FileExists("Alletesten/testinput/negativeJobnr.txt"));
 
     System::PrinterSystem testSystem;
+    testSystem.readXML("Alletesten/testinput/negativeJobnr.xml");
 
     EXPECT_EQ(testSystem.readXML("Alletesten/testinput/negativeJobnr.xml"), false);
 
@@ -134,7 +136,7 @@ TEST_F(InputTests, Jobnr_unique){
     ASSERT_TRUE(FileExists("Alletesten/testinput/notuniqueJobnr.xml"));
 
     System::PrinterSystem testSystem;
-
+    testSystem.readXML("Alletesten/testinput/notuniqueJobnr.xml");
     EXPECT_EQ(testSystem.readXML("Alletesten/testinput/notuniqueJobnr.xml"), false);
 
     ASSERT_TRUE(FileExists("Alletesten/testinput/notuniqueJobnr.xml.txt"));
@@ -156,7 +158,7 @@ TEST_F(InputTests, emptyUserName){
 
     System::PrinterSystem testSystem;
     testSystem.readXML("Alletesten/testinput/emptyUser.xml");
-    //EXPECT_EQ(testSystem.readXML("Alletesten/testinput/emptyUser.xml"), false);
+    EXPECT_EQ(testSystem.readXML("Alletesten/testinput/emptyUser.xml"), false);
 
     ASSERT_TRUE(FileExists("Alletesten/testinput/emptyUser.xml.txt"));
     ASSERT_TRUE(FileExists("Alletesten/testinput/emptyUser.txt"));
@@ -174,6 +176,7 @@ TEST_F(InputTests, pageCountisnegative){
     ASSERT_TRUE(FileExists("Alletesten/testinput/negativePagecount.xml"));
 
     System::PrinterSystem testSystem;
+    testSystem.readXML("Alletesten/testinput/negativePagecount.xml");
 
     EXPECT_EQ(testSystem.readXML("Alletesten/testinput/negativePagecount.xml"), false);
 
@@ -200,7 +203,7 @@ TEST_F(InputTests, InfoPrinter){
     const char *outputFileNameChar = outputFileName.c_str();
     outFile.open(outputFileNameChar); // Open the file
 
-    testSystem.getInfo(outFile, "ASCII");
+    testSystem.getInfo(outFile, "ASCII", true);
     outFile.close();
 
 

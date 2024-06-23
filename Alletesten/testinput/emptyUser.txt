@@ -1,1 +1,2 @@
-username should not be empty
+Username should not be empty
+there was an error in a device in the inputfile

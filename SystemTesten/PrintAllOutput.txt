@@ -1,13 +1,43 @@
 Printer "Office_Printer5" finished black-and-white-printing job:
   Number: 89751
   Submitted by "SergeDemeyer"
-  2 pages
-  Job CO2 emissions: 6 gram
+  1 pages
+  Job CO2 emissions: 3 gram
 
 Printer "Office_Printer5" finished black-and-white-printing job:
+  Number: 89753
+  Submitted by "SergeDemeyer"
+  3 pages
+  Job CO2 emissions: 9 gram
+
+Printer "Color_Printer" finished color-printing job:
   Number: 2189
   Submitted by "anonymous_user"
   3 pages
   Job CO2 emissions: 9 gram
 
-Total CO2 emitted by jobs until now is 15 gram
+Printer "Office_Printer6" finished black-and-white-printing job:
+  Number: 89752
+  Submitted by "SergeDemeyer"
+  2 pages
+  Job CO2 emissions: 6 gram
+
+Printer "Default Scanner" finished scanning job:
+  Number: 98634
+  Submitted by "Jane Doe"
+  13 pages
+  Job CO2 emissions: 104 gram
+
+Printer "Default Scanner" finished scanning job:
+  Number: 98632
+  Submitted by "Peter Selie"
+  10 pages
+  Job CO2 emissions: 80 gram
+
+Printer "Default Scanner" finished scanning job:
+  Number: 98633
+  Submitted by "Peter Pan"
+  6 pages
+  Job CO2 emissions: 48 gram
+
+Total CO2 emitted by jobs until now is 259 gram

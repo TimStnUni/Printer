@@ -38,14 +38,13 @@ TEST_F(SystemOutputTests, SingleJobTest){
     outFile.open(outputFileNameChar); // Open the file
 
 
-    testSystem.doPrintJob(2189, outFile);
+    testSystem.doPrintJob("Office_Printer5", outFile);
 
     outFile.close();
 
     EXPECT_TRUE(FileExists("SystemTesten/PrintOutputTest.txt"));
     EXPECT_TRUE(FileExists("SystemTesten/PrintOutput.txt"));
     EXPECT_TRUE(FileCompare("SystemTesten/PrintOutputTest.txt", "SystemTesten/PrintOutput.txt"));
-    EXPECT_TRUE(FileCompare("SystemTesten/PrintOutput.txt", "SystemTesten/PrintOutputTest.txt"));
 
 
 }

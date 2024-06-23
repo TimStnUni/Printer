@@ -78,7 +78,7 @@ namespace System {
 
                             if (name_t.empty()) {
                                 std::string type_err = "Name";
-                                System::Logger::parseNameEmpty(std::cerr, type_err);
+                                System::Logger::parseNameEmpty(errorstream, type_err);
 //                                errorstream << "Name should not be empty" << std::endl;
                                 readingCorrect = false;
                                 break;
@@ -99,7 +99,7 @@ namespace System {
                                 type = "Emissions";
                                 //TODO: werkt niet
                                 std::string type_err = "Emissions";
-                                System::Logger::parseNegative(std::cerr, type_err);
+                                System::Logger::parseNegative(errorstream, type_err);
 //                                errorstream << "Emissions should be positive" << std::endl;
                                 readingCorrect = false;
                                 consistent = false;
@@ -116,7 +116,7 @@ namespace System {
 
                             } else {
                                 std::string type_err = "Cost";
-                                System::Logger::parseNegative(std::cerr, type_err);
+                                System::Logger::parseNegative(errorstream, type_err);
 //                                errorstream << "Cost should be positive" << std::endl;
                                 readingCorrect = false;
                                 consistent = false;
@@ -134,7 +134,7 @@ namespace System {
 
                             if (type_d.empty()) {
                                 std::string type_err = "Type";
-                                System::Logger::parseNameEmpty(std::cerr, type_err);
+                                System::Logger::parseNameEmpty(errorstream, type_err);
 //                                errorstream << "Type should not be empty" << std::endl;
                                 readingCorrect = false;
                                 break;
@@ -157,7 +157,7 @@ namespace System {
                                 speed = std::stoi(elem->FirstChild()->ToText()->Value());
                             } else {
                                 std::string type_err = "Speed";
-                                System::Logger::parseNegative(std::cerr, type_err);
+                                System::Logger::parseNegative(errorstream, type_err);
 //                                errorstream << "speed should be positive" << std::endl;
                                 readingCorrect = false;
                                 consistent = false;
@@ -226,7 +226,7 @@ namespace System {
                         TiXmlNode * t = elem->FirstChild();
                         if (t == nullptr) {
                             std::string type_err = "Username";
-                            System::Logger::parseNameEmpty(std::cerr, type_err);
+                            System::Logger::parseNameEmpty(errorstream, type_err);
 //                            errorstream << "username should not be empty" << std::endl;
                             readingCorrectly = false;
                             break;
@@ -242,7 +242,7 @@ namespace System {
                             pageCount = std::stoi(elem->FirstChild()->ToText()->Value());
                         } else {
                             std::string type_err = "Pagecount";
-                            System::Logger::parseNegative(std::cerr, type_err);
+                            System::Logger::parseNegative(errorstream, type_err);
 //                            errorstream << "pagecount should be a positive integer" << std::endl;
                             consistent = false;
                             readingCorrectly = false;
@@ -256,7 +256,7 @@ namespace System {
                             jobNr = std::stoi(elem->FirstChild()->ToText()->Value());
                         } else {
                             std::string type_err = "Jobnumber";
-                            System::Logger::parseNegative(std::cerr, type_err);
+                            System::Logger::parseNegative(errorstream, type_err);
 //                            errorstream << "jobnumber should be a positive integer" << std::endl;
                             consistent = false;
                             readingCorrectly = false;
@@ -273,8 +273,8 @@ namespace System {
 
                         if (type_j.empty()) {
                             std::string type_err = "Type";
-                            System::Logger::parseNameEmpty(std::cerr, type_err);
-//                            errorstream << "Type should not be empty" << std::endl;
+                            System::Logger::parseNameEmpty(errorstream, type_err);
+                            errorstream << "Type should not be empty" << std::endl;
                             readingCorrectly = false;
                             break;
                             //return readingCorrectly;

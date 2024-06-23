@@ -50,7 +50,7 @@ TEST_F(OutputTests, SingleJobTest){
     outFile.open(outputFileNameChar); // Open the file
 
 
-    testSystem.doPrintJob(2189, outFile);
+    testSystem.doPrintJob("Color_Printer", outFile);
 
     outFile.close();
 
@@ -102,7 +102,7 @@ TEST_F(OutputTests, ScheduledJobTest){
     outFile.open(outputFileNameChar); // Open the file
 
     //TODO:create scheduler for test
-    testSystem.doPrintJob(2189, outFile);
+    testSystem.doPrintJob("Color_Printer", outFile);
 
     outFile.close();
 
@@ -130,7 +130,7 @@ TEST_F(OutputTests, InfoSysText){
     const char *outputFileNameChar = outputFileName.c_str();
     outFile.open(outputFileNameChar); // Open the file
 
-    testSystem.getInfo(outFile, "ASCII");
+    testSystem.getInfo(outFile, "ASCII", true);
     outFile.close();
 
 
@@ -156,15 +156,15 @@ TEST_F(OutputTests, InfoSystemgraph){
     std::string outputFileName = f + ".txt";
     const char *outputFileNameChar = outputFileName.c_str();
     outFile.open(outputFileNameChar); // Open the file
-
-    testSystem.getSystemGraph(outFile, "ASCII");
+//TODO:
+//    testSystem.getSystemGraph(outFile, "ASCII");
     outFile.close();
 
 
-//    ASSERT_TRUE(FileExists("Alletesten/testoutput/ASCIISysGraph.xml.txt"));
-//    ASSERT_TRUE(FileExists("Alletesten/testoutput/ASCIISysGraph.txt"));
-//
-//    EXPECT_TRUE(FileCompare("Alletesten/testoutput/ASCIISysGraph.xml.txt",
-//                            "Alletesten/testoutput/ASCIISysGraph.txt"));
+    ASSERT_TRUE(FileExists("Alletesten/testoutput/ASCIISysGraph.xml.txt"));
+    ASSERT_TRUE(FileExists("Alletesten/testoutput/ASCIISysGraph.txt"));
+
+    EXPECT_TRUE(FileCompare("Alletesten/testoutput/ASCIISysGraph.xml.txt",
+                            "Alletesten/testoutput/ASCIISysGraph.txt"));
 
 }
