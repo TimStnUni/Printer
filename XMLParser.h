@@ -29,24 +29,30 @@ namespace System {
 
     public:
 
+
+        /**
+         * \brief default constructor
+         * ENSURE(this->properlyInitialized(), "Parser wasn't properly initialized");
+         */
         XMLParser();
 
-        //Todo: Look through all of these requires/ensures
+
 
         /**
          *
          * \brief Constructor for parser
          * @param filename : Name of file to parse as a const char *
-         * REQUIRE inputfile not empty i guess?
+         * REQUIRE(filename != nullptr, "Inputfile should be properly given")
          * ENSURE(properlyInitialized(), "Parser not properly initialized");
-
          */
-        XMLParser(const char *filename);
+        XMLParser(const char *filename, std::ostream & errorStream);
 
         /**
          * \brief Additional way to read an XML File through the parser, never used
          * @param filename
          * @return
+         * REQUIRE(this->properlyInitialized(), "Parser wasn't properly initialized when calling addInputFile");
+         * REQUIRE(filename != nullptr, "File should be properly given");
          */
 
         bool addInputFile(const char * filename);

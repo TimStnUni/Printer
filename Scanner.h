@@ -25,7 +25,13 @@ namespace System {
         */
         Scanner(std::string &name, int &emissions, int &speed, float &cost);
 
-        bool belowLimit();
+
+        /**
+         * Function to check if scanner is below mandated CO2 emissions
+         * @return
+         * REQUIRE(properlyInitialized(), "Scanner wasn't properly initialized");
+         */
+        bool isBelowLimit();
 
     private:
         Device * _initCheck;

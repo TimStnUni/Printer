@@ -159,7 +159,6 @@ namespace System {
     Device &Device::operator=(const Device &inDevice) {
 
 
-        std::cout << "using the operator " << std::endl;
 
         Device outDevice;
         outDevice.name = inDevice.getNameDev();
@@ -170,17 +169,6 @@ namespace System {
         outDevice.jobPtrQueue = inDevice.jobPtrQueue;
         outDevice._initCheck = &outDevice;
 
-        /*
-
-
-         if (inDevice.jobPtrQueue.size()>0) {
-
-            for (std::vector<Job *>::const_iterator ptrIt = inDevice.jobPtrQueue.begin();
-                 ptrIt != inDevice.jobPtrQueue.end(); ++ptrIt) {
-                (*ptrIt)->setOwnDevice(this);
-            }
-        }
-         */
         return *this;
     }
 
@@ -267,101 +255,8 @@ namespace System {
 
     }
 
-    /*
-     * //Should be deprecated
-    bool Device::printJob(Job *jobPtr) {
 
 
-        REQUIRE(properlyInitialized(), "this printer was not properly initialized when calling printJob");
-        REQUIRE(jobPtr != nullptr, "job should be a valid job");
-
-
-        if (jobPtrQueue.size() != 0) {
-            jobPtr->printFull();
-            jobPtrQueue.erase(jobPtr);
-
-            ENSURE(jobPtrQueue.count(jobPtr) == 0, "Job was not correctly removed");
-            return true;
-        }
-
-        logger.printerAssignmentError(std::cout, jobPtr->getJobNr());
-
-        return false;
-
-
-    }
-*/
-
-    /*
-     * should be deprecated
-    void Device::printJob(unsigned int jobNr) {
-
-        //todo: simplify function. This function should be removed anyway, so i'm not changing it
-
-        for (std::unordered_set<Job *>::iterator jobIt = jobPtrQueue.begin(); jobIt != jobPtrQueue.end(); jobIt++) {
-
-            if ((*jobIt)->getJobNr() == jobNr) {
-
-                (*jobIt)->printFull();
-                return;
-            }
-
-        }
-
-        std::cout << "this job was not assigned to this printer." << std::endl;
-
-    }
-     */
-
-
-    /*
-     * should be deprecated
-    bool Device::printJobPages(Job *jobPtr, unsigned int pages) {
-
-        REQUIRE(properlyInitialized(), "this printer was not properly initialized when calling printJob");
-        REQUIRE(jobPtr != nullptr, "job should be a valid job");
-        REQUIRE(pages > 0, "Pages to be printed should be positive");
-
-        if (jobPtrQueue.count(jobPtr) != 0) {
-
-            if (pages < jobPtr->getRemainingPages()) {
-
-                jobPtr->printPages(pages);
-                return true;
-            } else {
-                return printJob(jobPtr);
-            }
-        }
-
-
-
-        logger.printerAssignmentError(std::cout, jobPtr->getJobNr());
-        return false;
-
-    }
-     */
-
-    /*
-     * should be deprecated
-    void Device::printJobPages(unsigned int jobNr, unsigned int pages) {
-
-        //todo: simplify function. This function should be removed anyways so i'm not changing it
-
-        for (std::unordered_set<Job *>::iterator jobIt = jobPtrQueue.begin(); jobIt != jobPtrQueue.end(); jobIt++) {
-
-            if ((*jobIt)->getJobNr() == jobNr) {
-
-                (*jobIt)->printPages(pages);
-                return;
-            }
-
-        }
-
-        logger.printerAssignmentError(std::cout, jobNr);
-
-    }
-
-     */
 
 
     int Device::printCurrentJob() {
@@ -406,15 +301,19 @@ namespace System {
 
     }
 
-    bool Device::belowLimit() {
-        return false;
+    bool Device::isBelowLimit() {
+        REQUIRE(properlyInitialized(), "Device wasn't properly initialized");
+        return true;
     }
 
     std::deque<Job *> *Device::getJobs() {
+        REQUIRE(this->properlyInitialized(), "Device wasn't properly initialized");
         return &jobPtrQueue;
     }
 
     Job *Device::getCurrentJob() {
+        REQUIRE(this->properlyInitialized(), "Device wasn't properly initialized");
+        REQUIRE(!jobPtrQueue.empty(), "There should be a current job");
         return jobPtrQueue.front();
     }
 

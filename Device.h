@@ -171,11 +171,6 @@ namespace System {
         void addJob(Job * jobIn);
 
 
-
-
-
-
-
         /**
          * \brief Function to remove the front job from the queue
          * @param jobnr
@@ -196,6 +191,11 @@ namespace System {
         void printAllJobs();
 
 
+        /**
+         * \brief Function to get a pointer to the joblist. Used for infoprinting and checking if devices are finished
+         * @return
+         * REQUIRE(this->properlyInitialized(), "Device wasn't properly initialized");
+         */
         std::deque<Job *> * getJobs();
 
 
@@ -224,11 +224,23 @@ namespace System {
 
         int printCurrentJobPages(unsigned int pages);
 
+        /**
+         * Function to get a pointer to the first job in the queue
+         * @return
+         * REQUIRE(this->properlyInitialized(), "Device wasn't properly initialized");
+         * REQUIRE(!jobPtrQueue.empty(), "There should be a current job");
+         */
 
         Job * getCurrentJob();
 
 
-        virtual bool belowLimit();
+        /**
+         * Function to check if a device is below its mandated CO2 limit
+         * @return
+         * REQUIRE(properlyInitialized(), "Device wasn't properly initialized");
+         */
+
+        virtual bool isBelowLimit();
 
 
         /**

@@ -1,2 +1,0 @@
-name should not be empty
-there was an error in a device in the inputfile

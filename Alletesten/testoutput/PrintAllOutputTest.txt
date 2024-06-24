@@ -16,4 +16,4 @@ Printer "Default Scanner" finished scanning job:
   10 pages
   Job CO2 emissions: 80 gram
 
-Total CO2 emitted by jobs until now is 95 gram
+Total CO2 emitted by jobs until now is 95.000000 gram

@@ -18,7 +18,6 @@ namespace System {
 
     class Scheduler {
 
-        //friend class PrinterSystem;
 
     public:
         /**
@@ -27,12 +26,7 @@ namespace System {
          */
         Scheduler();
 
-        /**
-         * \brief Constructor for scheduler
-         * @param PrintSystem
-         * ENSURE(this->properlyInitialized(), "Scheduler was not properly initialized")
-         */
-        Scheduler(PrinterSystem * PrintSystem);
+
 
 
         /**
@@ -44,40 +38,16 @@ namespace System {
          * ENSURE(jobIn->getOwnDevice() != nullptr, "Job was not assigned to a device, even though the error path was not triggered");
          */
 
-        //todo: maybe split devVect into a setter function?
-        bool schedule(Job * jobIn, std::list<Device *> * devVect, std::ostream * outstream);
 
+        int schedule(Job * jobIn, std::list<Device *> * devVect, std::ostream & errorStream);
 
-        /**
-         * \brief Setter function for the system for which this scheduler works
-         * @param PrintSystem
-         * REQUIRE(properlyInitialized(), "Scheduler was not properly initialized when attempting to set its ownsystem")
-         * REQUIRE(ownSystem == PrintSystem, "Assignment of ownsystem for scheduler failed")
-         */
-
-        void setSystem(PrinterSystem * PrintSystem);
-
-
-        /**
-         * \brief function to set the outputstream
-         * @param inStream
-         * REQUIRE(properlyInitialized(), "scheduler wasn't properly initialized");
-         * REQUIRE(inStream != nullptr, "Instream should not be a nullptr");
-         * ENSURE(outStream == inStream, "Outstream wasn't properly assigned");
-         */
-
-        //void setStream(std::ostream * inStream);
 
 
     private:
 
-        //PrinterSystem * ownSystem = nullptr;
+
         Scheduler * _initcheck;
         bool properlyInitialized();
-
-
-        //std::ostream * outStream = nullptr;
-
         Logger logger;
 
     };

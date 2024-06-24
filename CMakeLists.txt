@@ -124,7 +124,6 @@ set(DEBUG_SOURCE_FILES
         ./Libs/tinyxml.cpp
         ./Libs/tinyxmlparser.cpp
         ./Libs/tinyxmlerror.cpp
-        old/Printer.cpp
         TicTacToeUtils.cpp
         Device.cpp
         Job.cpp

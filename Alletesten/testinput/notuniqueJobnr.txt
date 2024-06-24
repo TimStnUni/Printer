@@ -1,1 +1,2 @@
 Jobnumber should be unique
+xmlFile was not consistent

@@ -4,8 +4,8 @@
 #include <iostream>
 #include <fstream>
 #include "gtest/gtest.h"
-#include "../old/Printer.h"
-#include "../TicTacToeUtils.h"
+#include "../Printer.h"
+#include "../../TicTacToeUtils.h"
 
 
 using namespace std;

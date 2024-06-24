@@ -21,13 +21,25 @@ namespace System {
 
         REQUIRE(properlyInitialized(), "System wasn't properly initialized when attempting to read an XML file");
 
-        XMLParser tempXML(filename);
+
+        std::ofstream outFile; // Create an output file stream
+        std::string f = filename;
+        std::string outputFileName = f + ".txt";
+        const char *outputFileNameChar = outputFileName.c_str();
+        outFile.open(outputFileNameChar); // Open the file
+
+        XMLParser tempXML(filename, outFile);
 
         //if parse is not successful return false
+
+
+
+
+
         if (!tempXML.isConsistent()) {
 
 
-            logger.printConsistency(std::cerr);
+            logger.printConsistency(outFile);
 
             return false;
         }
@@ -55,12 +67,15 @@ namespace System {
 
             jobsUnscheduledVect.insert(jobsUnscheduledVect.end(), tempJobs->begin(), tempJobs->end());
 
-            this->scheduleAll();
+            this->scheduleAll(outFile);
 
             return true;
         }
 
-        std::cerr << testVector.size() << " Jobnrs was/were not unique, rejecting xml" << std::endl;
+        logger.printError(outFile, std::to_string(testVector.size()) + " Jobnrs was/were not unique, rejecting xml");
+
+
+        outFile.close();
         return false;
 
     }
@@ -68,27 +83,6 @@ namespace System {
     void PrinterSystem::getInfo(std::ostream &writeStream, std::string outputType, bool advanced) {
 
         REQUIRE(properlyInitialized(), "the printer system was not properly initialized");
-
-
-
-        //todo: replace with scheduleall
-        for (std::list<Job *>::iterator jobsIt = jobsUnscheduledVect.begin(); jobsIt != jobsUnscheduledVect.end(); jobsIt++) {
-
-            if (!system_scheduler.schedule(*jobsIt, &deviceVect)){
-
-                //this is removing the job when no suitable device is found;
-                jobNrSet.erase((*jobsIt)->getJobNr());
-                removeJob(*jobsIt);
-                delete *jobsIt;
-            }
-
-            removeScheduled(*jobsIt);
-
-        }
-
-
-        //scheduleAll();
-
 
         InfoPrinter printer;
         printer.setSystem(this);
@@ -98,15 +92,15 @@ namespace System {
 
                 printer.printAscii(writeStream);
             } else {
-                std::cerr << "Unsupported output type, reverting to ASCII" << std::endl;
+                logger.printError(std::cerr, "Unsupported output type, reverting to ASCII");
                 printer.printAscii(writeStream);
             }
-        }else{
+        } else {
             if (outputType == "ASCII") {
 
                 printer.printAdvancedAscii(writeStream);
             } else {
-                std::cerr << "Unsupported output type, reverting to ASCII" << std::endl;
+                logger.printError(std::cerr, "Unsupported output type, reverting to ASCII");
                 printer.printAdvancedAscii(writeStream);
             }
 
@@ -114,10 +108,6 @@ namespace System {
 
 
     }
-
-
-
-
 
 
     bool PrinterSystem::properlyInitialized() {
@@ -125,41 +115,14 @@ namespace System {
     }
 
 
-    /*
-    void PrinterSystem::doPrintJob(unsigned int jobNr, std::ostream &writeStream, bool eraseBool) {
-
-        Job *jobptr = nullptr;
-
-
-        for (std::vector<Job *>::iterator jobIt = this->jobVect.begin(); jobIt != this->jobVect.end(); ++jobIt) {
-            if ((*jobIt)->getJobNr() == jobNr) {
-                jobptr = *jobIt;
-                break;
-            }
-            if (jobIt == (this->jobVect.end())) {
-                std::cerr << "JobNr not found" << std::endl;
-                return;
-            }
-        }
-
-
-        this->doPrintJob(jobptr, writeStream, eraseBool);
-
-
-    }
-     */
-
-
-
-
     void PrinterSystem::doPrintJob(std::string deviceName, std::ostream &writestream, bool erasebool) {
 
         REQUIRE(properlyInitialized(), "system not properly initialized");
         REQUIRE(!deviceName.empty(), "device name should not be empty");
 
-        for (std::list<Device *>::iterator devIt = deviceVect.begin(); devIt != deviceVect.end(); devIt++){
+        for (std::list<Device *>::iterator devIt = deviceVect.begin(); devIt != deviceVect.end(); devIt++) {
 
-            if ((*devIt)->getNameDev() == deviceName){
+            if ((*devIt)->getNameDev() == deviceName) {
 
                 doPrintJob(*devIt, writestream, erasebool);
 
@@ -176,7 +139,7 @@ namespace System {
     }
 
 
-    void PrinterSystem::doPrintJob(Device * indevice, std::ostream &writeStream, bool eraseBool) {
+    void PrinterSystem::doPrintJob(Device *indevice, std::ostream &writeStream, bool eraseBool) {
 
 
         /*
@@ -217,7 +180,6 @@ namespace System {
         //Increment CO2 emissions
         totalCO2_system += newCO2;
 
-        //std::cout << "total CO2 emissions for now " << totalCO2_system << std::endl;
 
         if (eraseBool) {
 
@@ -237,9 +199,7 @@ namespace System {
 
         REQUIRE(properlyInitialized(), "system wasn't properly initialized");
 
-        this->scheduleAll();
-
-        while(!indevice->getJobs()->empty()) {
+        while (!indevice->getJobs()->empty()) {
 
             doPrintJob(indevice, writestream, reasebool);
         }
@@ -252,8 +212,6 @@ namespace System {
     void PrinterSystem::printAll(std::ostream &writeStream) {
         REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to print all jobs");
 
-        //For some reason this breaks the debugger, So i guess i'm creating a pointer pointing nowhere somewhere?
-        this->scheduleAll();
 
         bool eraseBool = true;
 
@@ -261,13 +219,15 @@ namespace System {
              devIt != deviceVect.end();) {
 
 
-
             this->doPrintJobFull(*devIt++, writeStream, eraseBool);
 
         }
 
 
-        writeStream << "Total CO2 emitted by jobs until now is " << totalCO2_system << " gram" << std::endl;
+
+        logger.printError(writeStream,
+                          "Total CO2 emitted by jobs until now is " + std::to_string(totalCO2_system) + " gram");
+
 
         if (eraseBool) {
             ENSURE(jobVect.empty(), "Jobs were not all correctly removed");
@@ -282,7 +242,6 @@ namespace System {
 
         this->jobVect.push_back(inJob);
         ENSURE(jobVect.back() == inJob, "Job was not correctly added");
-
 
 
     }
@@ -321,16 +280,8 @@ namespace System {
         return &(jobVect);
     }
 
-    void PrinterSystem::testPrinting() {
 
-
-        std::cout << (*this->deviceVect.begin())->jobPtrQueue.size() << std::endl;
-
-        (*this->deviceVect.begin())->printAllJobs();
-
-    }
-
-    void PrinterSystem::scheduleAll() {
+    void PrinterSystem::scheduleAll(std::ostream &errorstream) {
 
         REQUIRE(properlyInitialized(), "system not properly initialized when trying to schedule all jobs");
 
@@ -338,10 +289,10 @@ namespace System {
         if (!jobsUnscheduledVect.empty()) {
 
 
-
             for (std::list<Job *>::iterator unsIt = jobsUnscheduledVect.begin(); unsIt != jobsUnscheduledVect.end();) {
 
-                if (!system_scheduler.schedule(*unsIt, &deviceVect, outStream)) {
+                int retval = system_scheduler.schedule(*unsIt, &deviceVect, errorstream);
+                if (retval != 0) {
 
                     //this is removing jobs when no suitable devices are found.
                     jobNrSet.erase((*unsIt)->getJobNr());
@@ -361,9 +312,9 @@ namespace System {
     bool PrinterSystem::removeJob(Job *inJob) {
 
 
-        for (std::list<Job*>::iterator jobIt = jobVect.begin(); jobIt != jobVect.end(); jobIt++){
+        for (std::list<Job *>::iterator jobIt = jobVect.begin(); jobIt != jobVect.end(); jobIt++) {
 
-            if (*jobIt == inJob){
+            if (*jobIt == inJob) {
                 jobVect.erase(jobIt);
                 delete inJob;
                 return true;
@@ -378,9 +329,9 @@ namespace System {
 
     bool PrinterSystem::removeDevice(Device *inDevice) {
 
-        for (std::list<Device*>::iterator deviceIt = deviceVect.begin(); deviceIt != deviceVect.end(); deviceIt++){
+        for (std::list<Device *>::iterator deviceIt = deviceVect.begin(); deviceIt != deviceVect.end(); deviceIt++) {
 
-            if (*deviceIt == inDevice){
+            if (*deviceIt == inDevice) {
                 deviceVect.erase(deviceIt);
                 return true;
 
@@ -390,14 +341,15 @@ namespace System {
 
 
         return false;
-        
-        
+
+
     }
 
     bool PrinterSystem::removeScheduled(Job *inJob) {
-        for (std::list<Job*>::iterator jobIt = jobsUnscheduledVect.begin(); jobIt != jobsUnscheduledVect.end(); jobIt++){
+        for (std::list<Job *>::iterator jobIt = jobsUnscheduledVect.begin();
+             jobIt != jobsUnscheduledVect.end(); jobIt++) {
 
-            if (*jobIt == inJob){
+            if (*jobIt == inJob) {
                 jobsUnscheduledVect.erase(jobIt);
                 return true;
 
@@ -407,13 +359,6 @@ namespace System {
 
 
         return false;
-    }
-
-    void PrinterSystem::setStream(std::ostream *inStream) {
-
-
-        outStream = inStream;
-
     }
 
 

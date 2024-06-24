@@ -101,7 +101,7 @@ TEST_F(OutputTests, ScheduledJobTest){
     const char *outputFileNameChar = outputFileName.c_str();
     outFile.open(outputFileNameChar); // Open the file
 
-    //TODO:create scheduler for test
+
     testSystem.doPrintJob("Color_Printer", outFile);
 
     outFile.close();

@@ -137,9 +137,8 @@ namespace System {
          * ENSURE(jobsUnscheduledVect.empty(), "Not all jobs were correctly scheduled");
          */
 
-        void scheduleAll();
+        void scheduleAll(std::ostream & errorstream);
 
-        void testPrinting();
 
 
         bool removeJob(Job * inJob);
@@ -179,7 +178,7 @@ namespace System {
 
         PrinterSystem *_initcheck;
 
-        std::ostream * outStream = nullptr;
+
     };
 
 

@@ -1,2 +1,4 @@
 name should not be empty
 there was an error in a device in the inputfile
+No suitable device found for job 89751
+No suitable device found for job 2189

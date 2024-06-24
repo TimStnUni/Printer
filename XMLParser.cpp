@@ -8,25 +8,25 @@
 namespace System {
 
 
-    XMLParser::XMLParser(const char *filename) {
-//        std::cout <<  InputDoc.LoadFile(filename) << std::endl;
-        //Todo: check whether inputdoc isn't empty
-        if (!InputDoc.LoadFile(filename)) {
-            std::cerr << InputDoc.ErrorDesc() << std::endl;
-        }
+    XMLParser::XMLParser(const char *filename, std::ostream & outFile) {
 
+        REQUIRE(filename != nullptr, "Inputfile should be properly given");
 
         _initCheck = this;
 
+        /*
         std::ofstream outFile; // Create an output file stream
         std::string f = filename;
         std::string outputFileName = f + ".txt";
         const char *outputFileNameChar = outputFileName.c_str();
         outFile.open(outputFileNameChar); // Open the file
+*/
 
+        if (!InputDoc.LoadFile(filename)) {
+            System::Logger::printError(outFile, InputDoc.ErrorDesc());
+        }
 
         parseSuccessful = this->parse(outFile);
-
 
         ENSURE(properlyInitialized(), "Parser not properly initialized");
     }
@@ -66,10 +66,9 @@ namespace System {
 
                     if (elem->FirstChild() == nullptr) {
                         readingCorrect = false;
-
-                        errorstream << elemname << " should not be empty" << std::endl;
+                        System::Logger::printError(errorstream, elemname + " should not be empty");
                         break;
-                        //return readingCorrect;
+
                     } else {
 
                         if (elemname == "name") {
@@ -81,14 +80,13 @@ namespace System {
                             if (name_t.empty()) {
                                 std::string type_err = "Name";
                                 System::Logger::parseNameEmpty(errorstream, type_err);
-//                                errorstream << "Name should not be empty" << std::endl;
                                 readingCorrect = false;
                                 break;
-                                //return readingCorrect;
+
 
                             } else {
                                 name = name_t;
-                                //std::cout << "name = " << name << std::endl;
+
                             }
 
 
@@ -102,7 +100,6 @@ namespace System {
 
                                 std::string type_err = "Emissions";
                                 System::Logger::parseNegative(errorstream, type_err);
-//                                errorstream << "Emissions should be positive" << std::endl;
                                 readingCorrect = false;
                                 consistent = false;
                                 break;
@@ -119,7 +116,6 @@ namespace System {
                             } else {
                                 std::string type_err = "Cost";
                                 System::Logger::parseNegative(errorstream, type_err);
-//                                errorstream << "Cost should be positive" << std::endl;
                                 readingCorrect = false;
                                 consistent = false;
                                 break;
@@ -137,7 +133,6 @@ namespace System {
                             if (type_d.empty()) {
                                 std::string type_err = "Type";
                                 System::Logger::parseNameEmpty(errorstream, type_err);
-//                                errorstream << "Type should not be empty" << std::endl;
                                 readingCorrect = false;
                                 break;
                                 //return readingCorrect;
@@ -147,11 +142,11 @@ namespace System {
                                     type = type_d;
 
                                 } else {
-                                    errorstream << "Invalid type for device" << std::endl;
+                                    System::Logger::printError(errorstream, "Invalid type for device");
                                     readingCorrect = false;
                                     break;
                                 }
-                                //std::cout << "type = " << type << std::endl;
+
                             }
 
                         } else if (elemname == "speed") {
@@ -160,16 +155,17 @@ namespace System {
                             } else {
                                 std::string type_err = "Speed";
                                 System::Logger::parseNegative(errorstream, type_err);
-//                                errorstream << "speed should be positive" << std::endl;
+
                                 readingCorrect = false;
                                 consistent = false;
                                 break;
-                                //return readingCorrect;
+
                             }
 
                         } else {
-                            std::cout << "Element name " << elemname << " is either empty or an unexpected element name"
-                                      << std::endl;
+
+                            System::Logger::printError(errorstream, "Element name " + elemname +
+                                                                    " is either empty or an unexpected element name");
                             readingCorrect = false;
                             break;
                         }
@@ -183,20 +179,20 @@ namespace System {
                     if (type == "color") {
                         if (emissions <= 23) {
                             outPtr = new CPrinter(name, emissions, speed, cost);
-                        }else{
-                            errorstream << "Emissions for printer " << name << " are beyond acceptable levels" << std::endl;
+                        } else {
+                            System::Logger::exceededLimits(errorstream, name);
                         }
                     } else if (type == "bw") {
                         if (emissions <= 8) {
                             outPtr = new BWPrinter(name, emissions, speed, cost);
-                        }else{
-                            errorstream << "Emissions for printer " << name << " are beyond acceptable levels" << std::endl;
+                        } else {
+                            System::Logger::exceededLimits(errorstream, name);
                         }
                     } else if (type == "scan") {
                         if (emissions <= 12) {
                             outPtr = new Scanner(name, emissions, speed, cost);
-                        }else{
-                            errorstream << "Emissions for printer " << name << " are beyond acceptable levels" << std::endl;
+                        } else {
+                            System::Logger::exceededLimits(errorstream, name);
                         }
                     }
 
@@ -205,9 +201,9 @@ namespace System {
 
                         deviceList.push_back(outPtr);
                     }
-                }
-                else{
-                    errorstream << "there was an error in a device in the inputfile" << std::endl;
+                } else {
+                    System::Logger::printError(errorstream, "there was an error in a device in the inputfile");
+
                 }
 
 
@@ -225,11 +221,10 @@ namespace System {
 
 
                     if (elemname == "userName") {
-                        TiXmlNode * t = elem->FirstChild();
+                        TiXmlNode *t = elem->FirstChild();
                         if (t == nullptr) {
                             std::string type_err = "Username";
                             System::Logger::parseNameEmpty(errorstream, type_err);
-//                            errorstream << "username should not be empty" << std::endl;
                             readingCorrectly = false;
                             break;
                             //return readingCorrectly;
@@ -245,7 +240,6 @@ namespace System {
                         } else {
                             std::string type_err = "Pagecount";
                             System::Logger::parseNegative(errorstream, type_err);
-//                            errorstream << "pagecount should be a positive integer" << std::endl;
                             consistent = false;
                             readingCorrectly = false;
                             break;
@@ -259,7 +253,6 @@ namespace System {
                         } else {
                             std::string type_err = "Jobnumber";
                             System::Logger::parseNegative(errorstream, type_err);
-//                            errorstream << "jobnumber should be a positive integer" << std::endl;
                             consistent = false;
                             readingCorrectly = false;
                             break;
@@ -276,7 +269,6 @@ namespace System {
                         if (type_j.empty()) {
                             std::string type_err = "Type";
                             System::Logger::parseNameEmpty(errorstream, type_err);
-                            errorstream << "Type should not be empty" << std::endl;
                             readingCorrectly = false;
                             break;
                             //return readingCorrectly;
@@ -285,7 +277,7 @@ namespace System {
                             if (type_j == "bw" || type_j == "scan" || type_j == "color") {
                                 type = type_j;
                             } else {
-                                errorstream << "Invalid type for job" << std::endl;
+                                System::Logger::printError(errorstream, "Invalid type for job");
                                 readingCorrectly = false;
                                 break;
                             }
@@ -293,8 +285,8 @@ namespace System {
                         }
 
                     } else {
-                        std::cout << "Element name " << elemname << "is either empty or an unexpected element name"
-                                  << std::endl;
+                        System::Logger::printError(errorstream, "Element name " + elemname +
+                                                                " is either empty or an unexpected element name");
                         readingCorrectly = false;
                         break;
                     }
@@ -309,14 +301,13 @@ namespace System {
                         Job tempJob = Job(userName, pageCount, jobNr, type);
 
 
+                        Job *outJobPtr = nullptr;
 
-                        Job * outJobPtr = nullptr;
-
-                        if (type == "bw"){
+                        if (type == "bw") {
                             outJobPtr = new BWJob(userName, pageCount, jobNr);
-                        }else if (type == "color"){
+                        } else if (type == "color") {
                             outJobPtr = new CJob(userName, pageCount, jobNr);
-                        }else if (type == "scan"){
+                        } else if (type == "scan") {
                             outJobPtr = new ScanJob(userName, pageCount, jobNr);
                         }
 
@@ -327,21 +318,21 @@ namespace System {
 
                     } else {
 
-                        errorstream << "Jobnumber should be unique" << std::endl;
+                        System::Logger::printError(errorstream, "Jobnumber should be unique");
                         consistent = false;
                         //return false;
                     }
 
-                }
-                else {
+                } else {
 
-                    errorstream << "there was an error in a device in the inputfile" << std::endl;
+                    System::Logger::printError(errorstream, "there was an error in a device in the inputfile");
                 }
 
 
             } else {
 
-                std::cerr << "Element should be either a printer or a Job, is a " << type_sys << std::endl;
+                System::Logger::printError(errorstream, "Element should be either a printer or a Job, is a " + type_sys);
+
 
 
                 continue;
@@ -365,11 +356,10 @@ namespace System {
         return &deviceList;
     }
 
-    std::vector<Job *>* XMLParser::getJobList() {
+    std::vector<Job *> *XMLParser::getJobList() {
         REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getJobList()");
         return &jobList;
     }
-
 
 
     XMLParser::~XMLParser() {
@@ -397,15 +387,20 @@ namespace System {
     bool XMLParser::addInputFile(const char *filename) {
 
         REQUIRE(this->properlyInitialized(), "Parser wasn't properly initialized when calling addInputFile");
+        REQUIRE(filename != nullptr, "File should be properly given");
 
-        if (InputDoc.LoadFile(filename)) {
-            std::cerr << InputDoc.ErrorDesc() << std::endl;
-        }
+
         std::ofstream outFile; // Create an output file stream
         std::string f = filename;
         std::string outputFileName = f + ".txt";
         const char *outputFileNameChar = outputFileName.c_str();
         outFile.open(outputFileNameChar); // Open the file
+
+        if (InputDoc.LoadFile(filename)) {
+
+            System::Logger::printError(outFile, InputDoc.ErrorDesc());
+
+        }
 
         parseSuccessful = this->parse(outFile);
         return parseSuccessful;
