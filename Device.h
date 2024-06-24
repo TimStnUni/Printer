@@ -16,19 +16,15 @@
 #include "Logger.h"
 
 
-
 namespace System {
 
     class Job;
+
     class PrinterSystem;
 
     class Device {
 
-        friend class PrinterSystem;
-        friend class Job;
-
     public:
-
 
 
         /**
@@ -124,6 +120,7 @@ namespace System {
          */
 
         void setType(std::string &type_in);
+
         /**
          * \brief a getter function for the device type
          * @return returns the type of the device, either bw (black and white) or color (for color printing)
@@ -159,8 +156,6 @@ namespace System {
         int getTotalPages();
 
 
-
-
         /**
          * \brief function to add a job to the queue for this device
          * @param jobIn
@@ -168,12 +163,7 @@ namespace System {
          * REQUIRE(jobIn != nullptr, "job should be a valid job")
          * ENSURE(*jobPtrQueue.back() == *jobIn, "Job was not correctly added")
          */
-        void addJob(Job * jobIn);
-
-
-
-
-
+        void addJob(Job *jobIn);
 
 
         /**
@@ -196,8 +186,12 @@ namespace System {
         void printAllJobs();
 
 
-        std::deque<Job *> * getJobs();
-
+        /**
+         * \brief Function to get a pointer to the joblist. Used for infoprinting and checking if devices are finished
+         * @return
+         * REQUIRE(this->properlyInitialized(), "Device wasn't properly initialized");
+         */
+        std::deque<Job *> *getJobs();
 
 
         /**
@@ -211,8 +205,6 @@ namespace System {
         int printCurrentJob();
 
 
-
-
         /**
          * Function that prints a certain amount of pages for the job currently first in queue
          * @param pages : amount of pages to be printed
@@ -224,11 +216,23 @@ namespace System {
 
         int printCurrentJobPages(unsigned int pages);
 
+        /**
+         * Function to get a pointer to the first job in the queue
+         * @return
+         * REQUIRE(this->properlyInitialized(), "Device wasn't properly initialized");
+         * REQUIRE(!jobPtrQueue.empty(), "There should be a current job");
+         */
 
-        Job * getCurrentJob();
+        Job *getCurrentJob();
 
 
-        virtual bool belowLimit();
+        /**
+         * Function to check if a device is below its mandated CO2 limit
+         * @return
+         * REQUIRE(properlyInitialized(), "Device wasn't properly initialized");
+         */
+
+        virtual bool isBelowLimit();
 
 
         /**
@@ -237,15 +241,15 @@ namespace System {
          * @return
          */
 
-        Device& operator=(Device const & inDevice);
+        Device &operator=(Device const &inDevice);
 
         /**
          * \brief overloaded equality operator for getters
          * @param d device to be compared
          * @return boolean true or false
          */
-        bool operator == (const Device &d){
-            if (name == d.name && emissions == d.emissions && speed == d.speed && type == d.type){
+        bool operator==(const Device &d) {
+            if (name == d.name && emissions == d.emissions && speed == d.speed && type == d.type) {
                 return true;
             }
             return false;
@@ -261,14 +265,7 @@ namespace System {
         float cost;
         Device *_initCheck;
 
-
-
-        //void updatePointer(Job * inPointer, const Job * prevPointer);
-
-
-
         std::deque<System::Job *> jobPtrQueue;
-
 
         System::Logger logger;
 

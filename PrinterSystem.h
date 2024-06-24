@@ -24,7 +24,7 @@
 
 #include "DesignByContract.h"
 
-#include <unordered_set>
+#include <list>
 
 namespace System {
 
@@ -65,6 +65,8 @@ namespace System {
 
 
 
+
+        void getSystemGraph(std::ostream &writestream, std::string outputSys);
 
 
         /**
@@ -132,18 +134,26 @@ namespace System {
         /**
          * Function to schedule all jobs
          * REQUIRE(properlyInitialized(), "system not properly initialized when trying to schedule all jobs");
-         * ENSURE(jobUnscheduled.empty(), "Not all jobs were correctly scheduled");
+         * ENSURE(jobsUnscheduledVect.empty(), "Not all jobs were correctly scheduled");
          */
 
-        void scheduleAll();
-
-        void testPrinting();
+        void scheduleAll(std::ostream & errorstream);
 
 
 
-        std::unordered_set<Device*> * getDeviceVector();
+        bool removeJob(Job * inJob);
 
-        std::unordered_set<Job*> * getJobVector();
+        bool removeDevice(Device * inDevice);
+
+        bool removeScheduled(Job * inJob);
+
+
+        std::list<Device*> * getDeviceVector();
+
+        std::list<Job*> * getJobVector();
+
+
+        void setStream(std::ostream * inStream);
 
 
 
@@ -152,12 +162,13 @@ namespace System {
         float totalCO2_system = 0;
 
         std::set<unsigned int> jobNrSet;
-        std::set<Job*> jobUnscheduled;
 
-        std::unordered_set<Job*> jobVect;
+        std::list<Job*> jobsUnscheduledVect;
+
+        std::list<Job*> jobVect;
 
 
-        std::unordered_set<Device*> deviceVect;
+        std::list<Device*> deviceVect;
 
 
         Scheduler system_scheduler;
@@ -166,6 +177,8 @@ namespace System {
         Logger logger;
 
         PrinterSystem *_initcheck;
+
+
     };
 
 

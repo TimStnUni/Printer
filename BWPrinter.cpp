@@ -6,7 +6,7 @@
 
 namespace System {
     BWPrinter::BWPrinter(std::string &name_in, int &emissions_in, int &speed_in, float &cost_in) {
-        REQUIRE(emissions_in > 0 && emissions_in <= 8, "Emissions should be positive within cap");
+        REQUIRE(emissions_in > 0, "Emissions should be positive");
         REQUIRE(speed_in > 0, "Speed should be positive");
         REQUIRE(cost_in>0, "Cost should be positive");
         REQUIRE(!(name_in.empty()), "name shouldn't be empty");
@@ -29,7 +29,8 @@ namespace System {
 
     }
 
-    bool BWPrinter::belowLimit() {
+    bool BWPrinter::isBelowLimit() {
+        REQUIRE(properlyInitialized(), "BWPrinter wasn't properly initialized");
 
         if (this->getEmissions() <= limit){
             return true;

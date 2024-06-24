@@ -50,7 +50,7 @@ TEST_F(OutputTests, SingleJobTest){
     outFile.open(outputFileNameChar); // Open the file
 
 
-    testSystem.doPrintJob(2189, outFile);
+    testSystem.doPrintJob("Color_Printer", outFile);
 
     outFile.close();
 
@@ -82,7 +82,7 @@ TEST_F(OutputTests, AllJobTest){
     EXPECT_TRUE(FileExists("Alletesten/testoutput/PrintAllOutput.txt"));
     EXPECT_TRUE(FileExists("Alletesten/testoutput/PrintAllOutputTest.txt"));
     EXPECT_TRUE(FileCompare("Alletesten/testoutput/PrintAllOutput.txt", "Alletesten/testoutput/PrintAllOutputTest.txt"));
-
+    EXPECT_TRUE(FileCompare("Alletesten/testoutput/PrintAllOutputTest.txt", "Alletesten/testoutput/PrintAllOutput.txt"));
 
 }
 
@@ -101,8 +101,8 @@ TEST_F(OutputTests, ScheduledJobTest){
     const char *outputFileNameChar = outputFileName.c_str();
     outFile.open(outputFileNameChar); // Open the file
 
-    //TODO:create scheduler for test
-    testSystem.doPrintJob(2189, outFile);
+
+    testSystem.doPrintJob("Color_Printer", outFile);
 
     outFile.close();
 
@@ -110,5 +110,61 @@ TEST_F(OutputTests, ScheduledJobTest){
     EXPECT_TRUE(FileExists("Alletesten/testoutput/ScheduleJobOutputTest.txt"));
     EXPECT_TRUE(FileCompare("Alletesten/testoutput/ScheduleJobOutput.txt", "Alletesten/testoutput/ScheduleJobOutputTest.txt"));
 
+
+}
+
+
+
+TEST_F(OutputTests, InfoSysText){
+
+    ASSERT_TRUE(DirectoryExists("Alletesten/testoutput"));
+    ASSERT_TRUE(FileExists("Alletesten/testoutput/outputtest.xml"));
+
+    System::PrinterSystem testSystem;
+
+    EXPECT_EQ(testSystem.readXML("Alletesten/testoutput/outputtest.xml"), true);
+
+    std::ofstream outFile; // Create an output file stream
+    std::string f = "Alletesten/testoutput/AsciiSysText.xml";
+    std::string outputFileName = f + ".txt";
+    const char *outputFileNameChar = outputFileName.c_str();
+    outFile.open(outputFileNameChar); // Open the file
+
+    testSystem.getInfo(outFile, "ASCII", true);
+    outFile.close();
+
+
+    ASSERT_TRUE(FileExists("Alletesten/testoutput/AsciiSysText.xml.txt"));
+    ASSERT_TRUE(FileExists("Alletesten/testoutput/AsciiSysText.txt"));
+
+    EXPECT_TRUE(FileCompare("Alletesten/testoutput/AsciiSysText.xml.txt",
+                            "Alletesten/testoutput/AsciiSysText.txt"));
+
+}
+
+TEST_F(OutputTests, InfoSystemgraph){
+
+    ASSERT_TRUE(DirectoryExists("Alletesten/testoutput"));
+    ASSERT_TRUE(FileExists("Alletesten/testoutput/outputtest.xml"));
+
+    System::PrinterSystem testSystem;
+
+    EXPECT_EQ(testSystem.readXML("Alletesten/testoutput/outputtest.xml"), true);
+
+    std::ofstream outFile; // Create an output file stream
+    std::string f = "Alletesten/testoutput/ASCIISysGraph.xml";
+    std::string outputFileName = f + ".txt";
+    const char *outputFileNameChar = outputFileName.c_str();
+    outFile.open(outputFileNameChar); // Open the file
+//TODO:
+//    testSystem.getSystemGraph(outFile, "ASCII");
+    outFile.close();
+
+
+    ASSERT_TRUE(FileExists("Alletesten/testoutput/ASCIISysGraph.xml.txt"));
+    ASSERT_TRUE(FileExists("Alletesten/testoutput/ASCIISysGraph.txt"));
+
+    EXPECT_TRUE(FileCompare("Alletesten/testoutput/ASCIISysGraph.xml.txt",
+                            "Alletesten/testoutput/ASCIISysGraph.txt"));
 
 }

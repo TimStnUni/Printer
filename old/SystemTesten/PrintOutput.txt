@@ -1,0 +1,6 @@
+Printer "Office_Printer5" finished black-and-white-printing job:
+  Number: 89752
+  Submitted by "SergeDemeyer"
+  2 pages
+  Job CO2 emissions: 6 gram
+

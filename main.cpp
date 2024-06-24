@@ -42,18 +42,15 @@ int main() {
 */
 
 
-
-
-
     if(consistent){
         //Usecase 2: Basic info about the printer system
-        testSystem.getInfo(std::cout, "ASCII", true);
+//        testSystem.getInfo(std::cout, "ASCII", true);
 
         //Usecase 3.1: manual processing
-        //testSystem.doPrintJob("Office_Printer5", std::cout);
+//        testSystem.doPrintJob("Office_Printer5", std::cout);
         //testSystem.printFull(outFile2);
         //Usecase 3.2: automatic processing
-        //testSystem.printAll(std::cout);
+        testSystem.printAll(std::cout);
 
     }
 

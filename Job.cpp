@@ -70,13 +70,7 @@ namespace System {
         this->setType(inJob.getType());
         this->setOwnDevice(inJob.getOwnDevice());
 
-
-        /*
-         * Pointer bullshittery that should no longer be needed
-        if (inJob.getOwnDevice() != nullptr) {
-            this->ownerDevice->updatePointer(this, &inJob);
-        }
-        */
+        ENSURE(*this == inJob, "Job was not properly equaled");
         ENSURE(this->properlyInitialized(), "job was not properly initialized");
     }
 
@@ -114,24 +108,6 @@ namespace System {
 
 
 
-    Job &Job::operator=(const Job &inJob) {
-
-        //I'm ninety percent sure this doesn't work anymore, but atm it isn't used so it should be fine
-
-        std::cout << "Assignment operator called for job " << inJob.getJobNr() << std::endl;
-        Job outJob(inJob.getUserName(), inJob.getPageCount(), inJob.getJobNr(), inJob.type);
-
-
-        //Pointer bullshittery that should no longer be needed
-        //outJob.setOwnDevice(inJob.getOwnDevice());
-
-
-
-        //outJob._initCheck = &outJob;
-
-
-        return *this;
-    }
 
     void Job::setOwnDevice(System::Device *ownDevice) {
 
@@ -153,13 +129,15 @@ namespace System {
 
     bool Job::printPage() {
 
+        REQUIRE(properlyInitialized(), "Job was not properly initialized when printing a page");
+
         if (currentPageCount > 0) {
 
             currentPageCount--;
             return false;
         }else{
 
-            //std::cout << "job has been fully printed" << std::endl;
+
             return true;
         }
 
@@ -168,20 +146,28 @@ namespace System {
 
     int Job::printFull() {
 
+        REQUIRE(properlyInitialized(), "Job not properly initialized when attempting to print fully");
 
         int remPages = this->getRemainingPages();
 
         while(!printPage());
+
+        ENSURE(this->getRemainingPages() == 0, "Not all pages were printed");
         return (this->getOwnDevice()->getEmissions() * remPages);
 
     }
 
     unsigned int Job::getPrintedPages() const {
+
+        REQUIRE(properlyInitialized(), "Job not properly initialized when attempting to query printed pages");
+
         return pageCount - currentPageCount;
     }
 
     int Job::printPages(unsigned int amount) {
 
+
+        REQUIRE(properlyInitialized(), "job wasn't properly initialized when attempting to print multiple pages");
         if (amount >= currentPageCount) {
 
             for (int i = 0; i < amount; i++) {
@@ -201,6 +187,8 @@ namespace System {
     }
 
     unsigned int Job::getRemainingPages() const {
+        REQUIRE(properlyInitialized(), "Job not properly initialized when attempting to query remaining pages");
+
         return currentPageCount;
     }
 

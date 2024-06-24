@@ -23,6 +23,7 @@ namespace System {
 
         REQUIRE(!message.empty(), "Message should not be empty");
 
+
         outStream << message << std::endl;
 
     }
@@ -61,7 +62,32 @@ namespace System {
 
     void Logger::printNoDevice(std::ostream &outStream, unsigned int jobNr) {
 
+        REQUIRE(jobNr > 0, "Jobnr should be positive");
+
         outStream << "No suitable device found for job " << jobNr << std::endl;
+
+    }
+
+    void Logger::parseNameEmpty(std::ostream & outStream, const std::string& type){
+
+        REQUIRE(!type.empty(), "Field type should not be empty");
+
+        outStream << type << " should not be empty" << std::endl;
+
+    }
+
+    void Logger::parseNegative(std::ostream & outStream, const std::string& type){
+
+        REQUIRE(!type.empty(), "Field type should not be empty");
+        outStream << type << " should be positive" << std::endl;
+
+    }
+
+    void Logger::exceededLimits(std::ostream &outStream, const std::string &name) {
+
+        REQUIRE(!name.empty(), "Name should not be empty");
+        outStream << "Emissions for printer " << name << " are beyond acceptable levels"
+                    << std::endl;
 
     }
 

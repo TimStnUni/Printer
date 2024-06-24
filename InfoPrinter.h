@@ -43,6 +43,12 @@ namespace System {
 
         void printAscii(std::ostream &writestream);
 
+        /**
+         * \brief Function that prints info about the system in an advanced ASCII format
+         * @param writestream
+         * REQUIRE(properlyInitialized(), "infoprinter wasn't properly initialized")
+         */
+
         void printAdvancedAscii(std::ostream &writestream);
 
 

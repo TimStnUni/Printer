@@ -5,6 +5,7 @@
 #ifndef PROJSOFTENG_XMLPARSER_H
 #define PROJSOFTENG_XMLPARSER_H
 
+#include "Logger.h"
 #include "DesignByContract.h"
 #include "tinystr.h"
 #include "tinyxml.h"
@@ -28,24 +29,30 @@ namespace System {
 
     public:
 
+
+        /**
+         * \brief default constructor
+         * ENSURE(this->properlyInitialized(), "Parser wasn't properly initialized");
+         */
         XMLParser();
 
-        //Todo: Look through all of these requires/ensures
+
 
         /**
          *
          * \brief Constructor for parser
          * @param filename : Name of file to parse as a const char *
-         * REQUIRE inputfile not empty i guess?
+         * REQUIRE(filename != nullptr, "Inputfile should be properly given")
          * ENSURE(properlyInitialized(), "Parser not properly initialized");
-
          */
-        XMLParser(const char *filename);
+        XMLParser(const char *filename, std::ostream & errorStream);
 
         /**
          * \brief Additional way to read an XML File through the parser, never used
          * @param filename
          * @return
+         * REQUIRE(this->properlyInitialized(), "Parser wasn't properly initialized when calling addInputFile");
+         * REQUIRE(filename != nullptr, "File should be properly given");
          */
 
         bool addInputFile(const char * filename);
@@ -54,21 +61,21 @@ namespace System {
 
 
         /**
-         * \brief Getter function that returns all Devices read in from xml, shouldn't be used any longer
-         * @return
+         * \brief Getter function that returns all Devices read in from xml
+         * @return vector of devices
          * REQUIRE(this->properlyInitialized, "XMLParser wasn't properly initialized)
          */
-        std::unordered_set<Device*>* getDeviceList();
+        std::vector<Device*>* getDeviceList();
 
 
         /**
-         * \brief Getter function for getting a joblist, shouldn't be used any longer
-         * @return double ended queue of jobs
+         * \brief Getter function for getting a joblist
+         * @return vector of jobs
          * REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getJobList()")
          */
 
 
-        std::unordered_set<Job*>* getJobList();
+        std::vector<Job*>* getJobList();
 
 
 
@@ -104,13 +111,14 @@ namespace System {
         XMLParser *_initCheck;
         bool parseSuccessful = true;
 
-        bool properlyInitialized();
+        bool properlyInitialized() const;
 
 
         /**
          * \brief Function that parses the XML file supplied to the constructor.
          * @param errorstream Stream to store errors
          * REQUIRE(System != nullptr, "There is no system in xml");
+         * REQUIRE(properlyInitialized(), "XMLParser was not properly initialized when attempting to call parse");
          */
 
         bool parse(std::ostream &errorstream);
@@ -121,8 +129,8 @@ namespace System {
 
 
         //new datamembers
-        std::unordered_set<Device*> deviceList;
-        std::unordered_set<Job*> jobList;
+        std::vector<Device*> deviceList;
+        std::vector<Job*> jobList;
 
         std::set<unsigned int> jobNrSet;
 

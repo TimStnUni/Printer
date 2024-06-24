@@ -1,1 +1,0 @@
-speed should be positive
