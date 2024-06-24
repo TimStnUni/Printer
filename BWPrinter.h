@@ -26,7 +26,7 @@ namespace System {
         BWPrinter(std::string &name, int &emissions, int &speed, float &cost);
 
         /**
-         * Function to check if bwprinter is below mandated co2 levels
+         * \brief Function to check if bwprinter is below mandated co2 levels
          * @return
          * REQUIRE(properlyInitialized(), "BWPrinter wasn't properly initialized");
          */

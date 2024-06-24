@@ -41,8 +41,8 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
     outfile << "   --=== Printers: ===--\n" << std::endl;
 
 
-    for (std::list<Device *>::iterator printIt = ownSystem->getDeviceVector()->begin();
-         printIt != ownSystem->getDeviceVector()->end(); ++printIt) {
+    for (std::list<Device *>::iterator printIt = ownSystem->getDeviceList()->begin();
+         printIt != ownSystem->getDeviceList()->end(); ++printIt) {
 
         //TODO: layout aanpassen?
 
@@ -116,8 +116,8 @@ void System::InfoPrinter::printAdvancedAscii(std::ostream &outfile) {
     REQUIRE(properlyInitialized(), "infoprinter wasn't properly initialized");
 
 
-    for (std::list<Device *>::iterator devsIt = ownSystem->getDeviceVector()->begin();
-         devsIt != ownSystem->getDeviceVector()->end(); devsIt++) {
+    for (std::list<Device *>::iterator devsIt = ownSystem->getDeviceList()->begin();
+         devsIt != ownSystem->getDeviceList()->end(); devsIt++) {
 
         outfile << (*devsIt)->getNameDev() << std::endl;
 

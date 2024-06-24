@@ -142,6 +142,8 @@ TEST_F(OutputTests, InfoSysText){
 
 }
 
+
+/*
 TEST_F(OutputTests, InfoSystemgraph){
 
     ASSERT_TRUE(DirectoryExists("Alletesten/testoutput"));
@@ -168,3 +170,4 @@ TEST_F(OutputTests, InfoSystemgraph){
                             "Alletesten/testoutput/ASCIISysGraph.txt"));
 
 }
+ */

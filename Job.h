@@ -132,14 +132,14 @@ namespace System {
 
 
         /**
-         * Function to print a single page for a job;
+         * \brief Function to print a single page for a job;
          * @return
          * REQUIRE(properlyInitialized(), "Job was not properly initialized when printing a page")
          */
         bool printPage();
 
         /**
-         * Function to print a set amount of pages
+         * \brief Function to print a set amount of pages
          * @param amount
          * @return CO2 emissions as a consequence of this job
          * REQUIRE(properlyInitialized(), "job wasn't properly initialized when attempting to print multiple pages")
@@ -148,7 +148,7 @@ namespace System {
 
 
         /**
-         * Function to print all remaining pages of this job
+         * \brief Function to print all remaining pages of this job
          * @return CO2 emissions as a consequence of this job
          * REQUIRE(properlyInitialized(), "Job not properly initialized when attempting to print fully")
          * ENSURE(this->getRemainingPages() == 0, "Not all pages were printed")
@@ -156,7 +156,7 @@ namespace System {
         int printFull();
 
         /**
-         * Function to get the amount of pages already printed
+         * \brief Function to get the amount of pages already printed
          * @return
          * REQUIRE(properlyInitialized(), "Job not properly initialized when attempting to query printed pages")
          */
@@ -164,7 +164,7 @@ namespace System {
         unsigned int getPrintedPages() const;
 
         /**
-         * Function to get the amount of pages to be printed
+         * \brief Function to get the amount of pages to be printed
          * @return
          * REQUIRE(properlyInitialized(), "Job not properly initialized when attempting to query remaining pages");
          */
@@ -175,7 +175,7 @@ namespace System {
 
 
         /**
-         * Overload of the == operator for tests
+         * \brief Overload of the == operator for tests
          * @param d
          * @return
          */

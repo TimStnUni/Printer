@@ -23,14 +23,14 @@ namespace System {
         Logger();
 
         /**
-         * generic error printing function
+         * \brief generic error printing function
          * @param outStream stream to print error to
          * @param message message to be printed
          */
         static void printError(std::ostream &outStream, std::string message);
 
         /**
-         * Specific function to indicate a job was not part of a device's queue. Unused currently
+         * \brief Specific function to indicate a job was not part of a device's queue. Unused currently
          * @param outStream
          * @param jobNr
          */
@@ -38,8 +38,7 @@ namespace System {
         static void printerAssignmentError(std::ostream &outStream, unsigned int jobNr);
 
         /**
-         * Function to print the output of a specific job. Has way too many inputs. These are needed to not tell this class what a job/device are
-         * Should maybe be moved to infoprinter, since that already knows about jobs
+         * \brief Function to print the output of a specific job. Has way too many inputs. These are needed to not tell this class what a job/device are Should maybe be moved to infoprinter, since that already knows about jobs
          * @param outStream
          * @param jobNr
          * @param deviceName
@@ -54,20 +53,20 @@ namespace System {
 
 
         /**
-         * Function to print a remaning pages < printjob(pages) error
+         * \brief Function to print a remaning pages < printjob(pages) error
          * @param outStream
          */
         static void pageAmount(std::ostream & outStream);
 
         /**
-         * Function to print a consistency error
+         * \brief Function to print a consistency error
          * @param outStream
          */
 
         static void printConsistency(std::ostream & outStream);
 
         /**
-         * Function to print the lack of available device for a job
+         * \brief Function to print the lack of available device for a job
          * @param outStream
          * @param jobNr
          * REQUIRE(jobNr > 0, "Jobnr should be positive")
@@ -76,7 +75,7 @@ namespace System {
         static void printNoDevice(std::ostream & outStream, unsigned int jobNr);
 
         /**
-         * Function to print some parsing error
+         * \brief Function to print some parsing error
          * @param outStream
          * @param type
          * REQUIRE(!type.empty(), "Field type should not be empty");
@@ -84,7 +83,7 @@ namespace System {
         static void parseNameEmpty(std::ostream & outStream, const std::string& type);
 
         /**
-         * Function to print some parsing error
+         * \brief Function to print some parsing error
          * @param outStream
          * @param type
          * REQUIRE(!type.empty(), "Field type should not be empty")
@@ -93,7 +92,7 @@ namespace System {
         static void parseNegative(std::ostream & outStream, const std::string& type);
 
         /**
-         * Function to indicate the exceeding limits error
+         * \brief Function to indicate the exceeding limits error
          * @param outStream
          * @param name
          * REQUIRE(!name.empty(), "Name should not be empty");

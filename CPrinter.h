@@ -29,7 +29,7 @@ namespace System {
 
 
         /**
-         * Function to check if printer is below mandated CO2 limit
+         * \brief Function to check if printer is below mandated CO2 limit
          * @return
          * REQUIRE(properlyInitialized(), "CPrinter wasn't properly initialized");
          */

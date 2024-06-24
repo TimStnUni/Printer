@@ -66,7 +66,7 @@ namespace System {
 
 
 
-        void getSystemGraph(std::ostream &writestream, std::string outputSys);
+        //void getSystemGraph(std::ostream &writestream, std::string outputSys);
 
 
         /**
@@ -82,23 +82,35 @@ namespace System {
          * \brief Function that executes a print job via jobPtr.
          * @param jobnr JobNr of the job to be executed
          * @param writeStream Stream where the output is stored
-         * REQUIRE(properlyInitialized()
-         * ENSURE(job is removed)
+         * REQUIRE(properlyInitialized(), "Printersystem not properly initialized")
+         * REQUIRE(indevice != nullptr, "Printer should not be a nullptr");
+         * ENSURE(indevice->getJobs()->size()+1 == queusize, "Job was not correctly printed")
          */
 
         void doPrintJob(Device * inDevice, std::ostream &writeStream, bool erasebool = true);
 
 
-        void doPrintJobFull(Device * inDevice, std::ostream &writesteram, bool reasebool = true);
+        /**
+         * \brief Function to print all jobs in a device's queue
+         * @param inDevice
+         * @param writesteram
+         * @param erasebool
+         * REQUIRE(properlyInitialized(), "system wasn't properly initialized")
+         * REQUIRE(indevice != nullptr, "Indevice should not be a nullptr")
+         *  ENSURE((*indevice->getJobs()).empty(), "jobs were not all executed");
+         */
+        void doPrintJobFull(Device * inDevice, std::ostream &writesteram, bool erasebool = true);
 
 
 
         /**
          * \brief Function that takes a devicename instead of a pointer for testing purposes
-         *
          * @param deviceName
          * @param writestream
          * @param erasebool
+         * REQUIRE(properlyInitialized(), "system not properly initialized");
+         * REQUIRE(!deviceName.empty(), "device name should not be empty");
+         * ENSURE(indevice->getJobs()->size()+1 == queusize, "Job was not correctly printed") // Dit is eigenlijk slechts een wrapper over de gewone doprintjob
          */
 
         void doPrintJob(std::string deviceName, std::ostream &writestream, bool erasebool = true);
@@ -115,7 +127,7 @@ namespace System {
 
 
         /**
-         * Adder function for a single job
+         * \brief Adder function for a single job
          * @param inJob
          * REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to print add job");
          * ENSURE(jobVect.back() == inJob, "Job was not correctly added");
@@ -123,7 +135,7 @@ namespace System {
         void addJob(Job *inJob);
 
         /**
-         * adder function for a single device
+         * \brief adder function for a single device
          * @param inDevice
          * REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to add a device")
          * ENSURE(deviceVect.back == inDevice, "Device was not correctly added");
@@ -132,7 +144,7 @@ namespace System {
 
 
         /**
-         * Function to schedule all jobs
+         * \brief Function to schedule all jobs
          * REQUIRE(properlyInitialized(), "system not properly initialized when trying to schedule all jobs");
          * ENSURE(jobsUnscheduledVect.empty(), "Not all jobs were correctly scheduled");
          */
@@ -141,19 +153,30 @@ namespace System {
 
 
 
+        /**
+         * \brief Function to remove a job from the system
+         * @param inJob
+         * @return
+         * REQUIRE(properlyInitialized(), "System wasn't properly initialized when attempting to remove a job")
+         * REQUIRE(inJob != nullptr, "Injob should not be a nullptr")
+         * ENSURE(std::find(jobVect.begin(), jobVect.end(), inJob) == jobVect.end(), "job not correclty removed")
+         */
         bool removeJob(Job * inJob);
 
-        bool removeDevice(Device * inDevice);
-
-        bool removeScheduled(Job * inJob);
 
 
-        std::list<Device*> * getDeviceVector();
+        /**
+         * \brief Function to get a pointer to the devicelist
+         * @return
+         * REQUIRE(properlyInitialized(), "System not properly initialized")
+         */
 
-        std::list<Job*> * getJobVector();
+        std::list<Device*> * getDeviceList();
 
 
-        void setStream(std::ostream * inStream);
+
+
+
 
 
 
@@ -163,12 +186,12 @@ namespace System {
 
         std::set<unsigned int> jobNrSet;
 
-        std::list<Job*> jobsUnscheduledVect;
+        std::list<Job*> jobsUnscheduledList;
 
-        std::list<Job*> jobVect;
+        std::list<Job*> jobList;
 
 
-        std::list<Device*> deviceVect;
+        std::list<Device*> deviceList;
 
 
         Scheduler system_scheduler;

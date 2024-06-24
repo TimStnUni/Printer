@@ -195,7 +195,7 @@ namespace System {
 
 
         /**
-         * Function that prints the job currently first in queue
+         * \brief Function that prints the job currently first in queue
          * REQUIRE(properlyInitialized(), "printer not properly initialized when calling printcurrentjob");
          * REQUIRE(!jobPtrQueue.empty(), "There should be at least 1 job in the queue");
          * ENSURE(printed, "Job was not correctly printed");
@@ -206,7 +206,7 @@ namespace System {
 
 
         /**
-         * Function that prints a certain amount of pages for the job currently first in queue
+         * \brief Function that prints a certain amount of pages for the job currently first in queue
          * @param pages : amount of pages to be printed
          * REQUIRE(properlyInitialized(), "printer not properly initialized when calling printcurrentjob");
          * REQUIRE(!jobPtrQueue.empty(), "There should be at least 1 job in the queue");
@@ -217,7 +217,7 @@ namespace System {
         int printCurrentJobPages(unsigned int pages);
 
         /**
-         * Function to get a pointer to the first job in the queue
+         * \brief Function to get a pointer to the first job in the queue
          * @return
          * REQUIRE(this->properlyInitialized(), "Device wasn't properly initialized");
          * REQUIRE(!jobPtrQueue.empty(), "There should be a current job");
@@ -227,7 +227,7 @@ namespace System {
 
 
         /**
-         * Function to check if a device is below its mandated CO2 limit
+         * \brief Function to check if a device is below its mandated CO2 limit
          * @return
          * REQUIRE(properlyInitialized(), "Device wasn't properly initialized");
          */
@@ -236,7 +236,7 @@ namespace System {
 
 
         /**
-         * Overloaded assingment operator. Currently does not seem to be used
+         * Overloaded assigmment operator. Currently does not seem to be used
          * @param inDevice
          * @return
          */
