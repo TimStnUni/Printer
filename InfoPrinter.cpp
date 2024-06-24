@@ -41,7 +41,7 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
     outfile << "   --=== Printers: ===--\n" << std::endl;
 
 
-    for (std::unordered_set<Device *>::iterator printIt = ownSystem->getDeviceVector()->begin();
+    for (std::list<Device *>::iterator printIt = ownSystem->getDeviceVector()->begin();
          printIt != ownSystem->getDeviceVector()->end(); ++printIt) {
 
         //TODO: layout aanpassen?
@@ -65,46 +65,44 @@ void System::InfoPrinter::printAscii(std::ostream &outfile) {
                 << "    * " << (*printIt)->getCost() << " cents/page\n";
 
 
-    }
+        outfile << "      -= Jobs =-\n" << std::endl;
+
+        for (std::deque<Job *>::iterator jobIt = (*printIt)->getJobs()->begin();
+             jobIt != (*printIt)->getJobs()->end(); ++jobIt) {
+
+            std::string jobType;
 
 
-    outfile << "      --=== Jobs ===--\n" << std::endl;
+            if ((*jobIt)->getType() == "bw") {
+                jobType = "Black-and-white job";
+            } else if ((*jobIt)->getType() == "color") {
+                jobType = "Colour job";
+            } else if ((*jobIt)->getType() == "scan") {
+                jobType = "Scanning job";
+            }
 
-    for (std::unordered_set<Job *>::iterator jobIt = ownSystem->getJobVector()->begin();
-         jobIt != ownSystem->getJobVector()->end(); ++jobIt) {
+            if (jobIt == (*printIt)->getJobs()->begin()) {
 
-        std::string jobType;
-
-
-        if ((*jobIt)->getType() == "bw") {
-            jobType = "Black-and-white job";
-        } else if ((*jobIt)->getType() == "color") {
-            jobType = "Colour job";
-        } else if ((*jobIt)->getType() == "scan") {
-            jobType = "Scanning job";
-        }
-
-        if (jobIt == ownSystem->getJobVector()->begin()) {
-
-            outfile << "    * Current:\n";
-        }
+                outfile << "    * Current:\n";
+            }
 
 
-        float totalcost = (float) (*jobIt)->getPageCount() * (*jobIt)->getOwnDevice()->getCost();
-        float totalCO2 = (float) (*jobIt)->getPageCount() * (float) (*jobIt)->getOwnDevice()->getEmissions();
+            float totalcost = (float) (*jobIt)->getPageCount() * (*jobIt)->getOwnDevice()->getCost();
+            float totalCO2 = (float) (*jobIt)->getPageCount() * (float) (*jobIt)->getOwnDevice()->getEmissions();
 
-        outfile << "        [Job #" << (*jobIt)->getJobNr() << "]\n"
-                << "            * Owner: " << (*jobIt)->getUserName() << "\n"
-                << "            * Total Pages: " << (*jobIt)->getPageCount() << "\n"
-                << "            * Pages Printed: " << (*jobIt)->getPrintedPages() << "\n"
-                << "            * Type: " << jobType << "\n"
-                << "            * Device: " << (*jobIt)->getOwnDevice()->getNameDev() << "\n"
-                << "            * Total CO2: " << totalCO2 << "\n"
-                << "            * Total cost: " << totalcost << "\n";
+            outfile << "        [Job #" << (*jobIt)->getJobNr() << "]\n"
+                    << "            * Owner: " << (*jobIt)->getUserName() << "\n"
+                    << "            * Total Pages: " << (*jobIt)->getPageCount() << "\n"
+                    << "            * Pages Printed: " << (*jobIt)->getPrintedPages() << "\n"
+                    << "            * Type: " << jobType << "\n"
+                    << "            * Device: " << (*jobIt)->getOwnDevice()->getNameDev() << "\n"
+                    << "            * Total CO2: " << totalCO2 << "\n"
+                    << "            * Total cost: " << totalcost << "\n";
 
-        if (jobIt == ownSystem->getJobVector()->begin()) {
+            if (jobIt == (*printIt)->getJobs()->begin()) {
 
-            outfile << "    * Queue:\n";
+                outfile << "    * Queue:\n";
+            }
         }
     }
 
@@ -118,7 +116,7 @@ void System::InfoPrinter::printAdvancedAscii(std::ostream &outfile) {
     REQUIRE(properlyInitialized(), "infoprinter wasn't properly initialized");
 
 
-    for (std::unordered_set<Device *>::iterator devsIt = ownSystem->getDeviceVector()->begin();
+    for (std::list<Device *>::iterator devsIt = ownSystem->getDeviceVector()->begin();
          devsIt != ownSystem->getDeviceVector()->end(); devsIt++) {
 
         outfile << (*devsIt)->getNameDev() << std::endl;

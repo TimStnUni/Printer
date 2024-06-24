@@ -28,16 +28,18 @@ namespace System {
         return (this == _initcheck);
     }
 
-    bool Scheduler::schedule(Job *jobIn, std::unordered_set<Device *> *devVect) {
+    bool Scheduler::schedule(Job *jobIn, std::list<Device *> *devVect, std::ostream * outStream) {
 
 
         //Todo: CO2 limits mogen exceeded zijn in inlezen, het is pas hier dat we daar rekening mee moeten houden en for some
         // reason houden we dan wel die printers in het systeem maar smijten we jobs weg die we niet kunnen printen?
 
 
-        //todo: check opsplitsen in type en limit, want die moeten blijkbaar aparte errors geven
+
 
         REQUIRE(properlyInitialized(), "Scheduler not properly initialized when attempting to schedule a job");
+        REQUIRE(jobIn != nullptr && devVect != nullptr, "Inputs shouldn't be nullptrs");
+
 
 
         std::string jobType = jobIn->getType();
@@ -50,7 +52,7 @@ namespace System {
 
         std::vector<Device *> posDevs;
 
-        for (std::unordered_set<Device *>::iterator devIt = devVect->begin(); devIt != devVect->end(); devIt++) {
+        for (std::list<Device *>::iterator devIt = devVect->begin(); devIt != devVect->end(); devIt++) {
 
             if ((*devIt)->getType() == jobType && (*devIt)->belowLimit()) {
                 posDevs.push_back(*devIt);
@@ -60,7 +62,7 @@ namespace System {
         }
         if (posDevs.empty()) {
 
-            logger.printNoDevice(std::cerr, jobIn->getJobNr());
+            logger.printNoDevice(outStream, jobIn->getJobNr());
 
             return false;
         }
@@ -97,7 +99,20 @@ namespace System {
 
     }
 
+    /*
 
+    void Scheduler::setStream(std::ostream *inStream) {
+
+        REQUIRE(properlyInitialized(), "scheduler wasn't properly initialized");
+        REQUIRE(inStream != nullptr, "Instream should not be a nullptr");
+
+        outStream = inStream;
+
+        ENSURE(outStream == inStream, "Outstream wasn't properly assigned");
+
+    }
+
+*/
     /*
     void Scheduler::setSystem(PrinterSystem *PrintSystem) {
 

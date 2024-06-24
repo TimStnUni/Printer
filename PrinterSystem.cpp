@@ -47,13 +47,13 @@ namespace System {
             jobNrSet.insert(tempJobNrSet.begin(), tempJobNrSet.end());
 
 
-            std::unordered_set<Device *> *tempDevs = tempXML.getDeviceList();
-            std::unordered_set<Job *> *tempJobs = tempXML.getJobList();
+            std::vector<Device *> *tempDevs = tempXML.getDeviceList();
+            std::vector<Job *> *tempJobs = tempXML.getJobList();
 
-            deviceVect.insert(tempDevs->begin(), tempDevs->end());
-            jobVect.insert(tempJobs->begin(), tempJobs->end());
+            deviceVect.insert(deviceVect.end(), tempDevs->begin(), tempDevs->end());
+            jobVect.insert(jobVect.end(), tempJobs->begin(), tempJobs->end());
 
-            jobUnscheduled.insert(tempJobs->begin(), tempJobs->end());
+            jobsUnscheduledVect.insert(jobsUnscheduledVect.end(), tempJobs->begin(), tempJobs->end());
 
             this->scheduleAll();
 
@@ -70,18 +70,24 @@ namespace System {
         REQUIRE(properlyInitialized(), "the printer system was not properly initialized");
 
 
+
         //todo: replace with scheduleall
-        for (std::set<Job *>::iterator jobsIt = jobUnscheduled.begin(); jobsIt != jobUnscheduled.end(); jobsIt++) {
+        for (std::list<Job *>::iterator jobsIt = jobsUnscheduledVect.begin(); jobsIt != jobsUnscheduledVect.end(); jobsIt++) {
 
             if (!system_scheduler.schedule(*jobsIt, &deviceVect)){
+
+                //this is removing the job when no suitable device is found;
                 jobNrSet.erase((*jobsIt)->getJobNr());
-                jobVect.erase(*jobsIt);
+                removeJob(*jobsIt);
                 delete *jobsIt;
             }
 
-            jobUnscheduled.erase(*jobsIt);
+            removeScheduled(*jobsIt);
 
         }
+
+
+        //scheduleAll();
 
 
         InfoPrinter printer;
@@ -125,7 +131,7 @@ namespace System {
         Job *jobptr = nullptr;
 
 
-        for (std::unordered_set<Job *>::iterator jobIt = this->jobVect.begin(); jobIt != this->jobVect.end(); ++jobIt) {
+        for (std::vector<Job *>::iterator jobIt = this->jobVect.begin(); jobIt != this->jobVect.end(); ++jobIt) {
             if ((*jobIt)->getJobNr() == jobNr) {
                 jobptr = *jobIt;
                 break;
@@ -151,7 +157,7 @@ namespace System {
         REQUIRE(properlyInitialized(), "system not properly initialized");
         REQUIRE(!deviceName.empty(), "device name should not be empty");
 
-        for (std::unordered_set<Device *>::iterator devIt = deviceVect.begin(); devIt != deviceVect.end(); devIt++){
+        for (std::list<Device *>::iterator devIt = deviceVect.begin(); devIt != deviceVect.end(); devIt++){
 
             if ((*devIt)->getNameDev() == deviceName){
 
@@ -174,7 +180,8 @@ namespace System {
 
 
         /*
-        if (this->jobUnscheduled.count(jobptr) != 0) {
+
+        if (std::find(this->jobsUnscheduledVect.begin(), this->jobsUnscheduledVect.end(), jobptr != 0) {
             //This means the job has not yet been scheduled
             if (!system_scheduler.schedule(jobptr, &deviceVect)){
                 jobNrSet.erase(jobptr->getJobNr());
@@ -182,10 +189,11 @@ namespace System {
                 delete jobptr;
 
             }
-            jobUnscheduled.erase(jobptr);
+            jobsUnscheduledVect.erase(jobptr);
         }
+
          */
-        this->scheduleAll();
+        //this->scheduleAll();
 
 
         Job *jobptr = indevice->getCurrentJob();
@@ -217,8 +225,8 @@ namespace System {
             //Here jobs are removed from the list of jobs and the set of jobs, so the job must also be deleted.
 
             jobNrSet.erase(jobptr->getJobNr());
-            jobVect.erase(jobptr);
-            delete jobptr;
+            this->removeJob(jobptr);
+            //delete jobptr;
 
         }
     }
@@ -249,7 +257,7 @@ namespace System {
 
         bool eraseBool = true;
 
-        for (std::unordered_set<Device *>::iterator devIt = deviceVect.begin();
+        for (std::list<Device *>::iterator devIt = deviceVect.begin();
              devIt != deviceVect.end();) {
 
 
@@ -272,8 +280,8 @@ namespace System {
 
         REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to add a job");
 
-        this->jobVect.insert(inJob);
-        ENSURE(jobVect.count(inJob) != 0, "Job was not correctly added");
+        this->jobVect.push_back(inJob);
+        ENSURE(jobVect.back() == inJob, "Job was not correctly added");
 
 
 
@@ -284,10 +292,10 @@ namespace System {
         REQUIRE(properlyInitialized(), "System was not properly initialized when attempting to add a device");
         //REQUIRE(inDevice != nullptr, "input device should not be a nullptr");
 
-        this->deviceVect.insert(inDevice);
+        this->deviceVect.push_back(inDevice);
 
 
-        ENSURE(deviceVect.count(inDevice) != 0, "Device was not correctly added");
+        ENSURE(deviceVect.back() == inDevice, "Device was not correctly added");
 
 
     }
@@ -305,11 +313,11 @@ namespace System {
 
     }
 
-    std::unordered_set<Device *> *PrinterSystem::getDeviceVector() {
+    std::list<Device *> *PrinterSystem::getDeviceVector() {
         return &(deviceVect);
     }
 
-    std::unordered_set<Job *> *PrinterSystem::getJobVector() {
+    std::list<Job *> *PrinterSystem::getJobVector() {
         return &(jobVect);
     }
 
@@ -327,24 +335,86 @@ namespace System {
         REQUIRE(properlyInitialized(), "system not properly initialized when trying to schedule all jobs");
 
 
-        if (!jobUnscheduled.empty()) {
+        if (!jobsUnscheduledVect.empty()) {
 
-            for (std::set<Job *>::iterator unsIt = jobUnscheduled.begin(); unsIt != jobUnscheduled.end(); unsIt++) {
 
-                if (!system_scheduler.schedule(*unsIt, &deviceVect)) {
+
+            for (std::list<Job *>::iterator unsIt = jobsUnscheduledVect.begin(); unsIt != jobsUnscheduledVect.end();) {
+
+                if (!system_scheduler.schedule(*unsIt, &deviceVect, outStream)) {
+
+                    //this is removing jobs when no suitable devices are found.
                     jobNrSet.erase((*unsIt)->getJobNr());
-                    jobVect.erase(*unsIt);
-                    delete *unsIt;
+                    removeJob(*unsIt);
+                    //delete *unsIt;
                 }
-                jobUnscheduled.erase(unsIt);
+                //removeScheduled(*unsIt++);
+                jobsUnscheduledVect.erase(unsIt++);
 
             }
         }
-        ENSURE(jobUnscheduled.empty(), "Not all jobs were correctly scheduled");
+
+        ENSURE(jobsUnscheduledVect.empty(), "Not all jobs were correctly scheduled");
 
     }
 
+    bool PrinterSystem::removeJob(Job *inJob) {
 
+
+        for (std::list<Job*>::iterator jobIt = jobVect.begin(); jobIt != jobVect.end(); jobIt++){
+
+            if (*jobIt == inJob){
+                jobVect.erase(jobIt);
+                delete inJob;
+                return true;
+
+            }
+
+        }
+
+
+        return false;
+    }
+
+    bool PrinterSystem::removeDevice(Device *inDevice) {
+
+        for (std::list<Device*>::iterator deviceIt = deviceVect.begin(); deviceIt != deviceVect.end(); deviceIt++){
+
+            if (*deviceIt == inDevice){
+                deviceVect.erase(deviceIt);
+                return true;
+
+            }
+
+        }
+
+
+        return false;
+        
+        
+    }
+
+    bool PrinterSystem::removeScheduled(Job *inJob) {
+        for (std::list<Job*>::iterator jobIt = jobsUnscheduledVect.begin(); jobIt != jobsUnscheduledVect.end(); jobIt++){
+
+            if (*jobIt == inJob){
+                jobsUnscheduledVect.erase(jobIt);
+                return true;
+
+            }
+
+        }
+
+
+        return false;
+    }
+
+    void PrinterSystem::setStream(std::ostream *inStream) {
+
+
+        outStream = inStream;
+
+    }
 
 
 }

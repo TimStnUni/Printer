@@ -1,6 +1,6 @@
-Default Scanner
-    Peter Selie:[10/10] | 
-Color_Printer
-    anonymous_user:[3/3] | 
 Office_Printer5
     SergeDemeyer:[2/2] | 
+Color_Printer
+    anonymous_user:[3/3] | 
+Default Scanner
+    Peter Selie:[10/10] | 

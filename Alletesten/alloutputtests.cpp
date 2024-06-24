@@ -82,7 +82,7 @@ TEST_F(OutputTests, AllJobTest){
     EXPECT_TRUE(FileExists("Alletesten/testoutput/PrintAllOutput.txt"));
     EXPECT_TRUE(FileExists("Alletesten/testoutput/PrintAllOutputTest.txt"));
     EXPECT_TRUE(FileCompare("Alletesten/testoutput/PrintAllOutput.txt", "Alletesten/testoutput/PrintAllOutputTest.txt"));
-
+    EXPECT_TRUE(FileCompare("Alletesten/testoutput/PrintAllOutputTest.txt", "Alletesten/testoutput/PrintAllOutput.txt"));
 
 }
 

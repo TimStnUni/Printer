@@ -7,8 +7,9 @@
 
 #include "Job.h"
 #include "Device.h"
-#include <unordered_set>
+#include <list>
 #include "Logger.h"
+#include <ostream>
 
 
 namespace System {
@@ -39,11 +40,12 @@ namespace System {
          * @param jobIn: pointer to job that needs to be scheduled
          * @param devVect: pointer to container of all devices
          * REQUIRE(properlyInitialized(), "Scheduler not properly initialized when attempting to schedule a job")
+         * REQUIRE(jobIn != nullptr && devVect != nullptr, "Inputs shouldn't be nullptrs")
          * ENSURE(jobIn->getOwnDevice() != nullptr, "Job was not assigned to a device, even though the error path was not triggered");
          */
 
         //todo: maybe split devVect into a setter function?
-        bool schedule(Job * jobIn, std::unordered_set<Device *> * devVect);
+        bool schedule(Job * jobIn, std::list<Device *> * devVect, std::ostream * outstream);
 
 
         /**
@@ -56,6 +58,15 @@ namespace System {
         void setSystem(PrinterSystem * PrintSystem);
 
 
+        /**
+         * \brief function to set the outputstream
+         * @param inStream
+         * REQUIRE(properlyInitialized(), "scheduler wasn't properly initialized");
+         * REQUIRE(inStream != nullptr, "Instream should not be a nullptr");
+         * ENSURE(outStream == inStream, "Outstream wasn't properly assigned");
+         */
+
+        //void setStream(std::ostream * inStream);
 
 
     private:
@@ -63,6 +74,9 @@ namespace System {
         //PrinterSystem * ownSystem = nullptr;
         Scheduler * _initcheck;
         bool properlyInitialized();
+
+
+        //std::ostream * outStream = nullptr;
 
         Logger logger;
 

@@ -34,6 +34,8 @@ namespace System {
 
     bool XMLParser::parse(std::ostream &errorstream) {
 
+        REQUIRE(properlyInitialized(), "XMLParser was not properly initialized when attempting to call parse");
+
         TiXmlElement *System = InputDoc.FirstChildElement();
 
         bool consistent = true;
@@ -96,8 +98,8 @@ namespace System {
                                 emissions = std::stoi(elem->FirstChild()->ToText()->Value());
 
                             } else {
-                                type = "Emissions";
-                                //TODO: werkt niet
+
+
                                 std::string type_err = "Emissions";
                                 System::Logger::parseNegative(errorstream, type_err);
 //                                errorstream << "Emissions should be positive" << std::endl;
@@ -201,7 +203,7 @@ namespace System {
 
                     if (outPtr != nullptr) {
 
-                        deviceList.insert(outPtr);
+                        deviceList.push_back(outPtr);
                     }
                 }
                 else{
@@ -320,7 +322,7 @@ namespace System {
 
                         //ownSystem->addJob(outJobPtr);
 
-                        jobList.insert(outJobPtr);
+                        jobList.push_back(outJobPtr);
                         jobNrSet.insert(jobNr);
 
                     } else {
@@ -354,16 +356,16 @@ namespace System {
     }
 
 
-    bool XMLParser::properlyInitialized() {
+    bool XMLParser::properlyInitialized() const {
         return (this == _initCheck);
     }
 
-    std::unordered_set<Device *> *XMLParser::getDeviceList() {
+    std::vector<Device *> *XMLParser::getDeviceList() {
         REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getDeviceList()");
         return &deviceList;
     }
 
-    std::unordered_set<Job *>* XMLParser::getJobList() {
+    std::vector<Job *>* XMLParser::getJobList() {
         REQUIRE(this->properlyInitialized(), "Parser not properly initialized when calling getJobList()");
         return &jobList;
     }
@@ -411,6 +413,8 @@ namespace System {
     }
 
     bool XMLParser::isConsistent() const {
+        REQUIRE(properlyInitialized(), "Parser not properly initialized when checking for consistency");
+
         return parseSuccessful;
     }
 
