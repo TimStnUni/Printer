@@ -344,7 +344,9 @@ namespace System {
 
     }
 
+    void PrinterSystem::getSystemGraph(std::ostream &writestream, std::string outputSys) {
 
+    }
 
 
 }

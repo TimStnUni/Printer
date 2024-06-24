@@ -1,1 +1,2 @@
-pagecount should be a positive integer
+Pagecount should be positive
+there was an error in a device in the inputfile

@@ -1,2 +1,3 @@
-speed should be positive
+Speed should be positive
+there was an error in a device in the inputfile
 there was an error in a device in the inputfile
