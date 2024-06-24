@@ -1,8 +1,8 @@
-Office_Printer5
-    SergeDemeyer:[1/1] | SergeDemeyer:[2] ||
-Color_Printer
-    anonymous_user:[3/3] |
-Office_Printer6
-    SergeDemeyer:[3/3] |
 Default Scanner
-    Jane Doe:[13/13] | Peter Selie:[10] || Peter Pan:[6] ||
+    Jane Doe:[13/13] | Peter Pan:[6] || Peter Selie:[10] || 
+Office_Printer6
+    SergeDemeyer:[3/3] | 
+Color_Printer
+    anonymous_user:[3/3] | 
+Office_Printer5
+    SergeDemeyer:[2/2] | SergeDemeyer:[1] || 
